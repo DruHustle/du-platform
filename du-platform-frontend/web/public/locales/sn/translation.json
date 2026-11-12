@@ -106,6 +106,8 @@
     "reset": {
       "title": "Gadzirisazve pasiwedhi",
       "subtitle": "Isa pasiwedhi itsva yeaccount yako.",
+      "invalid_link": "Link iyi yekugadzirisazve pasiwedhi haisi kushanda kana kuti yapera.",
+      "request_link": "Kumbira link itsva yekugadzirisazve pasiwedhi",
       "missing_token": "Link yekugadzirisazve haipo kana kuti yapera.",
       "new_password": "Pasiwedhi itsva",
       "show_password": "Ratidza pasiwedhi",
@@ -1382,7 +1384,12 @@
         "crafts": "Unyanzvi nemabasa emaoko",
         "food": "Chikafu & Nostalgia",
         "all_segments": "Mhando dzose dzezvigadzirwa",
-        "select_segment": "Sarudza mhando yechigadzirwa"
+        "select_segment": "Sarudza mhando yechigadzirwa",
+        "search": "Tsvaga zvigadzirwa",
+        "category": "Chikamu",
+        "result_count_one": "Chigadzirwa chawanikwa ({{count}})",
+        "result_count_other": "Zvigadzirwa zvawanikwa ({{count}})",
+        "no_matches": "Hapana zvigadzirwa zvinoenderana nezvawasarudza"
       },
       "loading": "Kurodha zvigadzirwa...",
       "empty_state": "Parizvino hapana zvigadzirwa.",
@@ -1688,6 +1695,7 @@
     }
   },
   "search": {
+    "partial": "Mimwe mhinduro yetsvakiridzo haisi kuwanikwa pari zvino.",
     "categories": {
       "tourism": "Kufamba",
       "investment": "Kudyara mari",
@@ -1704,14 +1712,14 @@
     },
     "no_results": {
       "title": "Hapana zvawanikwa",
-      "message": "Hatina kuwana chinoenderana ne\"{{query}}\". Edza kutsvaga mazwi akadai se \"Investment\", \"Tourism\", kana \"Onesa\".",
+      "message": "Hatina kuwana zvinoenderana ne“{{query}}”. Edza izwi pfupi rakaita sekuti “ndege” kana “pekugara”.",
       "return_home": "Dzoka Kumba"
     },
     "submit": "Tsvaga",
     "loading": "Tiri kutsvaga…",
     "failed": "Kutsvaga hakusi kushanda pari zvino. Ndapota edza zvakare.",
     "retry": "Edza zvakare",
-    "prompt": "Tsvaga zvekushanya, kuisa mari, kutenga, kana Onesa AI.",
+    "prompt": "Tsvaga ndege, pekugara, zvigadzirwa kana Onesa AI.",
     "description": "Tsvaga zvigadzirwa, nzvimbo dzekushanyira, pfungwa dzebhizinesi nematurusi eOnesa."
   },
   "error_boundary": {
@@ -2158,6 +2166,9 @@
     "explore": "Ongorora",
     "my-trips": "Nzendo dzangu",
     "description": "Munoshanyira mhuri, kudzokera kumusha kana kuona nzvimbo itsva here? Rongai nzendo kuenda, kubva uye mukati meZimbabwe nekumaodzanyemba kweAfrica, mozobhuka zvakananga nevapi vemabasa.",
+    "choose-location": "Sarudza nzvimbo kubva pane dzakarongwa.",
+    "no-locations": "Hapana nzvimbo inoenderana nezvawanyora. Edza zita reguta, nyika kana kodhi yenhandare yendege.",
+    "clear-confirm": "Unoda kudzima mashoko erwendo, zvawakatsvaga, mari yawakaronga uye zvawakasarudza mubhurawuza rino here?",
     "search-intro": "Tanga nemazuva nevafambi. Mashoko aya anoenderera kune zvimwe zvikamu.",
     "origin": "Nhandare yekubva",
     "destination": "Nhandare yekusvika / nzvimbo",
@@ -2210,7 +2221,7 @@
     "funds-unknown": "Mitero, mabhegi, mari dzinosungirwa, wedzero nemadhipoziti anodzoserwa: hazvizivikanwi. Mari dzekuronga idzi hadzisi mari yose yerwendo kana inodiwa. Mashoko emupi akanyorwa oga pazasi.",
     "onesa-planner": "Ronga rwendo rweZimbabwe naOnesa",
     "private-trips": "Nzendo nekutsvaga zvakachengetwa zvakavanzika",
-    "private-note": "Pinda kuchengeta pamidziyo yakasiyana. Akaunti yako chete ndiyo inoverenga kana kubvisa. Kuvhura kwakachengetwa kunotsiva chirongwa chemubrowser.",
+    "private-note": "Nzendo nezvawakatsvaga zvawakachengeta zvinoonekwa muakaundi yako chete. Kana ukavhura chimwe chazvo, chinotsiva chirongwa chiri pamudziyo uno.",
     "sign-in": "Pinda uchengete zvakavanzika",
     "trip-name": "Zita rerwendo / kutsvaga",
     "save-trip": "Chengeta rwendo rwakavanzika",
@@ -2222,6 +2233,10 @@
     "restore": "Vhura muchirongwa",
     "restored": "Mashoko akachengetwa avhurwa muchirongwa.",
     "delete": "Dzima",
+    "restore-confirm": "Unoda kutsiva chirongwa chiri mubhurawuza rino ne“{{name}}” here?",
+    "delete-confirm": "Unoda kudzima “{{name}}” panzendo nezvawakatsvaga zvawakachengeta here?",
+    "deleted": "“{{name}}” zvadzimwa.",
+    "list-error": "Hatina kukwanisa kuvhura rondedzero yezvawakachengeta. Edza zvakare.",
     "storage-error": "Hatina kukwanisa kuvhura nzendo dzakachengetwa. Chirongwa chako chiripo. Edza gare gare.",
     "alerts": "Zviziviso zvemitengo",
     "alerts-note": "Kuongorora otomatiki hakuwaniki kusvikira mupi atendera nemiganhu yekutumira. Hapana mitengo iri kuongororwa kumashure.",

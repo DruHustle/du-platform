@@ -241,7 +241,7 @@ export async function catalogueReply(
     const blocks = await Promise.all(
       selected.map(async p => {
         const lines = [
-          `- [${plain(p.name)}](/shop/products?product=${encodeURIComponent(p.slug)}) · ${(convertShopCents(p.price_cents, p.currency, target) / 100).toFixed(2)} ${target} · ${eligible(p) ? l.stock : l.out}`,
+          `- [${plain(p.name)}](/shop/product/${encodeURIComponent(p.slug)}) · ${(convertShopCents(p.price_cents, p.currency, target) / 100).toFixed(2)} ${target} · ${eligible(p) ? l.stock : l.out}`,
         ];
         if (!eligible(p))
           lines.push(

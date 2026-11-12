@@ -261,6 +261,124 @@ describe("public read-only Travel providers", () => {
     ).rejects.toMatchObject({ code: "TRAVEL_INVALID" });
     expect(fetcher).toHaveBeenCalledTimes(3);
   });
+  it("finds usable offers beyond malformed rows and duplicates in a supplier response", async () => {
+    const other = {
+      ...flight(),
+      outbound: { ...leg(), cabinClass: "Business" },
+    };
+    const rows = [...Array(20).fill({}), flight(), flight(), other];
+    const result = await service(flights(rows)).search.search(
+      "flights",
+      criteria()
+    );
+    expect(result.quotes.map(quote => quote.legs[0].cabin)).toEqual([
+      "Economy",
+      "Business",
+    ]);
+    expect(result.rejectedCount).toBe(21);
+  });
+  it("rechecks a saved option that moved below the 20 displayed offers", async () => {
+    const saved = (
+      await service(flights()).search.search("flights", criteria())
+    ).quotes[0];
+    const earlier = Array.from({ length: 20 }, (_, i) => ({
+      ...flight(),
+      outbound: {
+        ...leg(),
+        segments: [{ ...leg().segments[0], flightNumber: `ZZ${i}` }],
+      },
+    }));
+    const { search, fetcher } = service(
+      flights([...earlier, { ...flight(), price: 760 }])
+    );
+    const displayed = await search.search("flights", criteria());
+    expect(displayed.quotes).toHaveLength(20);
+    expect(
+      displayed.quotes.some(quote => quote.identity === saved.identity)
+    ).toBe(false);
+    expect(displayed.rejectedCount).toBe(1);
+    const rechecked = await search.revalidate(saved);
+    expect(rechecked).toMatchObject({
+      changed: true,
+      quote: { identity: saved.identity, price: 760 },
+    });
+    expect(verifyTravelQuote(rechecked.quote)).toBe(true);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+  it("keeps the original hotel search then follows one advertised page for a saved property", async () => {
+    let hotels = [hotel()];
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockImplementation(async (_url, options) => {
+        const { name, arguments: args } = JSON.parse(
+          String(options?.body)
+        ).params;
+        expect(name).toBe("search_hotels");
+        const offset = args.offset ?? 0;
+        const page = hotels.slice(offset, offset + args.limit);
+        return response({
+          hotels: page,
+          has_more: offset + page.length < hotels.length,
+          next_offset: offset + page.length,
+        });
+      });
+    const search = new PublicTravelSearch(fetcher, () => now);
+    const original = (await search.search("stays", criteria())).quotes[0];
+    expect(await search.revalidate(original)).toMatchObject({ changed: false });
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    hotels = [
+      ...Array.from({ length: 20 }, (_, i) => ({
+        ...hotel(),
+        id: `other-${i}`,
+        name: `Other property ${i}`,
+      })),
+      { ...hotel(), price: 135 },
+    ];
+    const rechecked = await search.revalidate(original);
+    expect(rechecked).toMatchObject({
+      changed: true,
+      quote: { identity: original.identity, price: 135 },
+    });
+    const args = fetcher.mock.calls.map(
+      ([, options]) => JSON.parse(String(options?.body)).params.arguments
+    );
+    expect(args[0].limit).toBe(10);
+    expect(args[1]).toEqual(args[0]);
+    expect(args[2]).toEqual(args[0]);
+    expect(args[3]).toEqual({ ...args[0], limit: 40, offset: 10 });
+    expect(fetcher).toHaveBeenCalledTimes(4);
+    hotels = [];
+    await expect(search.revalidate(original)).rejects.toMatchObject({
+      code: "TRAVEL_OFFER_EXPIRED",
+    });
+    expect(fetcher).toHaveBeenCalledTimes(5);
+  });
+  it("reports an inconclusive hotel recheck when the bounded scan has not exhausted the supplier", async () => {
+    const original = (
+      await service({ hotels: [hotel()] }).search.search("stays", criteria())
+    ).quotes[0];
+    const other = { ...hotel(), id: "other", name: "Another hotel" };
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        response({ hotels: [other], has_more: true, next_offset: 1 })
+      )
+      .mockResolvedValueOnce(
+        response({ hotels: [other], has_more: true, next_offset: 2 })
+      );
+    const search = new PublicTravelSearch(fetcher, () => now);
+    await expect(search.revalidate(original)).rejects.toMatchObject({
+      code: "TRAVEL_PROVIDER_UNAVAILABLE",
+    });
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    fetcher.mockResolvedValueOnce(
+      response({ hotels: [other], has_more: true, next_offset: 0 })
+    );
+    await expect(search.revalidate(original)).rejects.toMatchObject({
+      code: "TRAVEL_PROVIDER_INVALID",
+    });
+    expect(fetcher).toHaveBeenCalledTimes(3);
+  });
   it("supports SSE text fallbacks and plain JSON without executing supplier instructions", async () => {
     for (const sse of [true, false]) {
       const fetcher = vi
@@ -291,6 +409,42 @@ describe("public read-only Travel providers", () => {
       ).quotes
     ).toHaveLength(1);
   });
+  it("finishes the matching SSE response on an open connection and releases the supplier slot", async () => {
+    const cancel = vi.fn();
+    const fetcher = vi.fn<typeof fetch>().mockImplementation(async () => {
+      const envelope = {
+        jsonrpc: "2.0",
+        id: 1,
+        result: { structuredContent: flights() },
+      };
+      const chunks = [
+        ": keepalive\n\n",
+        'data: {"jsonrpc":"2.0","method":"notifications/progress"}\n\n',
+        'data: {"id":7,"result":{}}\r\n\r\n',
+        "event: message\r\ndata: " + JSON.stringify(envelope) + "\r",
+        "\n\r",
+        "\n",
+      ];
+      const stream = new ReadableStream<Uint8Array>({
+        start(controller) {
+          for (const chunk of chunks)
+            controller.enqueue(new TextEncoder().encode(chunk));
+          // The server keeps sending heartbeats until the client closes the stream.
+        },
+        cancel,
+      });
+      return new Response(stream, {
+        headers: { "Content-Type": "text/event-stream; charset=utf-8" },
+      });
+    });
+    const search = new PublicTravelSearch(fetcher, () => now);
+    for (let i = 0; i < 3; i++)
+      expect((await search.search("flights", criteria())).quotes).toHaveLength(
+        1
+      );
+    expect(cancel).toHaveBeenCalledTimes(3);
+  });
+
   it("fails closed on provider blocks, invalid envelopes, oversized responses and cancellation", async () => {
     for (const res of [
       new Response("blocked", { status: 403 }),

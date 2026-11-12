@@ -4,6 +4,7 @@ import {
   travelResultsSchema,
   travelQuoteSchema,
   type SavedTravel,
+  type SavedTravelInput,
   type TravelCriteria,
   type TravelQuote,
 } from "@/domain/travel";
@@ -42,6 +43,16 @@ export async function loadSavedTravel(): Promise<SavedTravel[]> {
   if (!parsed.success) throw new Error("TRAVEL_INVALID_RESPONSE");
   return parsed.data;
 }
+export async function saveTravel(input: SavedTravelInput) {
+  const response = await api.post("/travel/saved", input);
+  z.object({ id: z.string().uuid() }).parse(response.data);
+}
+
+export async function deleteSavedTravel(id: string) {
+  const response = await api.delete(`/travel/saved/${id}`);
+  z.object({ removed: z.literal(true) }).parse(response.data);
+}
+
 export async function searchTravel(
   category: "flights" | "stays",
   criteria: TravelCriteria,

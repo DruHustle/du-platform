@@ -5,6 +5,15 @@ on:
   pull_request:
     paths:
       - ".github/workflows/android-release-package.yml"
+      - "du-platform-frontend/mobile/android/**"
+      - "du-platform-frontend/mobile/src/**"
+      - "du-platform-frontend/mobile/assets/**"
+      - "du-platform-frontend/mobile/App.tsx"
+      - "du-platform-frontend/mobile/index.ts"
+      - "du-platform-frontend/mobile/app.json"
+      - "du-platform-frontend/mobile/package.json"
+      - "du-platform-frontend/mobile/package-lock.json"
+      - "du-platform-frontend/mobile/plugins/withUnsignedRelease.cjs"
       - "du-platform-frontend/mobile/scripts/sign-release-apk.sh"
       - "du-platform-frontend/mobile/scripts/test-release-apk.py"
 

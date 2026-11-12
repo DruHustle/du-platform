@@ -6,6 +6,7 @@ import path from "node:path";
 import { chromium, webkit } from "playwright";
 import { getPublicShopSeedProducts } from "../../../../du-platform-backend/domain/shopCatalog.ts";
 import { readyShop, testPricing, translatedFixture } from "./shop-readiness-fixture.mjs";
+import { checkCatalogueDiscovery } from "./shop-discovery-journey.mjs";
 const root = path.resolve("du-platform-frontend/web/dist"),
   out = process.env.SHOP_FOLLOWUP_OUTPUT || "/tmp/du-shop-followup";
 await fs.mkdir(out, { recursive: true });
@@ -69,6 +70,10 @@ try {
             "utf8"
           )
         );
+        for (const width of language === "en" ? [320, 768, 1440] : [375]) {
+          await checkCatalogueDiscovery({ browser, base, language, locale, width, products: [jersey, other] });
+          results.push({ engine, language, width, state: "search-filter-detail-return-clear" });
+        }
         for (const width of [320, 375, 1440])
           for (const state of [
             "prelaunch-zero",
@@ -344,7 +349,7 @@ try {
   }
   await fs.writeFile(out + "/report.json", JSON.stringify(results, null, 2));
   console.log(
-    `PASS ${results.length} focused shop scenarios: basket totals, explicit removal, product information and keyboard access`
+    `PASS ${results.length} focused shop scenarios: discovery, basket totals, explicit removal, product information and keyboard access`
   );
 } finally {
   await new Promise(done => server.close(done));

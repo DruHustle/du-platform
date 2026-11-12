@@ -106,6 +106,8 @@
     "reset": {
       "title": "Set New Password",
       "subtitle": "Choose a strong password for your account.",
+      "invalid_link": "This reset link is invalid or has expired.",
+      "request_link": "Request a new reset link",
       "missing_token": "Missing reset token. Please use the link sent to your email.",
       "new_password": "New Password",
       "show_password": "Show password",
@@ -1444,7 +1446,12 @@
         "crafts": "Arts & Crafts",
         "food": "Food & Nostalgia",
         "all_segments": "All product types",
-        "select_segment": "Choose a product type"
+        "select_segment": "Choose a product type",
+        "search": "Search products",
+        "category": "Category",
+        "result_count_one": "{{count}} product",
+        "result_count_other": "{{count}} products",
+        "no_matches": "No matching products"
       },
       "loading": "Loading products...",
       "empty_state": "No products available in this category yet.",
@@ -1684,6 +1691,7 @@
     }
   },
   "search": {
+    "partial": "Some search results are temporarily unavailable.",
     "categories": {
       "tourism": "Travel",
       "investment": "Investment",
@@ -1700,14 +1708,14 @@
     },
     "no_results": {
       "title": "No results found",
-      "message": "We couldn't find anything matching \"{{query}}\". Try searching for broader terms like \"Investment\", \"Tourism\", or \"Onesa\".",
+      "message": "No matches for “{{query}}”. Try a shorter phrase, such as “flights” or “hotels”.",
       "return_home": "Return Home"
     },
     "submit": "Search",
     "loading": "Searching…",
     "failed": "Search is unavailable right now. Please try again.",
     "retry": "Try again",
-    "prompt": "Search for tourism, investment, shopping, or Onesa AI.",
+    "prompt": "Search for flights, accommodation, products or Onesa AI.",
     "description": "Find products, destinations, business ideas and Onesa tools."
   },
   "error_boundary": {
@@ -2154,6 +2162,9 @@
     "explore": "Explore",
     "my-trips": "My Trips",
     "description": "Visiting family, heading home or exploring somewhere new? Plan journeys to, from and within Zimbabwe and Southern Africa, then book directly with providers.",
+    "choose-location": "Choose a location from the list.",
+    "no-locations": "No matching locations. Try a city, country or airport code.",
+    "clear-confirm": "Clear this browser’s trip details, searches, allowances and selected options?",
     "search-intro": "Start with your dates and travellers. These details follow you between Travel sections.",
     "origin": "Departure airport",
     "destination": "Destination airport / area",
@@ -2206,7 +2217,7 @@
     "funds-unknown": "Taxes, baggage, mandatory charges, extras and refundable deposits: unknown. These allowance subtotals are not a complete trip price or funds requirement. Supplier observations are listed separately below.",
     "onesa-planner": "Draft a Zimbabwe itinerary with Onesa",
     "private-trips": "Private saved trips & searches",
-    "private-note": "Sign in to save across devices. Only your account can read or delete these records. Loading a saved trip replaces this browser draft.",
+    "private-note": "Your saved trips and searches are private to your account. Loading one replaces the draft on this device.",
     "sign-in": "Sign in to save privately",
     "trip-name": "Trip / search name",
     "save-trip": "Save private trip",
@@ -2218,6 +2229,10 @@
     "restore": "Load into draft",
     "restored": "Saved details loaded into this browser draft.",
     "delete": "Delete",
+    "restore-confirm": "Replace this browser’s draft with “{{name}}”?",
+    "delete-confirm": "Delete “{{name}}” from your saved trips and searches?",
+    "deleted": "Deleted “{{name}}”.",
+    "list-error": "Could not load your saved list. Try again to refresh it.",
     "storage-error": "Could not access saved trips. Your browser draft is still here. Try again later.",
     "alerts": "Price alerts",
     "alerts-note": "Automatic monitoring is unavailable until a provider approves monitoring and delivery limits. No prices are being checked in the background.",

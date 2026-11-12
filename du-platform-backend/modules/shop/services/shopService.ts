@@ -1,7 +1,4 @@
-import {
-  publicShopReadiness,
-  assertOrderRequestReadiness,
-} from "../shopReadiness";
+import { publicShopReadiness } from "../shopReadiness";
 import { SHOP_PRICING_REVISION, SHOP_RATES_PER_EUR, type ShopCurrency } from "../../../domain/shopCurrency";
 import { SHOP_SHIPPING_POLICY } from "../../../domain/shopCheckout";
 import { SHOP_SEED_PRODUCTS } from "../../../domain/shopCatalog";
@@ -107,10 +104,6 @@ export class ShopService {
     items: Array<{ productId: number; quantity: number }>;
     requestToken?: string;
   }) {
-    await assertOrderRequestReadiness(
-      payload.shippingCountry,
-      payload.items.map(item => item.productId)
-    );
     const order = await this.orders.create(payload);
     return { order };
   }

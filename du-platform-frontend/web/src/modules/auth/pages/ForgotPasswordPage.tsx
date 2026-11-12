@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { useSearch } from "wouter/use-browser-location";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { authPageLink, returnPathFromSearch } from "@/lib/safeRedirect";
 import { api, getApiErrorMessage } from "@/lib/api";
 import { ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function ForgotPassword() {
+  const nextPath = returnPathFromSearch(useSearch());
   const { t, i18n } = useTranslation();
   const tr = (key: string, fallback: string) =>
     t(key, { defaultValue: fallback });
@@ -108,7 +111,7 @@ export default function ForgotPassword() {
 
           <div className="mt-6 border-t border-white/10 pt-4 text-center text-sm text-white/75">
             <Link
-              href="/login"
+              href={authPageLink("/login", nextPath)}
               className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold"
             >
               <ArrowLeft className="h-3.5 w-3.5 mr-2" />

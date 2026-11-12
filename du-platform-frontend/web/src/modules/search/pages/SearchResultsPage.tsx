@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
-import { useLocation, useSearch } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import Layout from "@/components/Layout";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Search,
@@ -13,10 +10,42 @@ import {
   TrendingUp,
   Plane,
   Brain,
+  ShoppingBag,
+  Layers,
+  type LucideIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Link } from "wouter";
 import { api } from "@/lib/api";
+
+type SearchResult = {
+  title: string;
+  href: string;
+  category: string;
+  summary?: string;
+};
+type SearchResponse = {
+  query: string;
+  results: SearchResult[];
+  status: "complete" | "partial" | "failed";
+};
+
+const routeTitles = new Map([
+  ["/travel/flights", "travel.flights"],
+  ["/travel/stays", "travel.stays"],
+  ["/travel/car-hire", "travel.car-hire"],
+  ["/travel/my-trips", "travel.my-trips"],
+  ["/travel/weather", "travel.weather"],
+  ["/travel/explore", "travel.explore"],
+  ["/travel/planner", "travel.onesa-planner"],
+  ["/ntir", "investment.ntir.title"],
+  ["/shop", "nav.shop"],
+  ["/shop/products", "pilot.browse_products"],
+  ["/shop/order-status", "pilot.request_status"],
+  ["/shop/products?category=food&segment=beverages", "shop.categories.beverages.title"],
+  ...(["sports", "crafts", "food"] as const).map(category =>
+    [`/shop/products?category=${category}`, `admin.shop.categories.${category}`] as const
+  ),
+]);
 
 export default function SearchResults() {
   const { t } = useTranslation();
@@ -26,24 +55,31 @@ export default function SearchResults() {
   const search = useSearch();
   const query = new URLSearchParams(search).get("q")?.trim() || "";
   const [draft, setDraft] = useState(query);
-  const [results, setResults] = useState<
-    Array<{ title: string; href: string; category: string; summary?: string }>
-  >([]);
-  const [loading, setLoading] = useState(Boolean(query));
-  const [failed, setFailed] = useState(false);
+  const [response, setResponse] = useState<SearchResponse | null>(null);
+  const [pending, setPending] = useState(false);
+  const current = response?.query === query ? response : null;
+  const results = current?.results ?? [];
+  const loading =
+    Boolean(query) && (!current || (pending && current.status === "failed"));
   const [retry, setRetry] = useState(0);
-  const iconByCategory: Record<string, any> = {
+  const iconByCategory: Record<string, LucideIcon> = {
     Tourism: Plane,
     Investment: TrendingUp,
     Technology: Brain,
     NTIR: Globe,
     Compliance: FileText,
+    Shop: ShoppingBag,
+    Product: ShoppingBag,
+    Collection: Layers,
   };
   const categoryLabels: Record<string, string> = {
     Tourism: tr("search.categories.tourism", "Travel"),
     Investment: tr("search.categories.investment", "Investment"),
     Technology: tr("search.categories.technology", "Technology"),
     NTIR: tr("search.categories.ntir", "NTIR"),
+    Shop: t("nav.shop"),
+    Product: t("shop.product"),
+    Collection: t("shop.collections"),
     Compliance: tr("search.categories.compliance", "Compliance"),
   };
 
@@ -51,11 +87,12 @@ export default function SearchResults() {
 
   useEffect(() => {
     const controller = new AbortController();
-    setResults([]);
-    setFailed(false);
-    setLoading(Boolean(query));
-    if (!query) return () => controller.abort();
-
+    if (!query) {
+      setResponse(null);
+      setPending(false);
+      return;
+    }
+    setPending(true);
     api
       .get("/search", {
         params: { q: query },
@@ -63,13 +100,25 @@ export default function SearchResults() {
         signal: controller.signal,
       })
       .then(({ data }) => {
-        if (!controller.signal.aborted) setResults(data?.results ?? []);
+        if (controller.signal.aborted) return;
+        if (!Array.isArray(data?.results))
+          throw new Error("Invalid search response");
+        setResponse({
+          query,
+          results: data.results,
+          status: data.partial === true ? "partial" : "complete",
+        });
       })
       .catch(() => {
-        if (!controller.signal.aborted) setFailed(true);
+        if (controller.signal.aborted) return;
+        setResponse(previous =>
+          previous?.query === query && previous.results.length > 0
+            ? { ...previous, status: "partial" }
+            : { query, results: [], status: "failed" }
+        );
       })
       .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!controller.signal.aborted) setPending(false);
       });
     return () => controller.abort();
   }, [query, retry]);
@@ -78,167 +127,145 @@ export default function SearchResults() {
     <Layout>
       <section className="document-section bg-slate-950 min-h-[60vh] text-white">
         <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="flex items-center gap-3 mb-8">
-              <Search className="h-8 w-8 text-zim-gold" />
-              <h1 className="page-title">
-                {query
-                  ? tr(
-                      "search.results.title_with_query",
-                      `Search Results for "{{query}}"`
-                    ).replace("{{query}}", query)
-                  : tr(
-                      "search.results.title_default",
-                      "Search Diaspora Unlocked"
-                    )}
-              </h1>
-            </div>
-
-            <form
-              role="search"
-              className="mb-8 flex gap-3"
-              onSubmit={event => {
-                event.preventDefault();
-                setLocation(`/search?q=${encodeURIComponent(draft.trim())}`);
-              }}
-            >
-              <label htmlFor="site-search" className="sr-only">
-                {tr("search.results.title_default", "Search Diaspora Unlocked")}
-              </label>
-              <input
-                id="site-search"
-                type="search"
-                value={draft}
-                onChange={event => setDraft(event.target.value)}
-                className="min-w-0 flex-1 rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-white"
-              />
-              <Button
-                type="submit"
-                className="h-auto bg-zim-gold text-zim-black"
-              >
-                {tr("search.submit", "Search")}
-              </Button>
-            </form>
-            {loading ? (
-              <p role="status" className="py-12 text-white/80">
-                {tr("search.loading", "Searching…")}
-              </p>
-            ) : failed ? (
-              <div
-                role="alert"
-                className="rounded-2xl border border-white/20 bg-slate-900 p-8"
-              >
-                <p>
-                  {tr(
-                    "search.failed",
-                    "Search is unavailable right now. Please try again."
+          <div className="flex items-center gap-3 mb-8">
+            <Search
+              aria-hidden="true"
+              className="h-8 w-8 shrink-0 text-zim-gold"
+            />
+            <h1 className="page-title min-w-0 [overflow-wrap:anywhere]">
+              {query
+                ? t("search.results.title_with_query", { query })
+                : tr(
+                    "search.results.title_default",
+                    "Search Diaspora Unlocked"
                   )}
-                </p>
-                <Button
-                  onClick={() => setRetry(value => value + 1)}
-                  className="mt-4 bg-zim-gold text-zim-black"
-                >
-                  {tr("search.retry", "Try again")}
-                </Button>
-              </div>
-            ) : !query ? (
-              <p className="py-12 text-white/80">
+            </h1>
+          </div>
+
+          <form
+            role="search"
+            className="mb-8 flex gap-3"
+            onSubmit={event => {
+              event.preventDefault();
+              setLocation(`/search?q=${encodeURIComponent(draft.trim())}`);
+            }}
+          >
+            <label htmlFor="site-search" className="sr-only">
+              {tr("search.results.title_default", "Search Diaspora Unlocked")}
+            </label>
+            <input
+              id="site-search"
+              type="search"
+              value={draft}
+              onChange={event => setDraft(event.target.value)}
+              className="min-w-0 flex-1 rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-white"
+            />
+            <Button type="submit" className="h-auto bg-zim-gold text-zim-black">
+              {tr("search.submit", "Search")}
+            </Button>
+          </form>
+          {current?.status === "partial" && (
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <p role="status">{t("search.partial")}</p>
+              <Button
+                variant="outline"
+                disabled={pending}
+                onClick={() => setRetry(value => value + 1)}
+              >
+                {t("search.retry")}
+              </Button>
+            </div>
+          )}
+          {loading ? (
+            <p role="status" className="py-12 text-white/80">
+              {tr("search.loading", "Searching…")}
+            </p>
+          ) : current?.status === "failed" ? (
+            <div
+              role="alert"
+              className="rounded-2xl border border-white/20 bg-slate-900 p-8"
+            >
+              <p>
                 {tr(
-                  "search.prompt",
-                  "Search for travel, investment, shopping, or Onesa AI."
+                  "search.failed",
+                  "Search is unavailable right now. Please try again."
                 )}
               </p>
-            ) : results.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {results.map((result, index) => {
-                  const Icon = iconByCategory[result.category] ?? Globe;
-                  return (
-                    <motion.div
-                      key={`${result.href}-${result.title}`}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3, delay: index * 0.05 }}
-                    >
-                      <Link href={result.href}>
-                        <Card className="surface-card h-full hover:shadow-xl transition-all cursor-pointer group border border-white/10 bg-white/[0.02] text-white">
-                          <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                            <div className="p-3 bg-zim-gold/10 rounded-xl text-zim-gold group-hover:bg-zim-gold group-hover:text-zim-black transition-colors">
-                              <Icon className="h-6 w-6" />
-                            </div>
-                            <div>
-                              <Badge
-                                variant="secondary"
-                                className="mb-1 bg-white/10 text-white border border-white/20"
-                              >
-                                {categoryLabels[result.category] ??
-                                  result.category}
-                              </Badge>
-                              <h2 className="text-xl font-semibold">
-                                {result.href === "/ntir" &&
-                                result.title === "NTIR Database"
-                                  ? t("investment.ntir.title")
-                                  : result.title}
-                              </h2>
-                            </div>
-                          </CardHeader>
-                          <CardContent>
-                            <p className=" text-sm mb-4">
-                              {result.summary ||
-                                tr(
-                                  "search.results.summary_fallback",
-                                  `Explore ${result.title.toLowerCase()} and related opportunities on Diaspora Unlocked.`
-                                )}
-                            </p>
-                            <div className="flex items-center text-zim-gold font-semibold text-sm group-hover:gap-2 transition-all">
-                              {tr(
-                                "search.results.view_details",
-                                "View Details"
-                              )}{" "}
-                              <ArrowRight className="h-4 w-4 ml-1" />
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </Link>
-                    </motion.div>
-                  );
-                })}
+              <Button
+                onClick={() => setRetry(value => value + 1)}
+                className="mt-4 bg-zim-gold text-zim-black"
+              >
+                {tr("search.retry", "Try again")}
+              </Button>
+            </div>
+          ) : !query ? (
+            <p className="py-12 text-white/80">
+              {tr(
+                "search.prompt",
+                "Search for travel, investment, shopping, or Onesa AI."
+              )}
+            </p>
+          ) : results.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {results.map(result => {
+                const Icon = iconByCategory[result.category] ?? Globe;
+                const titleKey = routeTitles.get(result.href);
+                return (
+                  <Link
+                    key={`${result.href}-${result.title}`}
+                    href={result.href}
+                    className="group flex min-w-0 items-start gap-3 rounded-xl border border-white/15 bg-white/[0.03] p-4 text-white hover:border-zim-gold/60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zim-gold sm:p-5"
+                  >
+                    <span className="rounded-lg bg-zim-gold/10 p-2.5 text-zim-gold">
+                      <Icon aria-hidden="true" className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0 flex-1 [overflow-wrap:anywhere]">
+                      <span className="text-sm text-white/70">
+                        {categoryLabels[result.category] ?? result.category}
+                      </span>
+                      <h2 className="mt-0.5 text-lg font-semibold">
+                        {titleKey ? t(titleKey) : result.title}
+                      </h2>
+                      {result.summary && (
+                        <p className="mt-2 text-sm text-white/80">
+                          {result.summary}
+                        </p>
+                      )}
+                    </div>
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="mt-3 h-4 w-4 shrink-0 text-zim-gold"
+                    />
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-20 bg-white/[0.02] rounded-3xl border border-white/10">
+              <Search className="h-16 w-16  mx-auto mb-6 opacity-40" />
+              <h2 className="text-2xl font-semibold mb-2 text-white">
+                {tr("search.no_results.title", "No results found")}
+              </h2>
+              <p className="mx-auto max-w-md [overflow-wrap:anywhere]">
+                {t("search.no_results.message", { query })}
+              </p>
+              <div className="mt-5 flex flex-wrap justify-center gap-5 text-zim-gold underline">
+                <Link href="/shop/products">{t("pilot.browse_products")}</Link>
+                <Link href="/travel">
+                  {t("nav.tourism", { defaultValue: "Travel" })}
+                </Link>
               </div>
-            ) : (
-              <div className="text-center py-20 bg-white/[0.02] rounded-3xl border border-white/10">
-                <Search className="h-16 w-16  mx-auto mb-6 opacity-40" />
-                <h2 className="text-2xl font-semibold mb-2 text-white">
-                  {tr("search.no_results.title", "No results found")}
-                </h2>
-                <p className=" max-w-md mx-auto">
-                  {tr(
-                    "search.no_results.message",
-                    `We couldn't find anything matching "{{query}}". Try searching for broader terms like "Investment", "Tourism", or "Onesa".`
-                  ).replace("{{query}}", query)}
-                </p>
-                <div className="mt-5 flex flex-wrap justify-center gap-5 text-zim-gold underline">
-                  <Link href="/shop/products">
-                    {t("pilot.browse_products")}
-                  </Link>
-                  <Link href="/travel">
-                    {t("nav.tourism", { defaultValue: "Travel" })}
-                  </Link>
-                </div>
-                <Button
-                  asChild
-                  className="mt-8 border-white/20 text-white hover:bg-white hover:text-zim-black"
-                  variant="outline"
-                >
-                  <Link href="/">
-                    {tr("search.no_results.return_home", "Return Home")}
-                  </Link>
-                </Button>
-              </div>
-            )}
-          </motion.div>
+              <Button
+                asChild
+                className="mt-8 border-white/20 text-white hover:bg-white hover:text-zim-black"
+                variant="outline"
+              >
+                <Link href="/">
+                  {tr("search.no_results.return_home", "Return Home")}
+                </Link>
+              </Button>
+            </div>
+          )}
         </div>
       </section>
     </Layout>

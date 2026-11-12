@@ -11,7 +11,8 @@ import ShopCurrencySelect from "../components/ShopCurrencySelect";
 import PilotReadinessNotice from "../components/PilotReadinessNotice";
 import { customerLanguage } from "@/domain/customerLanguage";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useLocation, useSearch } from "wouter";
+import { Link, useLocation } from "wouter";
+import { useSearch } from "wouter/use-browser-location";
 import {
   ArrowLeft,
   ShoppingCart,
@@ -20,6 +21,7 @@ import {
   Loader2,
   MessageCircle,
   Package,
+  Search,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -49,38 +51,24 @@ import {
 } from "../lib/checkoutSession";
 import { SHOP_CATEGORY_CONFIG } from "@/lib/shopCategories";
 
-type ProductCategory = "all" | "sports" | "crafts" | "food" | "beverage";
+import {
+  catalogCategories,
+  catalogCategory,
+  catalogQuery,
+  emptyCatalogFilters,
+  matchesCatalogQuery,
+  readCatalogFilters,
+  type CatalogFilters,
+} from "../lib/catalogFilters";
+
 type PaymentMethod = "manual_assisted" | "dummy_gateway";
 type DeliverySpeed = "normal" | "express";
 
 type PlacedOrder = OrderReceipt;
 
-type QueryState = {
-  queryCategory: ProductCategory;
-  querySegment: string;
-  queryAddProductSlug: string;
-};
-
 function normalizeWhatsAppPhone(raw: string) {
   const digits = String(raw ?? "").replace(/\D/g, "");
   return digits.length >= 8 && digits.length <= 15 ? digits : "4915147416152";
-}
-
-function normalizeProductCategory(raw: unknown): ProductCategory {
-  const value = String(raw ?? "")
-    .trim()
-    .toLowerCase();
-  if (value === "sports" || value === "crafts" || value === "food")
-    return value;
-  // Treat beverage-like categories as food for UI filters.
-  if (
-    value === "beverage" ||
-    value === "beverages" ||
-    value === "drinks" ||
-    value === "drink"
-  )
-    return "food";
-  return "all";
 }
 
 export default function ShopProducts() {
@@ -89,32 +77,16 @@ export default function ShopProducts() {
   const money = (cents: number) => formatMoney(cents, currency);
   const [pathname, setLocation] = useLocation();
   const search = useSearch();
-  const location = `${pathname}${search ? `?${search}` : ""}`;
+  const params = useMemo(() => new URLSearchParams(search), [search]);
+  const filters = useMemo(() => readCatalogFilters(params), [params]);
+  const { category, segment, query, availableOnly, product: selectedProduct } = filters;
+  const language = params.has("lng") ? customerLanguage(i18n.language) : undefined;
+  const filterQuery = catalogQuery(filters, language);
+  const hasFilters = Boolean(category !== "all" || segment || query || availableOnly || selectedProduct);
+  const resultCount = useRef<HTMLParagraphElement>(null);
+  const location = `${pathname}${search}`;
   const processedAddToCartQueryRef = useRef<string | null>(null);
-  const { queryCategory, querySegment, queryAddProductSlug } =
-    useMemo<QueryState>(() => {
-      const params = new URLSearchParams(search);
-      const category = params.get("category") ?? "";
-      const segment = String(params.get("segment") ?? "")
-        .trim()
-        .toLowerCase();
-      const add = String(params.get("add") ?? "")
-        .trim()
-        .toLowerCase();
-      const normalizedCategory = ["all", "sports", "crafts", "food"].includes(
-        category
-      )
-        ? (category as ProductCategory)
-        : "all";
-      return {
-        queryCategory: normalizedCategory,
-        querySegment: segment,
-        queryAddProductSlug: add,
-      };
-    }, [search]);
-
-  const [category, setCategory] = useState<ProductCategory>(queryCategory);
-  const [segment, setSegment] = useState(querySegment);
+  const queryAddProductSlug = params.get("add")?.trim().toLowerCase();
   const {
     products: allProducts,
     status: catalogStatus,
@@ -149,14 +121,18 @@ export default function ShopProducts() {
   const [confirmingPayment, setConfirmingPayment] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
   const [order, setOrder] = useState<PlacedOrder | null>(readOrderReceipt);
-  const mobileView =
-    new URLSearchParams(search).get("cart") === "1" ? "checkout" : "products";
+  const mobileView = params.get("cart") === "1" ? "checkout" : "products";
   const checkoutScrollRef = useCheckoutPanelHeight(mobileView);
+  const updateFilters = (changes: Partial<CatalogFilters>, replace = false) => {
+    const next = catalogQuery({ ...filters, ...changes }, language, mobileView === "checkout");
+    setLocation(`/shop/products${next}`, { replace });
+  };
+  const clearFilters = () => {
+    updateFilters(emptyCatalogFilters);
+    resultCount.current?.focus({ preventScroll: true });
+  };
   const setMobileView = (view: "products" | "checkout") => {
-    const params = new URLSearchParams(search);
-    if (view === "checkout") params.set("cart", "1");
-    else params.delete("cart");
-    setLocation(`/shop/products${params.size ? `?${params}` : ""}`);
+    setLocation(`/shop/products${catalogQuery(filters, language, view === "checkout")}`);
     requestAnimationFrame(() => {
       document
         .getElementById(
@@ -168,11 +144,6 @@ export default function ShopProducts() {
   const receiptOnly = Boolean(order && cart.length === 0);
   const supportsDummyGateway =
     import.meta.env.MODE === "development" || import.meta.env.MODE === "test";
-
-  useEffect(() => {
-    setCategory(queryCategory);
-    setSegment(querySegment);
-  }, [queryCategory, querySegment]);
 
   useEffect(() => {
     if (
@@ -202,22 +173,19 @@ export default function ShopProducts() {
     } else {
       addToSharedCart(targetProduct.id, targetProduct.stock_qty);
     }
-    const nextParams = new URLSearchParams();
-    if (queryCategory) nextParams.set("category", queryCategory);
-    if (querySegment) nextParams.set("segment", querySegment);
-    const nextHref = nextParams.toString()
-      ? `/shop/products?${nextParams.toString()}`
-      : "/shop/products";
-    setLocation(nextHref, { replace: true });
+    const nextParams = new URLSearchParams(search);
+    nextParams.delete("add");
+    setLocation(`/shop/products${nextParams.size ? `?${nextParams}` : ""}`, { replace: true });
   }, [
     allProducts,
     catalogStatus,
+    readiness,
     addToSharedCart,
     location,
     queryAddProductSlug,
-    queryCategory,
-    querySegment,
+    search,
     setLocation,
+    t,
   ]);
 
   useEffect(() => {
@@ -248,21 +216,20 @@ export default function ShopProducts() {
     }
   }, [paymentMethod, supportsDummyGateway]);
 
-  const availableOnly = new URLSearchParams(search).get("available") === "1";
-  const selectedProduct = new URLSearchParams(search).get("product");
-  const products = useMemo(
-    () =>
-      allProducts.filter(product => {
-        const normalized = normalizeProductCategory(product.category);
-        return (
-          (category === "all" || normalized === category) &&
-          matchesShopSegment(product, segment) &&
-          (!availableOnly || canRequestProduct(readiness, product)) &&
-          (!selectedProduct || product.slug === selectedProduct)
-        );
-      }),
-    [allProducts, category, segment, availableOnly, selectedProduct]
-  );
+  const products = useMemo(() => {
+    const matches = [];
+    for (const product of allProducts) {
+      if (category !== "all" && catalogCategory(product.category) !== category) continue;
+      if (!matchesShopSegment(product, segment)) continue;
+      if (availableOnly && !canRequestProduct(readiness, product)) continue;
+      if (selectedProduct && product.slug !== selectedProduct) continue;
+      const description = shopProductDescription(product, (key, fallback) =>
+        t(key, { defaultValue: fallback })
+      );
+      if (matchesCatalogQuery(product.name, description, query)) matches.push({ product, description });
+    }
+    return matches;
+  }, [allProducts, category, segment, availableOnly, readiness, selectedProduct, query, t]);
 
   useEffect(() => {
     if (catalogStatus === "ready") trackShopFunnel("product_discovery");
@@ -299,11 +266,6 @@ export default function ShopProducts() {
       lineTotal: number;
     }>;
   }, [cart, productsById, currency]);
-
-  const getLocalizedProductDescription = (product: ShopProduct) =>
-    shopProductDescription(product, (key, fallback) =>
-      t(key, { defaultValue: fallback })
-    );
 
   const invalidBasket =
     cartRows.length !== cart.length ||
@@ -561,105 +523,70 @@ export default function ShopProducts() {
                 <div
                   className={`lg:col-span-8 space-y-6${mobileView === "checkout" ? " hidden lg:block" : ""}`}
                 >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <div className="hidden sm:flex flex-wrap gap-2">
-                      {[
-                        {
-                          key: "all" as ProductCategory,
-                          label: t("shop.products.filters.all", {
-                            defaultValue: "All",
-                          }),
-                        },
-                        {
-                          key: "sports" as ProductCategory,
-                          label: t("shop.products.filters.sports", {
-                            defaultValue: "Sports",
-                          }),
-                        },
-                        {
-                          key: "crafts" as ProductCategory,
-                          label: t("shop.products.filters.crafts", {
-                            defaultValue: "Arts & Crafts",
-                          }),
-                        },
-                        {
-                          key: "food" as ProductCategory,
-                          label: t("shop.products.filters.food", {
-                            defaultValue: "Food & Nostalgia",
-                          }),
-                        },
-                      ].map(tab => (
-                        <Button
-                          key={tab.key}
-                          type="button"
-                          onClick={() => {
-                            setCategory(tab.key);
-                            setSegment("");
-                            setLocation(
-                              `/shop/products?category=${tab.key}${availableOnly ? "&available=1" : ""}`
-                            );
-                          }}
-                          className={`rounded-full px-5 py-2 h-auto text-[10px] font-black uppercase tracking-[0.2em] ${
-                            category === tab.key
-                              ? "bg-zim-gold text-black hover:bg-zim-gold/90"
-                              : "bg-white/10 border border-white/20 text-white hover:bg-white hover:text-black"
-                          }`}
-                        >
-                          {tab.label}
-                        </Button>
-                      ))}
+                  <div className="space-y-3 rounded-2xl border border-white/15 bg-white/[0.03] p-4">
+                    <label htmlFor="shop-product-search" className="sr-only">
+                      {t("shop.products.filters.search")}
+                    </label>
+                    <div className="relative">
+                      <Search aria-hidden="true" className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-slate-400" />
+                      <Input
+                        id="shop-product-search"
+                        type="search"
+                        value={query}
+                        placeholder={t("shop.products.filters.search")}
+                        onChange={event => updateFilters({ query: event.target.value, product: "" }, true)}
+                        className="min-h-11 border-white/20 bg-slate-950/70 pl-10 text-white placeholder:text-slate-400"
+                      />
                     </div>
-
-                    <div className="relative min-w-[190px]">
-                      <select
-                        aria-label={t("shop.products.filters.select_segment")}
-                        value={segment}
-                        onChange={event => {
-                          const nextSegment = event.target.value;
-                          setSegment(nextSegment);
-                          const query = nextSegment
-                            ? `/shop/products?category=${category}&segment=${nextSegment}`
-                            : `/shop/products?category=${category}`;
-                          setLocation(
-                            `${query}${availableOnly ? "&available=1" : ""}`
-                          );
-                        }}
-                        className="w-full rounded-full border border-zim-gold bg-zim-gold px-4 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-black outline-none focus:border-zim-gold sm:border-white/20 sm:bg-white/10 sm:text-white"
-                      >
-                        <option value="" className="bg-slate-900 text-white">
-                          {t("shop.products.filters.select_segment", {
-                            defaultValue: "Select Segment",
-                          })}
-                        </option>
-                        {availableSegments.map(item => (
-                          <option
-                            key={item.key}
-                            value={item.key}
-                            className="bg-slate-900 text-white"
-                          >
-                            {t(`shop.categories.${item.key}.title`) ||
-                              item.title}
-                          </option>
-                        ))}
-                      </select>
+                    <div className="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2">
+                      <label className="min-w-0 text-xs font-medium text-slate-300">
+                        {t("shop.products.filters.category")}
+                        <select
+                          value={category}
+                          onChange={event => updateFilters({ category: catalogCategory(event.target.value), segment: "", product: "" })}
+                          className="mt-1 block min-h-11 w-full rounded-lg border border-white/20 bg-slate-900 px-2.5 text-sm text-white focus-visible:outline-2 focus-visible:outline-zim-gold"
+                        >
+                          {catalogCategories.map(key => (
+                            <option key={key} value={key}>{t(`shop.products.filters.${key}`)}</option>
+                          ))}
+                        </select>
+                      </label>
+                      <label className="min-w-0 text-xs font-medium text-slate-300">
+                        {t("shop.products.filters.select_segment")}
+                        <select
+                          value={segment}
+                          onChange={event => updateFilters({ segment: event.target.value, product: "" })}
+                          className="mt-1 block min-h-11 w-full rounded-lg border border-white/20 bg-slate-900 px-2.5 text-sm text-white focus-visible:outline-2 focus-visible:outline-zim-gold"
+                        >
+                          <option value="">{t("shop.products.filters.all_segments")}</option>
+                          {availableSegments.map(item => (
+                            <option key={item.key} value={item.key}>
+                              {t(`shop.categories.${item.key}.title`, { defaultValue: item.title })}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    </div>
+                    <div className="flex flex-wrap items-center justify-between gap-x-3">
+                      <label className="inline-flex min-h-11 items-center gap-2 text-sm text-white">
+                        <input
+                          type="checkbox"
+                          checked={availableOnly}
+                          onChange={event => updateFilters({ availableOnly: event.target.checked })}
+                          className="size-4 accent-zim-gold"
+                        />
+                        {t("pilot.available_now")}
+                      </label>
+                      {hasFilters && (
+                        <button type="button" onClick={clearFilters} className="min-h-11 text-sm font-medium text-zim-gold underline underline-offset-4">
+                          {t("shop.products.clear_filters")}
+                        </button>
+                      )}
                     </div>
                   </div>
-
-                  <label className="mb-4 flex min-h-11 items-center gap-3 text-sm text-white">
-                    <input
-                      type="checkbox"
-                      checked={availableOnly}
-                      onChange={event => {
-                        const params = new URLSearchParams(search);
-                        if (event.target.checked) params.set("available", "1");
-                        else params.delete("available");
-                        setLocation(`/shop/products?${params}`);
-                      }}
-                    />
-                    {t("pilot.available_now", {
-                      defaultValue: "Available now",
-                    })}
-                  </label>
+                  <p ref={resultCount} tabIndex={-1} role="status" aria-atomic="true" className="text-sm text-slate-300">
+                    {catalogStatus === "ready" && t("shop.products.filters.result_count", { count: products.length })}
+                  </p>
                   <CatalogNotice
                     status={catalogStatus}
                     source={catalogSource}
@@ -675,37 +602,19 @@ export default function ShopProducts() {
                         </div>
                         <div>
                           <p className="text-white font-bold text-sm">
-                            {t("shop.products.empty_state", {
-                              defaultValue: "No products found",
-                            })}
+                            {t(hasFilters ? "shop.products.filters.no_matches" : "shop.products.empty_state")}
                           </p>
-                          <p className="text-white/45 text-xs mt-1">
-                            {availableOnly
+                          <p className="text-slate-300 text-sm mt-1">
+                            {availableOnly && !allProducts.some(product => canRequestProduct(readiness, product))
                               ? t("product_interest.available_empty")
-                              : category !== "all" || segment || selectedProduct
+                              : hasFilters
                                 ? t("shop.products.filter_hint")
                                 : t("shop.products.empty_hint")}
                           </p>
                         </div>
-                        {(category !== "all" ||
-                          segment ||
-                          availableOnly ||
-                          selectedProduct) && (
-                          <Button
-                            type="button"
-                            onClick={() => {
-                              setCategory("all");
-                              setSegment("");
-                              setLocation("/shop/products?category=all");
-                            }}
-                            className="rounded-full px-5 py-2 h-auto bg-white/10 border border-white/20 text-white hover:bg-white hover:text-black font-black text-[10px] uppercase tracking-[0.2em] transition-all"
-                          >
-                            {t("shop.products.clear_filters")}
-                          </Button>
-                        )}
                       </div>
                     ) : null}
-                    {products.map(product => (
+                    {products.map(({ product, description }) => (
                       <ProductCard
                         key={product.id}
                         product={product}
@@ -716,7 +625,8 @@ export default function ShopProducts() {
                         available={catalogStatus === "ready"}
                         onAdd={() => addToCart(product)}
                         onRemove={() => removeOne(product.id)}
-                        description={getLocalizedProductDescription(product)}
+                        description={description}
+                        catalogQuery={filterQuery}
                       />
                     ))}
                   </div>

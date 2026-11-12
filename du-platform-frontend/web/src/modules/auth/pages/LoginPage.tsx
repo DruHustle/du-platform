@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { safeRedirectPath } from "@/lib/safeRedirect";
+import { authPageLink, returnPathFromSearch } from "@/lib/safeRedirect";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { useSearch } from "wouter/use-browser-location";
 import {
   api,
   getApiErrorMessage,
@@ -28,9 +29,7 @@ import { primeCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
 export default function Login() {
   const { t } = useTranslation();
   const [, setLocation] = useLocation();
-  const params = new URLSearchParams(window.location.search);
-  const nextParam = params.get("next");
-  const nextPath = safeRedirectPath(nextParam);
+  const nextPath = returnPathFromSearch(useSearch());
   const adminLogin = nextPath === "/admin";
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -162,7 +161,7 @@ export default function Login() {
                     {t("auth.password") || "Password"}
                   </Label>
                   <Link
-                    href="/forgot-password"
+                    href={authPageLink("/forgot-password", nextPath)}
                     className="text-xs font-medium text-zim-gold hover:underline cursor-pointer"
                   >
                     {t("auth.forgot_password") || "Forgot Password?"}
@@ -249,7 +248,7 @@ export default function Login() {
                 <p className="text-xs text-white/70">
                   {t("auth.no_account") || "Don't have an account?"}{" "}
                   <Link
-                    href="/register"
+                    href={authPageLink("/register", nextPath)}
                     className="text-zim-gold font-bold hover:underline"
                   >
                     {t("auth.register_now") || "Create Account"}

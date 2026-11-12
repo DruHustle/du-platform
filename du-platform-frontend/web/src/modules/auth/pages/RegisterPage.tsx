@@ -21,12 +21,15 @@ import {
   Loader2,
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { useSearch } from "wouter/use-browser-location";
+import { authPageLink, returnPathFromSearch } from "@/lib/safeRedirect";
 import { api, getApiErrorMessage, saveAuthToken } from "@/lib/api";
 import { primeCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
 
 export default function Register() {
   const { t } = useTranslation();
   const [, setLocation] = useLocation();
+  const nextPath = returnPathFromSearch(useSearch());
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -137,7 +140,7 @@ export default function Register() {
       const accessToken = String(response?.data?.accessToken ?? "").trim();
       if (accessToken) saveAuthToken(accessToken);
       primeCurrentUserBootstrap(response?.data?.user ?? null);
-      setLocation("/");
+      setLocation(nextPath);
     } catch (err: any) {
       setError(
         getApiErrorMessage(err, "Registration failed. Please try again.")
@@ -506,7 +509,7 @@ export default function Register() {
               <p className="text-xs text-white/70">
                 {t("auth.have_account") || "Already have an account?"}{" "}
                 <Link
-                  href="/login"
+                  href={authPageLink("/login", nextPath)}
                   className="text-zim-gold font-bold hover:underline"
                 >
                   {t("auth.login_here") || "Sign In"}

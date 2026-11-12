@@ -106,6 +106,8 @@
     "reset": {
       "title": "Setha Iphasiwedi Entsha",
       "subtitle": "Khetha iphasiwedi eqinile ye-akhawunti yakho.",
+      "invalid_link": "Isixhumanisi lesi sokutshintsha iphaswedi kasisebenzi kumbe sesiphelelwe yisikhathi.",
+      "request_link": "Cela isixhumanisi esitsha sokutshintsha iphaswedi",
       "missing_token": "Ithokheni yokusetha kabusha ayikho. Sicela usebenzise isixhumanisi esithunyelwe ku-imeyili yakho.",
       "new_password": "Iphasiwedi Entsha",
       "show_password": "Bonisa iphasiwedi",
@@ -1382,7 +1384,12 @@
         "crafts": "Ubuciko Nezandla",
         "food": "Ukudla & Nostalgia",
         "all_segments": "Zonke izinhlobo zemikhiqizo",
-        "select_segment": "Khetha uhlobo lomkhiqizo"
+        "select_segment": "Khetha uhlobo lomkhiqizo",
+        "search": "Dinga imikhiqizo",
+        "category": "Isigaba",
+        "result_count_one": "Umkhiqizo otholakeleyo ({{count}})",
+        "result_count_other": "Imikhiqizo etholakeleyo ({{count}})",
+        "no_matches": "Akutholakalanga imikhiqizo ehambelana lokukhethileyo"
       },
       "loading": "Ilayisha imikhiqizo...",
       "empty_state": "Ayikho imikhiqizo etholakalayo kulesi sigaba okwamanje.",
@@ -1688,6 +1695,7 @@
     }
   },
   "search": {
+    "partial": "Eminye impumela yosesho kayitholakali okwamanje.",
     "categories": {
       "tourism": "Ukuvakasha",
       "investment": "Ukutshalwa kwemali",
@@ -1704,14 +1712,14 @@
     },
     "no_results": {
       "title": "Ayikho imiphumela etholiwe",
-      "message": "Asikwazanga ukuthola lutho olufana ne-\"{{query}}\". Zama ukusesha amagama abanzi njengokuthi \"Investment\", \"Tourism\", noma \"Onesa\".",
+      "message": "Asitholanga okuhambelana lokuthi “{{query}}”. Zama ibala elifitshane njengokuthi “indizamtshina” kumbe “indawo zokuhlala”.",
       "return_home": "Buyela Ekhaya"
     },
     "submit": "Dinga",
     "loading": "Siyadinga…",
     "failed": "Ukudinga akutholakali okwamanje. Sicela uzame futhi.",
     "retry": "Zama futhi",
-    "prompt": "Dinga ezokuvakasha, ukutshala imali, ukuthenga, kumbe i-Onesa AI.",
+    "prompt": "Dinga indizamtshina, indawo zokuhlala, impahla kumbe i-Onesa AI.",
     "description": "Thola imikhiqizo, izindawo zokuvakatshela, imibono yebhizimusi lamathuluzi eOnesa."
   },
   "error_boundary": {
@@ -2158,6 +2166,9 @@
     "explore": "Hlola",
     "my-trips": "Uhambo lwami",
     "description": "Uvakashela imuli, uya ekhaya kumbe uhlola indawo entsha? Hlela uhambo lokuya, lokusuka langaphakathi kweZimbabwe le-Afrika eseNingizimu, ubhukhe ngokuqondileyo kubahlinzeki.",
+    "choose-location": "Khetha indawo kuluhlu.",
+    "no-locations": "Ayikho indawo ehambelanayo. Zama ibizo ledolobho, ilizwe kumbe ikhodi yesikhumulo sendizamtshina.",
+    "clear-confirm": "Uyasusa imininingwane yohambo, okudingileyo, izindleko ozihlelileyo lokukhethileyo kulesi siphequluli?",
     "search-intro": "Qala ngezinsuku labahambi. Imininingwane iyagcinwa nxa utshintsha ingxenye.",
     "origin": "Isikhumulo sokusuka",
     "destination": "Isikhumulo sokuya / indawo",
@@ -2210,7 +2221,7 @@
     "funds-unknown": "Imithelo, izikhwama, izindleko ezidingekayo, okungezelelweyo lediphozithi ebuyiswayo: akwaziwa. Amanani okuhlela la akusilo inani lonke lohambo kumbe imali edingekayo. Imininingwane yomnikezeli ibhalwe yodwa ngaphansi.",
     "onesa-planner": "Hlela uhambo lweZimbabwe loOnesa",
     "private-trips": "Uhambo lokudinga okuyimfihlo okugciniweyo",
-    "private-note": "Ngena ukuze ugcine kumadivayisi ahlukene. I-akhawunti yakho kuphela ingabala kumbe isuse. Ukuvula okugciniweyo kuthatha indawo yohlaka lwesiphequluli.",
+    "private-note": "Uhambo lokusesha okugcinileyo kubonakala ku-akhawunti yakho kuphela. Nxa uvula okukodwa kwakho, kuthatha indawo yohlaka olukule idivayisi.",
     "sign-in": "Ngena ugcine okuyimfihlo",
     "trip-name": "Ibizo lohambo / lokudinga",
     "save-trip": "Gcina uhambo oluyimfihlo",
@@ -2222,6 +2233,10 @@
     "restore": "Vula kuhlaka",
     "restored": "Imininingwane egciniweyo ivuliwe kuhlaka.",
     "delete": "Cima",
+    "restore-confirm": "Ufuna ukufaka “{{name}}” esikhundleni sohlaka olukulesi siphequluli yini?",
+    "delete-confirm": "Ufuna ukususa “{{name}}” ohlwini lohambo lokudingileyo okugciniweyo yini?",
+    "deleted": "“{{name}}” kususiwe.",
+    "list-error": "Sehlulekile ukuvula uhlu lwakho olugciniweyo. Zama futhi.",
     "storage-error": "Akukwenzakalanga ukuvula uhambo olugciniweyo. Uhlaka lwakho lusekhona. Zama futhi ngemva kwesikhathi.",
     "alerts": "Izaziso zentengo",
     "alerts-note": "Ukuhlola okuzenzakalelayo akutholakali umhlinzeki engakavumi lemingcele yokuthumela. Akulantengo ezihlolwa ngemuva.",
