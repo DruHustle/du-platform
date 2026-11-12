@@ -79,6 +79,36 @@ export async function checkCatalogueDiscovery({ browser, base, language, locale,
       await page.getByRole("heading", { name: other.name, exact: true }).waitFor();
       assert.equal(new URL(page.url()).pathname, `/shop/product/${other.slug}`);
     }
+    if (width === 320 && language === "en") {
+      await page.setViewportSize({ width: 375, height: 667 });
+      for (const userMovedFocus of [false, true]) {
+        let releaseCatalogue;
+        const delayed = new Promise(resolve => { releaseCatalogue = resolve; });
+        const delayResponse = async route => { await delayed; await route.fallback(); };
+        await page.route("**/api/shop/products", delayResponse);
+        const browse = page.getByRole("link", { name: locale.pilot.browse_products, exact: true });
+        try {
+          await page.goto(`${base}/shop/product/${other.slug}#interest`, { waitUntil: "domcontentloaded" });
+          await page.getByText("Checking product availability…", { exact: true }).waitFor();
+          await browse.waitFor();
+          if (userMovedFocus) await browse.focus();
+          releaseCatalogue();
+          await page.locator("#interest button").waitFor();
+          if (userMovedFocus) {
+            assert(await browse.evaluate(link => link === document.activeElement));
+          } else {
+            await page.waitForFunction(() => {
+              const action = document.querySelector("#interest button").getBoundingClientRect();
+              return action.top >= 0 && action.bottom <= innerHeight &&
+                document.activeElement?.id === "interest";
+            });
+          }
+        } finally {
+          releaseCatalogue();
+          await page.unroute("**/api/shop/products", delayResponse);
+        }
+      }
+    }
     assert.deepEqual(errors, []);
   } finally {
     await context.close();
