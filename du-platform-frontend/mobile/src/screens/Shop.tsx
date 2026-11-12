@@ -3,11 +3,11 @@ import { Image, Pressable, Switch, Text, View } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import * as Crypto from "expo-crypto";
-import { request, type Catalog, type Product } from "../api";
+import { ApiError, request, type Catalog, type Product } from "../api";
 import { canRequestProduct, defaultShopFilters, filterShopProducts, shopCategories, type ShopFilters } from "../shopDiscovery";
 import { productImageUrl as imageUrl } from "../media";
 import { useCart } from "../cart";
-import { canEditRejectedRequest, readPendingOrder, type OrderPayload, type Order } from "../checkout";
+import { canEditRejectedRequest, readPendingOrder, readQuoteAcceptance, reconcileQuoteAcceptance, type QuoteAcceptanceAttempt, type OrderPayload, type Order } from "../checkout";
 import { saveSecurePayload, readSecurePayload, deleteSecurePayload } from "../securePayload";
 import { ORDER_KEY, PENDING_ORDER_KEY, PENDING_ORDER_COMMAND_KEY, useSession } from "../session";
 import { Action, Card, Copy, Field, Heading, Loading, Message, Screen, colors } from "../ui";
@@ -233,7 +233,7 @@ export function CartScreen() {
   return <Screen>
     <Heading>Basket</Heading>
     <Copy>Submitting a request does not complete a payment. The team will follow up with the next steps.</Copy>
-    {order && <OrderStatus order={order} />}
+    {order && <OrderStatus key={order.orderRef} order={order} />}
     {!restored && !error && <Loading label="Checking for a saved request…" />}
     {!!error && <Message error message={error} />}
     {!restored && !!error && <Action title="Retry loading saved request" secondary onPress={() => setRestoreAttempt(value => value + 1)} />}
@@ -266,11 +266,124 @@ export function CartScreen() {
 }
 
 type Workflow = {stage:string;version:number;quoteExpired:boolean;nextAction:string;carrier?:string;tracking?:string;history?:{command_id?:string}[];quotes?:{version:number;currency:string;total_cents:number;valid_until:string;items:{productId:number;productName:string;quantity:number;lineTotalCents:number;fulfilmentDetails?:string}[]}[]};
-function OrderStatus({order}:{order:Order}) {
-  const [workflow,setWorkflow]=useState<Workflow|null>(null);const [command,setCommand]=useState<{ref:string;version:number;requestId:string}|null>(null);const [error,setError]=useState("");const [notice,setNotice]=useState("");const [busy,setBusy]=useState(false);
-  const load=async()=>{setBusy(true);setError("");try{const [data,raw]=await Promise.all([request<Workflow>(`/shop/orders/${encodeURIComponent(order.orderRef)}/workflow`,{orderToken:order.manageToken}),SecureStore.getItemAsync(PENDING_ORDER_COMMAND_KEY)]);setWorkflow(data);if(raw){const saved=JSON.parse(raw);if(saved.ref===order.orderRef&&data.history?.some(event=>event.command_id===saved.requestId)){await SecureStore.deleteItemAsync(PENDING_ORDER_COMMAND_KEY);setCommand(null);setNotice("The previous action was saved.");}else if(saved.ref===order.orderRef)setCommand(saved);}}catch(e){setError(err(e));}finally{setBusy(false);}};
-  useEffect(()=>{void load();},[order.orderRef]);
-  const accept=async()=>{if(busy||!workflow)return;setBusy(true);setError("");try{let attempt=command;if(!attempt){attempt={ref:order.orderRef,version:workflow.version,requestId:Crypto.randomUUID()};await SecureStore.setItemAsync(PENDING_ORDER_COMMAND_KEY,JSON.stringify(attempt));setCommand(attempt);}await request(`/shop/orders/${encodeURIComponent(order.orderRef)}/accept-quote`,{method:"POST",orderToken:order.manageToken,body:{version:attempt.version,requestId:attempt.requestId}});await SecureStore.deleteItemAsync(PENDING_ORDER_COMMAND_KEY);setCommand(null);setNotice("Quote acceptance was recorded. Payment is arranged separately.");await load();}catch(e){setError(`${err(e)} Check the current status or retry the same action.`);}finally{setBusy(false);}};
-  const quote=workflow?.quotes?.at(-1);
-  return <Card><Heading>Request {order.orderRef}</Heading>{busy&&!workflow&&<Loading label="Loading request status…"/>}{!!error&&<Message error message={error}/>}{!!notice&&<Message message={notice}/>}<Action title="Refresh request status" secondary disabled={busy} onPress={()=>void load()}/>{workflow&&<><Copy>Status: {workflow.stage.replaceAll("_"," ")}</Copy><Copy>{workflow.nextAction}</Copy>{!!workflow.tracking&&<Copy>Delivery: {workflow.carrier} {workflow.tracking}</Copy>}{quote&&<><Copy>Final quote: {money(quote.total_cents,quote.currency)} · valid until {new Date(quote.valid_until).toLocaleString()}</Copy>{quote.items.map(item=><Copy key={item.productId}>{item.productName} × {item.quantity} · {money(item.lineTotalCents,quote.currency)}{item.fulfilmentDetails ? ` · ${item.fulfilmentDetails}` : ""}</Copy>)}{workflow.stage==="quote_sent"&&!workflow.quoteExpired&&<Action title={command?"Retry quote acceptance":"Accept final quote"} disabled={busy} onPress={()=>void accept()}/>}</>}</>}</Card>;
+function OrderStatus({ order }: { order: Order }) {
+  const [workflow, setWorkflow] = useState<Workflow | null>(null);
+  const [command, setCommand] = useState<QuoteAcceptanceAttempt | null>();
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [busy, setBusy] = useState(false);
+  const active = useRef<AbortController | null>(null);
+  const { orderRef, manageToken } = order;
+  const path = `/shop/orders/${encodeURIComponent(orderRef)}`;
+
+  const refresh = useCallback(async (signal: AbortSignal) => {
+    const data = await request<Workflow>(`${path}/workflow`, { orderToken: manageToken, signal });
+    if (signal.aborted) return;
+    setWorkflow(data);
+    setCommand(undefined);
+    const raw = await SecureStore.getItemAsync(PENDING_ORDER_COMMAND_KEY);
+    if (signal.aborted) return;
+    const saved = readQuoteAcceptance(raw);
+    if (raw !== null && !saved) {
+      await SecureStore.deleteItemAsync(PENDING_ORDER_COMMAND_KEY);
+      if (signal.aborted) return;
+      setNotice("Saved retry details were unreadable. Review the current request before continuing.");
+    }
+    const state = reconcileQuoteAcceptance(saved, orderRef, data);
+    setCommand(state === "pending" ? saved : null);
+    if (state === "changed" || state === "applied") {
+      setError("");
+      setNotice(state === "applied"
+        ? "Your quote acceptance was recorded. Payment is arranged separately."
+        : "Your request changed. Review its current status and quote before continuing.");
+      await SecureStore.deleteItemAsync(PENDING_ORDER_COMMAND_KEY);
+    }
+  }, [manageToken, orderRef, path]);
+
+  const load = useCallback(async () => {
+    if (active.current) return;
+    const controller = new AbortController();
+    active.current = controller;
+    setBusy(true);
+    setError("");
+    try {
+      await refresh(controller.signal);
+    } catch (failure) {
+      if (!controller.signal.aborted) setError(err(failure));
+    } finally {
+      if (!controller.signal.aborted) { active.current = null; setBusy(false); }
+    }
+  }, [refresh]);
+
+  useEffect(() => {
+    void load();
+    return () => { active.current?.abort(); active.current = null; };
+  }, [load]);
+
+  const accept = async () => {
+    if (active.current || command === undefined || !workflow || workflow.stage !== "quote_sent" || workflow.quoteExpired ||
+        (command && command.version !== workflow.version)) return;
+    const controller = new AbortController();
+    active.current = controller;
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const attempt = command ?? { ref: orderRef, version: workflow.version, requestId: Crypto.randomUUID() };
+      if (!command) {
+        await SecureStore.setItemAsync(PENDING_ORDER_COMMAND_KEY, JSON.stringify(attempt));
+        if (controller.signal.aborted) return;
+        setCommand(attempt);
+      }
+      const data = await request<Workflow>(`${path}/accept-quote`, {
+        method: "POST", orderToken: manageToken, signal: controller.signal,
+        body: { version: attempt.version, requestId: attempt.requestId },
+      });
+      if (controller.signal.aborted) return;
+      setWorkflow(data);
+      setCommand(null);
+      setNotice("Your quote acceptance was recorded. Payment is arranged separately.");
+      await SecureStore.deleteItemAsync(PENDING_ORDER_COMMAND_KEY);
+    } catch (failure) {
+      if (controller.signal.aborted) return;
+      if (failure instanceof ApiError && failure.status === 409) {
+        setWorkflow(null);
+        setError(err(failure));
+        try {
+          await refresh(controller.signal);
+        } catch (refreshFailure) {
+          if (!controller.signal.aborted) setError(`${err(refreshFailure)} Refresh the request status to check the latest quote.`);
+        }
+      } else {
+        setError(`${err(failure)} Refresh the request status before trying again.`);
+      }
+    } finally {
+      if (!controller.signal.aborted) { active.current = null; setBusy(false); }
+    }
+  };
+  const quote = workflow?.quotes?.at(-1);
+  return <Card>
+    <Heading>Request {orderRef}</Heading>
+    {busy && !workflow && <Loading label="Loading request status…" />}
+    {!!error && <Message error message={error} />}
+    {!!notice && <Message message={notice} />}
+    <Action title="Refresh request status" secondary disabled={busy} onPress={() => void load()} />
+    {workflow && <>
+      <Copy>Status: {workflow.stage.replaceAll("_", " ")}</Copy>
+      <Copy>{workflow.nextAction}</Copy>
+      {!!workflow.tracking && <Copy>Delivery: {workflow.carrier} {workflow.tracking}</Copy>}
+      {quote && <>
+        <Copy>Final quote {quote.version}: {money(quote.total_cents, quote.currency)} · valid until {new Date(quote.valid_until).toLocaleString()}</Copy>
+        {quote.items.map(item => <Copy key={item.productId}>
+          {item.productName} × {item.quantity} · {money(item.lineTotalCents, quote.currency)}
+          {item.fulfilmentDetails ? ` · ${item.fulfilmentDetails}` : ""}
+        </Copy>)}
+        {workflow.stage === "quote_sent" && !workflow.quoteExpired && <Action
+          title={command ? "Retry quote acceptance" : "Accept final quote"}
+          disabled={busy || command === undefined || Boolean(command && command.version !== workflow.version)}
+          onPress={() => void accept()}
+        />}
+      </>}
+    </>}
+  </Card>;
 }

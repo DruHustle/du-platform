@@ -91,23 +91,34 @@ for (const pathname of [
   assert.equal(response.status, 404, pathname);
   checkDocument(html, "/404", false);
 }
-for (const [pathname, destination] of [
+const redirects = [
   ["/index.html", "/"],
   ["/travel/", "/travel"],
   ["/travel.html", "/travel"],
   ...JSON.parse(await fs.readFile("du-platform-frontend/web/vercel.json", "utf8"))
     .redirects.filter(r => /tourism|onesa-ai-book-trip/.test(r.source))
     .map(r => [r.source, r.destination]),
-]) {
-  const { response } = await read(pathname);
-  assert(
-    [301, 308].includes(response.status),
-    `${pathname}: permanent redirect`
-  );
-  assert.equal(
-    new URL(response.headers.get("location"), base).pathname,
-    destination
-  );
+];
+// Bound simultaneous public requests while reporting failures in manifest order.
+for (let start = 0; start < redirects.length; start += 4) {
+  const batch = redirects.slice(start, start + 4);
+  const results = await Promise.allSettled(batch.map(([pathname]) => read(pathname)));
+  for (const [index, result] of results.entries()) {
+    const [pathname, destination] = batch[index];
+    if (result.status === "rejected") {
+      throw new Error(`${pathname}: redirect request failed`, { cause: result.reason });
+    }
+    const { response } = result.value;
+    assert(
+      [301, 308].includes(response.status),
+      `${pathname}: permanent redirect`
+    );
+    assert.equal(
+      new URL(response.headers.get("location"), base).pathname,
+      destination,
+      `${pathname}: redirect destination`
+    );
+  }
 }
 const { response: trackedResponse, html: tracked } = await read(
   "/travel?utm_source=seo-audit"

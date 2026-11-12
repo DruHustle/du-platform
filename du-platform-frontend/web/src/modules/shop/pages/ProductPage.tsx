@@ -125,7 +125,7 @@ export default function ProductPage() {
                   </p>
                   <PilotReadinessNotice />
                   {canRequestProduct(readiness, product) ? (
-                    <div className="flex flex-wrap items-center gap-3">
+                    <div id="interest" tabIndex={-1} className="flex scroll-mt-28 flex-wrap items-center gap-3">
                       <QuantityControl
                         name={product.name}
                         quantity={
@@ -145,7 +145,7 @@ export default function ProductPage() {
                       </Link>
                     </div>
                   ) : (
-                    <div id="interest" className="max-w-sm scroll-mt-28">
+                    <div id="interest" tabIndex={-1} className="max-w-sm scroll-mt-28">
                       <ProductInterest product={product} />
                     </div>
                   )}
