@@ -41,7 +41,11 @@ configured database and JWT secret. Development can use memory storage.
 
 - `/tourism`: destinations, planning information, and Onesa travel experiences.
 - `/investment`, `/investment/opportunities`, `/investment/projects/:id`, `/ntir`:
-  investment information and registry discovery.
+  investment information and registry discovery. The Investment page reads published impact
+  stories from `/api/impact/stories` at `/investment#impact-stories`. The content
+  owner can publish a reviewed story or hide it in the Impact tab of `/admin`. If
+  the feed is unavailable, the service owner should check the API and database
+  before retrying. The public page does not substitute static example stories.
 - `/shop`, `/shop/products`: catalogue, cart, and assisted checkout.
 - `/technology`: product and technology information.
 - `/onesa-ai-chat`, `/onesa-ai-book-trip`, and the tourism virtual/augmented

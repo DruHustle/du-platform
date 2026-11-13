@@ -1342,7 +1342,7 @@
       "markets_placeholder": "Markets (e.g. EU, UK)",
       "story_placeholder": "Story content",
       "testimonial_placeholder": "Testimonial",
-      "display_label": "Display on impact page",
+      "display_label": "Display on the Investment page",
       "add_story": "Add Impact Story",
       "badge_display": "Display",
       "badge_hide": "Don't display",
@@ -1743,6 +1743,12 @@
   "cancel": "Cancel",
   "close": "Close",
   "impact": {
+    "feed": {
+      "loading": "Loading impact stories…",
+      "unavailable": "Impact stories could not be loaded.",
+      "retry": "Try again",
+      "empty": "No impact stories have been published yet."
+    },
     "cta_button": "Start Partnership",
     "cta_subtitle": "We collaborate with diaspora leaders, institutions, and businesses to scale impact. Let",
     "cta_title": "Partner with us",

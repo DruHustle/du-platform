@@ -776,7 +776,7 @@ export default function AdminDashboard() {
                       }))
                     }
                   />
-                  {tr("admin.stories.display_label", "Display on impact page")}
+                  {tr("admin.stories.display_label", "Display on the Investment page")}
                 </label>
                 <Button
                   type="submit"

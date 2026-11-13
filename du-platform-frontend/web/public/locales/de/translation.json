@@ -1276,7 +1276,7 @@
       "markets_placeholder": "Märkte (z. B. EU, UK)",
       "story_placeholder": "Inhalt der Geschichte",
       "testimonial_placeholder": "Erfahrungsbericht",
-      "display_label": "Auf der Wirkungsseite anzeigen",
+      "display_label": "Auf der Investitionsseite anzeigen",
       "add_story": "Wirkungsgeschichte hinzufügen",
       "badge_display": "Anzeigen",
       "badge_hide": "Ausblenden",
@@ -1743,6 +1743,12 @@
   "cancel": "Stornieren",
   "close": "Schließen",
   "impact": {
+    "feed": {
+      "loading": "Wirkungsgeschichten werden geladen…",
+      "unavailable": "Die Wirkungsgeschichten konnten nicht geladen werden.",
+      "retry": "Erneut versuchen",
+      "empty": "Es wurden noch keine Wirkungsgeschichten veröffentlicht."
+    },
     "cta_button": "Partnerschaft starten",
     "cta_subtitle": "Wir arbeiten mit Diaspora-Führungskräften, Institutionen und Unternehmen zusammen, um die Wirkung zu steigern. Lassen",
     "cta_title": "Arbeiten Sie mit uns zusammen",

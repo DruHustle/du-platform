@@ -1280,7 +1280,7 @@
       "markets_placeholder": "Misika (semuenzaniso EU, UK)",
       "story_placeholder": "Zviri munyaya",
       "testimonial_placeholder": "Uchapupu",
-      "display_label": "Ratidzai papeji reshanduko",
+      "display_label": "Ratidza papeji rekudyara mari",
       "add_story": "Wedzerai nyaya yeshanduko",
       "badge_display": "Ratidzai",
       "badge_hide": "Musaratidze",
@@ -1747,6 +1747,12 @@
   "cancel": "Kanzura",
   "close": "Vharai",
   "impact": {
+    "feed": {
+      "loading": "Nyaya dzeshanduko dziri kuiswa…",
+      "unavailable": "Nyaya dzeshanduko hadzina kukwanisa kuiswa.",
+      "retry": "Edza zvakare",
+      "empty": "Hapana nyaya dzeshanduko dzakaburitswa parizvino."
+    },
     "cta_button": "Tanga Kudyidzana",
     "cta_subtitle": "Isu tinodyidzana nevatungamiriri vediaspora, masangano, uye mabhizinesi kuti tiwedzere maitiro. Regai",
     "cta_title": "Shamwaridzana nesu",
