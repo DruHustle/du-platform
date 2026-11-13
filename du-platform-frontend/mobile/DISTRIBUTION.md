@@ -32,9 +32,28 @@ scripts/sign-release-apk.sh verify downloaded-release.apk
 
 With Android SDK Platform 36 and Build Tools 36.0.0 installed, run `python3 scripts/test-release-apk.py` to exercise signing and rejection of tampered, debuggable and incorrectly signed samples. The test deletes its temporary files and disposable key.
 
+### Google Play App Bundle
+
+In the existing listing for `com.diasporaunlocked.app`, check the highest version code across all tracks and the registered **upload certificate** fingerprint under App integrity. Use the release code approved for the next upload, update the Expo and tracked native versions together, and build the full release bundle (without the CI arm64-only qualification override).
+
+```sh
+export EXPO_PUBLIC_API_URL=https://www.diasporaunlocked.com/api
+(cd android && bash gradlew :app:bundleRelease)
+```
+
+Use JDK 17 or later, Python 3.11 or later, and the Google bundletool JAR (`BUNDLETOOL_JAR`, version and SHA-256 pinned in the Android workflow). Set `PLAY_UPLOAD_KEYSTORE`, `PLAY_UPLOAD_ALIAS`, `PLAY_UPLOAD_STORE_PASSWORD`, `PLAY_UPLOAD_KEY_PASSWORD` and `PLAY_UPLOAD_CERT_SHA256` in the signing environment. Set `RELEASE_VERSION_CODE` to the intended numeric code. This verifies the package, manifest, version, JAR signature and selected upload certificate before recording the SHA-256. The certificate password stays in the environment.
+
+```sh
+bundle=android/app/build/outputs/bundle/release/app-release.aab
+python3 scripts/sign-play-bundle.py sign "$bundle" play-upload.aab --version-code "$RELEASE_VERSION_CODE"
+python3 scripts/sign-play-bundle.py verify play-upload.aab --version-code "$RELEASE_VERSION_CODE"
+```
+
+Upload the checked AAB to the existing testing track. Record the version code and processing outcome. Install from that track and verify sign-in, itinerary handoff and the account-deletion request with a disposable reviewer account. Promote the same tested bundle using the existing release settings and retain the Publishing overview submission status. The separate packaging workflow only uses a temporary QA key.
+
 ## iOS
 
-Register `com.diasporaunlocked.app` with the owner’s Apple Developer team and create the matching App Store Connect record. Select that team in Xcode and configure the app’s release signing and distribution profile. Enable Associated Domains for the registered app ID if the app uses universal links. Its entitlement names `applinks:www.diasporaunlocked.com`. Publish the AASA configuration for the actual team and bundle identifier to enable those links. The repository’s EAS production profile has no linked Expo project ID or Apple credentials. The checked-in native Xcode project can be archived independently. CI simulator apps cannot be installed through TestFlight or the App Store.
+Select the owner’s existing App Store Connect record for `com.diasporaunlocked.app`. Match the team, registered identifier, version history and next available build number before archiving. Select that team in Xcode and configure the app’s release signing and distribution profile. Enable Associated Domains for the registered app ID if the app uses universal links. Its entitlement names `applinks:www.diasporaunlocked.com`. Publish the AASA configuration for the actual team and bundle identifier to enable those links. The repository’s EAS production profile has no linked Expo project ID or Apple credentials. The checked-in native Xcode project can be archived independently. CI simulator apps cannot be installed through TestFlight or the App Store.
 
 On a Mac with the supported Xcode and a signed-in owner account, set `APPLE_TEAM_ID` to the team identifier. From this mobile directory create a Release archive for a physical iOS destination.
 

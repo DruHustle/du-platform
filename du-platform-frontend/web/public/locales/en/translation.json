@@ -1,4 +1,16 @@
 {
+  "deletion": {
+    "title": "Request account deletion",
+    "details": "Request permanent deletion of your Diaspora Unlocked account, saved trips and associated personal data. The operator reviews records held separately and any retention obligations before closing your account.",
+    "password": "Current password",
+    "confirm": "Confirm deletion request",
+    "receipt": "Request received. Reference: {{reference}}. The operator will contact you about completion.",
+    "sign_in": "Sign in to request account deletion",
+    "password_error": "Check your current password and try again.",
+    "retry": "The request could not be confirmed. Retry to recover your reference.",
+    "again": "Try again",
+    "loading": "Checking account…"
+  },
   "appearance": {
     "label": "Appearance",
     "system": "System (automatic)",
@@ -1616,11 +1628,13 @@
       "caption": "Food · Crafts · Supporter apparel",
       "collections_cta": "Explore categories"
     },
+    "delivery_coverage": "Approved delivery destinations: {{countries}}.",
+    "no_delivery_destinations": "Delivery is currently unavailable to all destinations.",
     "currency": {
       "label": "Shop currency",
-      "EUR": "EUR · Europe",
-      "USD": "USD · Zimbabwe",
-      "ZAR": "ZAR · South Africa",
+      "EUR": "EUR · Euro",
+      "USD": "USD · US dollar",
+      "ZAR": "ZAR · South African rand",
       "note": "Prices are estimates; final product and DHL delivery costs are confirmed before payment. Reference conversion: 15 October 2026."
     }
   },
@@ -2309,6 +2323,10 @@
       "changed": "The supplier amount has changed. Review the new amount shown before continuing.",
       "expired": "This option was not returned by the new search. Your trip is retained. Search again for alternatives.",
       "continue": "Continue to {{provider}}",
+      "checkout-owner": "{{provider}} handles checkout, payment and booking support. Confirm the final total and cancellation terms there.",
+      "affiliate-disclosure": "Awin can use cookies to attribute your booking. Diaspora Unlocked may earn a commission if you choose the referral link. You can also continue directly to Kiwi.com.",
+      "affiliate-choice": "Allow referral tracking and continue",
+      "referral-failed": "The referral link could not open. Your flight is still selected. Use the direct provider link or try again.",
       "no-reservation": "No reservation or price hold is created on DU. Booking and final prices are confirmed on the supplier site.",
       "nationality": "Guest nationality (2-letter country code)",
       "nationality-note": "For example DE, ZW, ZA or GB. Hotel rate eligibility can depend on nationality; do not enter a passport number.",

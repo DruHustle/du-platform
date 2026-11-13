@@ -1,4 +1,16 @@
 {
+  "deletion": {
+    "title": "Kumbira kudzima akaundi",
+    "details": "Kumbira kuti akaundi yako yeDiaspora Unlocked, nzendo dzakachengetwa nemashoko ako ane chekuita nayo zvidzimwe zvachose. Anotungamirira sevhisi anoongorora mashoko akachengetwa kumwe uye anofanira kuramba achichengetwa asati avhara akaundi.",
+    "password": "Pasiwedhi yaunoshandisa iye zvino",
+    "confirm": "Simbisa chikumbiro chekudzima",
+    "receipt": "Chikumbiro chagamuchirwa. Nhamba yacho: {{reference}}. Anotungamirira sevhisi achakuzivisa kana zvapera.",
+    "sign_in": "Pinda kuti ukumbire kudzima akaundi",
+    "password_error": "Tarisa pasiwedhi yako woedza zvakare.",
+    "retry": "Hatina kukwanisa kusimbisa chikumbiro. Edza zvakare kuti uwane nhamba yacho.",
+    "again": "Edza zvakare",
+    "loading": "Tiri kutarisa akaundi…"
+  },
   "appearance": {
     "label": "Chitarisiko",
     "system": "Tevera mudziyo (otomatiki)",
@@ -1554,11 +1566,13 @@
       "caption": "Chikafu · Mabasa emaoko · Mbatya dzevatsigiri",
       "collections_cta": "Ongorora zvikamu"
     },
+    "delivery_coverage": "Nyika dzinotenderwa kutumirwa zvinhu: {{countries}}.",
+    "no_delivery_destinations": "Parizvino hapana nyika yatiri kutumira zvinhu kwairi.",
     "currency": {
       "label": "Mari yechitoro",
-      "EUR": "EUR · KuEurope",
-      "USD": "USD · MuZimbabwe",
-      "ZAR": "ZAR · MuSouth Africa",
+      "EUR": "EUR · Yuro",
+      "USD": "USD · Dhora reUS",
+      "ZAR": "ZAR · Randi reSouth Africa",
       "note": "Mitengo iyi ndeyekufungidzira; mutengo wekupedzisira wezvinhu nekuendeswa neDHL zvinosimbiswa usati wabhadhara. Kushandurwa kwemari kunobva pa15 Gumiguru 2026."
     }
   },
@@ -2313,6 +2327,10 @@
       "changed": "Mari yemupi yachinja. Ongorora mari itsva yaratidzwa usati waenderera.",
       "expired": "Sarudzo iyi haina kudzoka pakutsvaga kutsva. Rwendo rwako rwachengetwa. Tsvaga dzimwe sarudzo.",
       "continue": "Enderera ku{{provider}}",
+      "checkout-owner": "{{provider}} ndiye anoita zvekubhuka, kubhadhara uye kukubatsira pabhuku rako. Tarisa mutengo wose nemitemo yokukanzura ikoko.",
+      "affiliate-disclosure": "Awin inogona kushandisa makuki kuona kuti wasvika sei pakubhuka. Diaspora Unlocked inogona kuwana komisheni kana ukashandisa chinongedzo ichi. Unogonawo kuenda kuKiwi.com zvakananga.",
+      "affiliate-choice": "Bvumira kuteverwa kwechinongedzo woenderera",
+      "referral-failed": "Chinongedzo chekomisheni hachina kuvhurika. Ndege yako ichakasarudzwa. Enda kumupi zvakananga kana kuedza zvakare.",
       "no-reservation": "DU haibhuki kana kubata mari. Kubhuka nemari yekupedzisira zvinosimbiswa pamupi.",
       "nationality": "Nyika yeugari yemuenzi (mavara maviri)",
       "nationality-note": "Somuenzaniso DE, ZW, ZA kana GB. Mari yehotera inogona kuenderana neugari; usanyora nhamba yepasipoti.",

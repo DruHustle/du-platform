@@ -1,3 +1,4 @@
+import DeliveryCoverage from "../components/DeliveryCoverage";
 import ProductInterest from "../components/ProductInterest";
 import { canRequestProduct } from "../lib/useShopCatalog";
 import { useEffect, useState } from "react";
@@ -123,6 +124,7 @@ export default function ProductPage() {
                         : "shop.products.stock.out"
                     )}
                   </p>
+                  <DeliveryCoverage />
                   <PilotReadinessNotice />
                   {canRequestProduct(readiness, product) ? (
                     <div id="interest" tabIndex={-1} className="flex scroll-mt-28 flex-wrap items-center gap-3">

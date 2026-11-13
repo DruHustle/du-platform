@@ -1,4 +1,16 @@
 {
+  "deletion": {
+    "title": "Cela ukucitshwa kwe-akhawunti",
+    "details": "Cela ukuthi i-akhawunti yakho yeDiaspora Unlocked, uhambo olugcinileyo kanye lemininingwane yakho ephathelane layo kucitshwe unomphela. Umqhubi uhlola amarekhodi agcinwe eceleni lalawo okumele agcinwe engakavali i-akhawunti.",
+    "password": "Iphasiwedi oyisebenzisayo",
+    "confirm": "Qinisekisa isicelo sokucitshwa",
+    "receipt": "Isicelo sesamukelwe. Inombolo yaso: {{reference}}. Umqhubi uzakubikela nxa sekuqediwe.",
+    "sign_in": "Ngena ukuze ucele ukucitshwa kwe-akhawunti",
+    "password_error": "Hlola iphasiwedi yakho uzame futhi.",
+    "retry": "Sehlulekile ukuqinisekisa isicelo. Zama futhi ukuze uthole inombolo yaso.",
+    "again": "Zama futhi",
+    "loading": "Sihlola i-akhawunti…"
+  },
   "appearance": {
     "label": "Ukubukeka",
     "system": "Landela idivayisi (okuzenzakalelayo)",
@@ -1554,11 +1566,13 @@
       "caption": "Ukudla · Imisebenzi yezandla · Izigqoko zabasekeli",
       "collections_cta": "Hlola izigaba"
     },
+    "delivery_coverage": "Amazwe avunyelweyo ukuthunyelwa impahla: {{countries}}.",
+    "no_delivery_destinations": "Okwamanje kasithumeli impahla kuloba yiliphi ilizwe.",
     "currency": {
       "label": "Imali yesitolo",
-      "EUR": "EUR · EYurophu",
-      "USD": "USD · EZimbabwe",
-      "ZAR": "ZAR · EMzansi Afrika",
+      "EUR": "EUR · I-euro",
+      "USD": "USD · Idola laseMelika",
+      "ZAR": "ZAR · Irandi leNingizimu Afrika",
       "note": "Amanani la ayizilinganiso; intengo yokucina yezinto lokuhambisa ngeDHL kuqinisekiswa ungakabhadali. Ukuguqulwa kwemali kusekelwe kumhlaka 15 Mfumfu 2026."
     }
   },
@@ -2313,6 +2327,10 @@
       "changed": "Inani lomnikezeli selintshintshile. Hlola inani elitsha elibonisiweyo ungaqhubekanga.",
       "expired": "Okukhethwayo lokhu akubuyanga ekudingweni okutsha. Uhambo lwakho lugciniwe. Dinga okunye.",
       "continue": "Qhubeka ku{{provider}}",
+      "checkout-owner": "U-{{provider}} nguye ophatha ukubhukha, ukubhadala lokuncedisa ngokubhukha. Hlola inani lokucina lemibandela yokwesula khona.",
+      "affiliate-disclosure": "I-Awin ingasebenzisa amakhukhi ukuze ibone ukuthi ukubhukha kwakho kuvela ngaphi. I-Diaspora Unlocked ingathola ikhomishini nxa usebenzisa ilinki le. Ungaya lakuKiwi.com mathupha.",
+      "affiliate-choice": "Vumela ukulandelwa kwelinki uqhubeke",
+      "referral-failed": "Ilinki yekhomishini kayivulekanga. Indizamtshina oyikhethileyo ilokhu ikhethiwe. Sebenzisa ilinki yomnikezeli kumbe uzame futhi.",
       "no-reservation": "I-DU ayibhukhi kumbe ibambe inani. Ukubhukha lamanani okucina kuqinisekiswa kusayithi yomnikezeli.",
       "nationality": "Ubuzwe besivakashi (ikhodi yelizwe elezinhlamvu ezimbili)",
       "nationality-note": "Isibonelo DE, ZW, ZA kumbe GB. Inani lehhotela lingaya ngobuzwe; ungafaki inombolo yepasipoti.",

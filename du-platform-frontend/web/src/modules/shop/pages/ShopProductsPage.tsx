@@ -1,3 +1,4 @@
+import DeliveryCoverage from "../components/DeliveryCoverage";
 import ProductInterest from "../components/ProductInterest";
 import { canRequestProduct } from "../lib/useShopCatalog";
 import { Textarea } from "@/components/ui/textarea";
@@ -504,6 +505,7 @@ export default function ShopProducts() {
                         "Build your basket and send an order request. Before you pay, the team confirms stock, DHL delivery to your destination and final costs.",
                     })}
                   </p>
+                  <DeliveryCoverage />
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
                   <ShopCurrencySelect compact disabled={placingOrder} />

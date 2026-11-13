@@ -4,7 +4,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import * as Crypto from "expo-crypto";
 import { ApiError, request, type Catalog, type Product } from "../api";
-import { canRequestProduct, defaultShopFilters, filterShopProducts, shopCategories, type ShopFilters } from "../shopDiscovery";
+import { canRequestProduct, deliveryCoverage, defaultShopFilters, filterShopProducts, shopCategories, type ShopFilters } from "../shopDiscovery";
 import { productImageUrl as imageUrl } from "../media";
 import { useCart } from "../cart";
 import { canEditRejectedRequest, readPendingOrder, readQuoteAcceptance, reconcileQuoteAcceptance, type QuoteAcceptanceAttempt, type OrderPayload, type Order } from "../checkout";
@@ -26,11 +26,13 @@ export function ShopScreen({ route }: { route?: { params?: Partial<ShopFilters> 
   const { data, loading, error, load } = useCatalog();
   const filters = { ...defaultShopFilters, ...route?.params };
   const products = data ? filterShopProducts(data, filters) : [];
+  const coverage = data && !loading && !error && deliveryCoverage(data);
   const filtered = Boolean(filters.q.trim() || filters.availableOnly || filters.category !== "all");
   const quantity = cart.items.reduce((count, item) => count + item.quantity, 0);
   return <Screen>
     <Heading>Shop</Heading>
     <Copy>Explore Zimbabwean products, check availability and request updates.</Copy>
+    {!!coverage && <Copy>{coverage}</Copy>}
     <Action title={`Basket (${quantity})`} onPress={() => navigation.navigate("Cart")} secondary />
     <Card>
       <Field label="Search products" placeholder="Product name or description" value={filters.q}
@@ -79,6 +81,7 @@ export function ProductScreen({ route }: { route: { params: { slug: string } } }
   const cart = useCart();
   const { data, loading, error, load } = useCatalog();
   const product = data?.products.find(item => item.slug === route.params.slug);
+  const coverage = data && !loading && !error && deliveryCoverage(data);
   const orderable = data && product && !loading && !error && canRequestProduct(data, product);
   const image = product && imageUrl(product.image_url, product.image_api_url);
   return <Screen>
@@ -94,6 +97,7 @@ export function ProductScreen({ route }: { route: { params: { slug: string } } }
         {image && <Image source={{ uri: image }} style={{ height: 220, width: "100%", borderRadius: 10 }} resizeMode="cover" />}
         <Copy>{product.description}</Copy>
         <Copy>Indicative price: {money(product.price_cents, product.currency)}</Copy>
+        {!!coverage && <Copy>{coverage}</Copy>}
         {orderable ? <>
           <Copy>Available to request through assisted ordering.</Copy>
           <Action title="Add to basket" onPress={() => { cart.add(product); navigation.navigate("Cart"); }} />

@@ -802,7 +802,68 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "provider",
+                        "category",
+                        "retrievedAt",
+                        "quotes",
+                        "rejectedCount"
+                      ],
+                      "properties": {
+                        "provider": {
+                          "enum": [
+                            "Kiwi.com",
+                            "Pilot"
+                          ]
+                        },
+                        "category": {
+                          "enum": [
+                            "flights",
+                            "stays"
+                          ]
+                        },
+                        "retrievedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "quotes": {
+                          "type": "array",
+                          "maxItems": 20,
+                          "items": {
+                            "$ref": "#/components/schemas/TravelQuote"
+                          }
+                        },
+                        "rejectedCount": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            }
           },
           "default": {
             "description": "Error, validation failure, rate limit or service unavailable",
@@ -822,7 +883,48 @@
         "summary": "Recheck a supplier observation",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "quote",
+                        "changed"
+                      ],
+                      "properties": {
+                        "quote": {
+                          "$ref": "#/components/schemas/TravelQuote"
+                        },
+                        "changed": {
+                          "type": "boolean"
+                        },
+                        "referralAvailable": {
+                          "type": "boolean",
+                          "description": "Returned only to clients requesting a placement. The provider relationship and exact link are checked again on explicit continuation."
+                        }
+                      }
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            }
           },
           "default": {
             "description": "Error, validation failure, rate limit or service unavailable",
@@ -831,6 +933,31 @@
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "channel",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "web",
+                "android",
+                "ios"
+              ]
+            },
+            "description": "Request optional referral availability for this placement. iOS uses the direct provider link."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TravelQuote"
               }
             }
           }
@@ -2223,6 +2350,273 @@
           }
         }
       }
+    },
+    "/travel/referrals/awin": {
+      "post": {
+        "summary": "Prepare a consented flight referral to the selected Kiwi.com offer",
+        "description": "No booking or payment is made. The link-issuance record is idempotent by the signed quote ID. Keep the original supplier link available on partner or storage failure.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "channel",
+                  "quote",
+                  "consent"
+                ],
+                "properties": {
+                  "channel": {
+                    "enum": [
+                      "web",
+                      "android"
+                    ]
+                  },
+                  "quote": {
+                    "$ref": "#/components/schemas/TravelQuote"
+                  },
+                  "consent": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "url"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "format": "uri",
+                          "description": "Awin-generated tracking URL to the exact selected offer."
+                        }
+                      }
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid consent, placement or signed observation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "The price review window expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Affiliate programme, referral storage or partner link unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/deletion-request": {
+      "post": {
+        "summary": "Request deletion of the signed-in account after current password confirmation",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Durable receipt with requestId and requested status"
+          },
+          "default": {
+            "description": "Validation, authentication, permission or storage failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "accountId",
+                  "password",
+                  "confirm"
+                ],
+                "properties": {
+                  "accountId": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "writeOnly": true
+                  },
+                  "confirm": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/service-inbox/deletion-requests": {
+      "get": {
+        "summary": "List pending account-deletion requests as a verified administrator",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated pending requests and account identities"
+          },
+          "default": {
+            "description": "Validation, authentication, permission or storage failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000,
+              "default": 1
+            }
+          }
+        ]
+      }
+    },
+    "/admin/service-inbox/deletion-requests/{reference}/fulfill": {
+      "post": {
+        "summary": "Fulfill an authenticated deletion request after reviewing separately held records",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fulfilled receipt for the request reference"
+          },
+          "default": {
+            "description": "Validation, authentication, permission or storage failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "associatedDataReviewed",
+                  "customerNotificationArranged"
+                ],
+                "properties": {
+                  "associatedDataReviewed": {
+                    "const": true
+                  },
+                  "customerNotificationArranged": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "reference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -2661,6 +3055,263 @@
             ]
           }
         }
+      },
+      "TravelQuote": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "identity": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "provider": {
+            "type": "string",
+            "enum": [
+              "Kiwi.com",
+              "Pilot"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "flights",
+              "stays"
+            ]
+          },
+          "providerReference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 12000
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/TravelCriteria"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 250
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "EUR",
+              "GBP",
+              "USD",
+              "ZAR"
+            ]
+          },
+          "priceBasis": {
+            "type": "string",
+            "enum": [
+              "party-total",
+              "unspecified"
+            ]
+          },
+          "retrievedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "reviewAfter": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "bookingUrl": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "legs": {
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "route": {
+                  "minItems": 2,
+                  "maxItems": 12,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{3}$"
+                  }
+                },
+                "departureTime": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:[+-]\\d{2}:\\d{2}|Z)?$"
+                },
+                "arrivalTime": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:[+-]\\d{2}:\\d{2}|Z)?$"
+                },
+                "durationSeconds": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 604800
+                },
+                "stops": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 10
+                },
+                "cabin": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 100
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "airlines": {
+                  "maxItems": 12,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 100
+                  }
+                }
+              },
+              "required": [
+                "route",
+                "departureTime",
+                "arrivalTime",
+                "durationSeconds",
+                "stops",
+                "cabin",
+                "airlines"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "baggage": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "personalItem": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "cabinBag": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "checkedBag": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "personalItem",
+                  "cabinBag",
+                  "checkedBag"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "address": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reviewRating": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reviewCount": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "signature": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "id",
+          "identity",
+          "provider",
+          "category",
+          "providerReference",
+          "criteria",
+          "title",
+          "price",
+          "currency",
+          "priceBasis",
+          "retrievedAt",
+          "reviewAfter",
+          "bookingUrl",
+          "legs",
+          "baggage",
+          "address",
+          "reviewRating",
+          "reviewCount",
+          "signature"
+        ],
+        "additionalProperties": false,
+        "description": "Signed supplier observation. Return the complete object unchanged for price revalidation. Kiwi.com flights use party totals and an opaque checkout URL. Pilot stays use an unspecified price basis."
       }
     }
   }

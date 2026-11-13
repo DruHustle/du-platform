@@ -7,6 +7,7 @@ import { ApiError, request, requestOnesaReply, type ChatMessage } from "../api";
 import { onesaProductLinks } from "../onesaProductLinks";
 import { shopDestination, isSitePath } from "../shopDiscovery";
 import { readSearchResponse, type SearchResponse } from "../searchResults";
+import { readContactAttempt, sendContactAttempt, type ContactAttempt } from "../contact";
 import { PENDING_CONTACT_KEY } from "../session";
 import { saveSecurePayload, readSecurePayload, deleteSecurePayload } from "../securePayload";
 import { Action, Card, Copy, Field, Heading, Message, Screen, styles } from "../ui";
@@ -84,10 +85,88 @@ export function AssistantScreen() {
   </Screen>;
 }
 export function ContactScreen() {
-  const [name,setName]=useState("");const [email,setEmail]=useState("");const [subject,setSubject]=useState("");const [message,setMessage]=useState("");const [busy,setBusy]=useState(false);const [feedback,setFeedback]=useState("");const [error,setError]=useState("");const [pending,setPending]=useState<{name:string;email:string;subject:string;message:string;requestId:string;language:string;module:string}|null>(null);
-  useEffect(()=>{void readSecurePayload(PENDING_CONTACT_KEY).then(raw=>{if(!raw)return;const saved=JSON.parse(raw);setPending(saved);setName(saved.name);setEmail(saved.email);setSubject(saved.subject);setMessage(saved.message);setError("A previous response was not confirmed. Retry the same message.");}).catch(()=>setError("Could not read your saved message on this device."));},[]);
-  const send=async()=>{if(busy)return;setBusy(true);setError("");try{const body=pending||{name:name.trim(),email:email.trim(),subject:subject.trim(),message:message.trim(),requestId:Crypto.randomUUID(),language:"en",module:"general"};if(!pending){await saveSecurePayload(PENDING_CONTACT_KEY,JSON.stringify(body));setPending(body);}await request("/notifications/contact",{method:"POST",body});await deleteSecurePayload(PENDING_CONTACT_KEY);setPending(null);setName("");setEmail("");setSubject("");setMessage("");setFeedback("Your message was received. The team will follow up when possible.");}catch(e){if(e instanceof ApiError&&e.status===400){await deleteSecurePayload(PENDING_CONTACT_KEY);setPending(null);setError(errorMessage(e));}else setError(`${errorMessage(e)} Retry the same message to avoid duplicates.`);}finally{setBusy(false);}};
-  return <Screen><Heading>Contact and help</Heading><Copy>Send a message to the Diaspora Unlocked team. Please do not include passwords or payment details.</Copy><Card><Field label="Full name" value={name} onChangeText={setName} editable={!pending} autoComplete="name"/><Field label="Email address" value={email} onChangeText={setEmail} editable={!pending} keyboardType="email-address" autoCapitalize="none" autoComplete="email"/><Field label="Subject" value={subject} onChangeText={setSubject} editable={!pending}/><Field label="Message" value={message} onChangeText={setMessage} editable={!pending} multiline maxLength={4000}/>{!!error&&<Message error message={error}/>}{!!feedback&&<Message message={feedback}/>}<Action title={busy?"Sending…":pending?"Retry same message":"Send message"} disabled={busy||!name.trim()||!email.trim()||!subject.trim()||!message.trim()} onPress={()=>void send()}/></Card><Action title="Email info@diasporaunlocked.com" secondary onPress={()=>void Linking.openURL("mailto:info@diasporaunlocked.com").catch(()=>setError("Could not open your email app."))}/></Screen>;
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [restored, setRestored] = useState(false);
+  const [restoreAttempt, setRestoreAttempt] = useState(0);
+  const [receipt, setReceipt] = useState("");
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState<ContactAttempt | null>(null);
+  const sending = useRef(false);
+  useEffect(() => {
+    let active = true;
+    setError("");
+    void readSecurePayload(PENDING_CONTACT_KEY).then(raw => {
+      if (!active) return;
+      if (raw) {
+        const saved = readContactAttempt(raw);
+        setPending(saved);
+        setName(saved.name); setEmail(saved.email); setSubject(saved.subject); setMessage(saved.message);
+        setError("A previous message was not confirmed. Retry the same message.");
+      }
+      setRestored(true);
+    }).catch(() => {
+      if (active) setError("Could not read your saved message on this device.");
+    });
+    return () => { active = false; };
+  }, [restoreAttempt]);
+
+  async function send() {
+    if (sending.current || !restored) return;
+    sending.current = true;
+    setBusy(true); setReceipt(""); setError("");
+    try {
+      const body = pending || {
+        name: name.trim(), email: email.trim(), subject: subject.trim(), message: message.trim(),
+        requestId: Crypto.randomUUID(), language: "en", module: "general",
+      };
+      if (!pending) {
+        await saveSecurePayload(PENDING_CONTACT_KEY, JSON.stringify(body));
+        setPending(body);
+      }
+      const confirmed = await sendContactAttempt(body);
+      await deleteSecurePayload(PENDING_CONTACT_KEY);
+      setPending(null); setName(""); setEmail(""); setSubject(""); setMessage("");
+      setReceipt(confirmed);
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 400) {
+        try {
+          await deleteSecurePayload(PENDING_CONTACT_KEY);
+          setPending(null);
+          setError(errorMessage(e));
+        } catch {
+          setError("Could not clear the saved request. Retry the same message.");
+        }
+      } else {
+        setError(`${errorMessage(e)} Retry the same message to avoid duplicates.`);
+      }
+    } finally {
+      sending.current = false;
+      setBusy(false);
+    }
+  }
+  const editable = restored && !pending && !busy;
+  return <Screen>
+    <Heading>Contact and help</Heading>
+    <Copy>Send a message to the Diaspora Unlocked team. Please do not include passwords or payment details.</Copy>
+    <Card>
+      <Field label="Full name" value={name} onChangeText={setName} editable={editable} autoComplete="name" maxLength={120} />
+      <Field label="Email address" value={email} onChangeText={setEmail} editable={editable} keyboardType="email-address" autoCapitalize="none" autoComplete="email" maxLength={254} />
+      <Field label="Subject" value={subject} onChangeText={setSubject} editable={editable} maxLength={200} />
+      <Field label="Message" value={message} onChangeText={setMessage} editable={editable} multiline maxLength={4000} />
+      {!!error && <Message error message={error} />}
+      {!!receipt && <Message message={`Your message was received. Reference: ${receipt}`} />}
+      {!restored && !!error && <Action title="Retry loading saved message" secondary onPress={() => setRestoreAttempt(n => n + 1)} />}
+      <Action title={busy ? "Sending…" : pending ? "Retry same message" : "Send message"}
+        disabled={!restored || busy || !name.trim() || !email.trim() || !subject.trim() || !message.trim()}
+        onPress={() => void send()} />
+    </Card>
+    <Action title="Email info@diasporaunlocked.com" secondary onPress={() =>
+      void Linking.openURL("mailto:info@diasporaunlocked.com").catch(() => setError("Could not open your email app."))} />
+  </Screen>;
 }
 export function SearchScreen() {
   const navigation = useNavigation<any>();
