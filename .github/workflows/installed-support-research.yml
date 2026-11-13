@@ -1,7 +1,7 @@
-name: Installed support recovery, consent and research qualification
+name: Android installed support recovery and research retry
 on:
   push:
-    branches: [validation/installed-support-and-research-20261113]
+    branches: [validation/android-support-recovery-20261113]
 permissions:
   contents: read
 concurrency:
@@ -13,33 +13,6 @@ env:
   CI: '1'
   EXPO_NO_TELEMETRY: '1'
 jobs:
-  ios:
-    runs-on: macos-26
-    timeout-minutes: 85
-    defaults:
-      run:
-        working-directory: du-platform-frontend/mobile
-    steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
-        with:
-          node-version: '24'
-          cache: npm
-          cache-dependency-path: du-platform-frontend/mobile/package-lock.json
-      - run: npm ci --no-audit --no-fund
-      - run: pod install --project-directory=ios
-      - run: |
-          cp scripts/store-screens/ExtendedJourneyTests.swift scripts/store-screens/DUNativeSmokeTests.swift
-          ruby scripts/store-screens/prepare-ui-tests.rb ios/DiasporaUnlocked.xcodeproj
-      - name: Run installed iPhone support, consent and research journeys
-        run: |
-          python3 scripts/store-screens/contact-fixture.py 9093 > "$RUNNER_TEMP/fixture.log" 2>&1 &
-          fixture=$!
-          trap 'kill "$fixture" 2>/dev/null || true' EXIT
-          python3 scripts/store-screens/extended-ios.py
-          grep 'PASS isolated inbox' "$RUNNER_TEMP/fixture.log"
   android:
     runs-on: ubuntu-24.04
     timeout-minutes: 85
@@ -97,9 +70,13 @@ jobs:
           arch: x86_64
           target: google_apis
           profile: pixel_6
+          cores: 4
+          ram-size: 4096M
           force-avd-creation: true
           disable-animations: true
           script: |
+            adb shell input keyevent KEYCODE_WAKEUP
+            adb shell wm dismiss-keyguard
             adb install -r "$RUNNER_TEMP/screen-app.apk"
             adb reverse tcp:9093 tcp:9093
             python3 du-platform-frontend/mobile/scripts/store-screens/extended-android.py

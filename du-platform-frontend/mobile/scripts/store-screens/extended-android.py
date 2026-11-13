@@ -10,7 +10,18 @@ screen=live.screen
 def home():
     screen.adb('shell','am','force-stop',screen.PACKAGE)
     screen.adb('shell','am','start','-W','-n',screen.PACKAGE+'/.MainActivity')
-    screen.wait_for_label('Explore what connects us')
+    deadline=time.monotonic()+90
+    while time.monotonic()<deadline:
+        doc=screen.tree()
+        if screen.node_for(doc,'Explore what connects us') is not None:
+            return
+        if any(n.get('package')=='android' and "Pixel Launcher isn't responding" in n.get('text','') for n in doc.iter('node')):
+            close=next((n for n in doc.iter('node') if n.get('package')=='android' and n.get('text')=='Close app'),None)
+            if close is not None:
+                live.tap(close)
+                screen.adb('shell','am','start','-W','-n',screen.PACKAGE+'/.MainActivity')
+        time.sleep(0.6)
+    raise AssertionError('Home did not load')
 
 def find_native(label, kind=None):
     for direction in [1,-1,1]:
