@@ -112,7 +112,10 @@ jobs:
           python3 scripts/sign-play-bundle.py sign "$bundle" "$qa_dir/verified.aab" --version-code "$version"
           python3 scripts/sign-play-bundle.py verify "$qa_dir/verified.aab" --version-code "$version"
       - name: Retain the original unsigned AAB for the release owner
-        if: github.event_name == 'workflow_dispatch' && inputs.keep_unsigned_bundle
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.keep_unsigned_bundle) ||
+          (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
+          startsWith(github.head_ref, 'release/'))
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: unsigned-play-bundle-${{ github.sha }}
