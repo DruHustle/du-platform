@@ -50,6 +50,9 @@ try {
         body: "<h1>Synthetic supplier handoff</h1>",
       })
     );
+    await context.route("https://www.awin1.com/**", r =>
+      r.fulfill({ contentType: "text/html", body: "<h1>Simulated referral network</h1>" })
+    );
     let referralFails = true;
     let referralRequests = 0;
     let privateMode = false;
@@ -632,6 +635,17 @@ try {
     await selectedFlight
       .getByText("The supplier amount has changed.", { exact: false })
       .waitFor();
+    await selectedFlight.getByRole("button", { name: "Allow referral tracking and continue" }).click();
+    await page.getByRole("heading", { name: "Simulated referral network" }).waitFor();
+    const landing = new URL(page.url());
+    assert.equal(landing.origin, "https://www.awin1.com");
+    assert.equal(landing.searchParams.get("ued"), "https://kiwi.com/u/synthetic");
+    assert.equal(landing.searchParams.get("cons"), "1");
+    assert.match(landing.searchParams.get("clickref"), /^[a-f0-9-]{36}$/);
+    assert.equal(referralRequests, 2);
+    checks.push(`${width}: affiliate opt-in, recoverable partner failure, direct link and exact referral destination (fixture)`);
+    await page.goto(base + "/travel/my-trips?lng=en");
+    await selectedFlight.waitFor();
     offerExpires = true;
     await selectedFlight
       .getByRole("button", { name: "Check current price", exact: true })

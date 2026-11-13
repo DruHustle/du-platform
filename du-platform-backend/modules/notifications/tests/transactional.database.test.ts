@@ -91,6 +91,64 @@ describe.skipIf(!url)("durable transactional messages", () => {
       "original-hash"
     );
   }
+  it("requests account deletion once across retries and erases the right account after operator review", async () => {
+    const { AccountDeletionService } = await import(
+      "../../auth/accountDeletion"
+    );
+    const { hashPassword } = await import("../../../shared/passwords");
+    const deletion = new AccountDeletionService(pool);
+    const password = "Synthetic-test-pass123!";
+    const person = await auth.createUser(
+      "Deletion fixture",
+      `${randomUUID()}@example.test`,
+      await hashPassword(password)
+    );
+    const other = await user();
+    const id = Number(person.id);
+    await auth.createSession(id, 0);
+    const setup = async (owner: number) =>
+      pool.execute(
+        "INSERT INTO travel_saved (id,user_id,name,kind,draft) VALUES (?,?, 'Fixture','draft','{}')",
+        [randomUUID(), owner]
+      );
+    await setup(id);
+    await setup(other.id);
+    await expect(
+      deletion.request(id, 0, "wrong password")
+    ).rejects.toMatchObject({ statusCode: 403 });
+    await expect(deletion.request(id, 1, password)).rejects.toMatchObject({
+      statusCode: 401,
+    });
+    const [one, two] = await Promise.all([
+      deletion.request(id, 0, password),
+      deletion.request(id, 0, password),
+    ]);
+    expect(one).toEqual(two);
+    expect(
+      (await deletion.pending(1)).filter(row => row.accountId === id)
+    ).toHaveLength(1);
+    vi.stubEnv("ADMIN_EMAILS", person.email);
+    await expect(deletion.fulfill(one.requestId)).rejects.toMatchObject({
+      statusCode: 409,
+    });
+    vi.stubEnv("ADMIN_EMAILS", "operator@example.test");
+    const final = await deletion.fulfill(one.requestId);
+    expect(await deletion.fulfill(one.requestId)).toEqual(final);
+    expect(await auth.findUserById(id)).toBeFalsy();
+    const [remaining] = await pool.execute<any[]>(
+      "SELECT user_id FROM travel_saved WHERE user_id IN (?,?)",
+      [id, other.id]
+    );
+    expect(remaining.map(row => row.user_id)).toEqual([other.id]);
+    const [[sessions]] = await pool.execute<any[]>(
+      "SELECT COUNT(*) AS n FROM auth_sessions WHERE user_id=?",
+      [id]
+    );
+    expect(sessions.n).toBe(0);
+    expect((await deletion.pending(1)).some(row => row.accountId === id)).toBe(
+      false
+    );
+  });
   it("stores enquiry and independent notification intents atomically, without marketing consent", async () => {
     const input = enquiry();
     const result = await service.contact(input);

@@ -8,6 +8,7 @@ English copy for the existing Apple and Google listings. Bundle and package iden
 | Apple subtitle | Plan trips and shop back home |
 | Google short description | Plan travel, check products and follow assisted orders for Southern Africa. |
 | Privacy policy | https://www.diasporaunlocked.com/privacy-policy |
+| Account-deletion URL (verify after deployment) | https://www.diasporaunlocked.com/account-deletion |
 | Support | https://www.diasporaunlocked.com/legal-notice |
 
 ## Description

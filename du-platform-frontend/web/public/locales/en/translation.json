@@ -1,4 +1,16 @@
 {
+  "deletion": {
+    "title": "Request account deletion",
+    "details": "Request permanent deletion of your Diaspora Unlocked account, saved trips and associated personal data. The operator reviews records held separately and any retention obligations before closing your account.",
+    "password": "Current password",
+    "confirm": "Confirm deletion request",
+    "receipt": "Request received. Reference: {{reference}}. The operator will contact you about completion.",
+    "sign_in": "Sign in to request account deletion",
+    "password_error": "Check your current password and try again.",
+    "retry": "The request could not be confirmed. Retry to recover your reference.",
+    "again": "Try again",
+    "loading": "Checking account…"
+  },
   "appearance": {
     "label": "Appearance",
     "system": "System (automatic)",

@@ -47,7 +47,7 @@ export async function request<T>(path: string, options: {
       signal: controller.signal,
     });
     try {
-      payload = await response.json();
+      payload = response.status === 204 || response.status === 205 ? null : await response.json();
     } catch (error) {
       if (controller.signal.aborted || options.signal?.aborted) throw error;
       if (response.ok) throw new ApiError("The service returned an unreadable response. Please try again.", response.status, "INVALID_RESPONSE");
@@ -59,7 +59,7 @@ export async function request<T>(path: string, options: {
     clearTimeout(timer);
     options.signal?.removeEventListener("abort", cancel);
   }
-  if (!response.ok) {
+  if (!response.ok || payload?.success === false) {
     const error: ApiErrorPayload = payload?.error || {};
     throw new ApiError(error.message || payload?.message || "The service is unavailable. Please try again.", response.status, error.code || "API_ERROR");
   }
