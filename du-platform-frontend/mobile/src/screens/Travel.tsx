@@ -50,7 +50,10 @@ function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<
   const providerRequest = useRef<AbortController | null>(null);
   const directory = useAirportDirectory();
   const link = travelLink(route?.params?.section);
-  const navigation = useNavigation<{ setParams: (params: { section: string }) => void }>();
+  const navigation = useNavigation<{
+    setParams: (params: { section: string }) => void;
+    navigate: (screen: "Account", params: { next: string; entry: "login" }) => void;
+  }>();
 
   useEffect(() => {
     if (!checked || typeof checked.reviewAfter !== "string") return;
@@ -354,6 +357,6 @@ function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<
       <Action title="Confirm deletion" disabled={busy} onPress={()=>void deleteSaved(item.id)}/>
       <Action title="Keep saved item" secondary disabled={busy} onPress={()=>setConfirmDelete(null)}/>
     </> : <Action title={item.kind === "trip" ? "Delete saved trip" : "Delete saved search"}
-      secondary disabled={busy} onPress={()=>setConfirmDelete(item.id)}/>}</Card>;})}</>:<Copy>Sign in on the Account tab to save travel searches.</Copy>}</Card>
+      secondary disabled={busy} onPress={()=>setConfirmDelete(item.id)}/>}</Card>;})}</>:<Action title="Sign in to save this search" onPress={() => navigation.navigate("Account", { next: `/travel/${category}`, entry: "login" })}/>}</Card>
   <Card><Heading>More Travel</Heading><Copy>Explore destinations and immersive experiences on the website. If a device cannot run an immersive preview, the destination guide remains available.</Copy><Action title="Open destination guide in browser" secondary onPress={()=>void WebBrowser.openBrowserAsync("https://www.diasporaunlocked.com/travel").catch(()=>setError("Could not open the browser."))}/></Card></Screen>;
 }

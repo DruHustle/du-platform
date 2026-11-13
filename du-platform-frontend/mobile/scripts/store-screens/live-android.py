@@ -105,12 +105,21 @@ def sign_in():
     print('PASS native sign-in rejected synthetic identity twice and kept its email for retry')
 
 
+def recover_missing_reset_link():
+    screen.adb('shell', 'am', 'start', '-W', '-a', 'android.intent.action.VIEW',
+               '-d', 'diasporaunlocked://reset-password?next=%2Ftravel%2Fstays', screen.PACKAGE)
+    tap(find('Request a new reset link', scroll=True))
+    find('Send reset instructions', scroll=True)
+    find('Email address')
+    print('PASS Android missing reset link opens the email recovery form')
+
+
 if __name__=='__main__':
     if len(sys.argv) == 3 and sys.argv[1] == 'product':
         product_capture(sys.argv[2])
         sys.exit(0)
     failures=[]
-    for name,work in [('Direct flight handoff',flight),('Sign-in retry',sign_in)]:
+    for name,work in [('Direct flight handoff',flight),('Sign-in retry',sign_in),('Missing reset link',recover_missing_reset_link)]:
         try: work()
         except Exception as error: failures.append(name);print(f'{name} not verified: {error}',flush=True)
     if failures: raise SystemExit('Live Android checks did not pass: '+', '.join(failures))

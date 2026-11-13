@@ -1,10 +1,50 @@
-import React from "react";
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, type TextInputProps } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, type TextInputProps } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { keyboardBottomInset } from "./keyboardLayout";
 
 export const colors = { ink: "#13233a", navy: "#071525", gold: "#e5b63b", pale: "#f3f5f7", border: "#cbd5e1", red: "#a6212b" };
 export function Screen({ children }: React.PropsWithChildren) {
-  return <SafeAreaView edges={["left", "right"]} style={styles.safe}><KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === "ios" ? "padding" : undefined}><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>{children}</ScrollView></KeyboardAvoidingView></SafeAreaView>;
+  const insets = useSafeAreaInsets();
+  const viewport = useRef<View>(null);
+  const measurement = useRef(0);
+  const [keyboardInset, setKeyboardInset] = useState(0);
+  const adjustForKeyboard = useCallback(() => {
+    if (Platform.OS !== "android") return;
+    const generation = ++measurement.current;
+    const keyboardTop = Keyboard.metrics()?.screenY;
+    if (keyboardTop === undefined) {
+      setKeyboardInset(0);
+      return;
+    }
+    viewport.current?.measureInWindow((_x, y, _width, height) => {
+      if (generation === measurement.current) {
+        setKeyboardInset(keyboardBottomInset({ y, height }, keyboardTop));
+      }
+    });
+  }, []);
+  useEffect(() => {
+    if (Platform.OS !== "android") return;
+    const show = Keyboard.addListener("keyboardDidShow", adjustForKeyboard);
+    const hide = Keyboard.addListener("keyboardDidHide", adjustForKeyboard);
+    return () => {
+      ++measurement.current;
+      show.remove();
+      hide.remove();
+    };
+  }, [adjustForKeyboard]);
+
+  return <SafeAreaView edges={["left", "right"]} style={styles.safe}>
+    <View ref={viewport} collapsable={false} onLayout={adjustForKeyboard}
+      style={[styles.flex, Platform.OS === "android" && { paddingBottom: keyboardInset }]}>
+      <ScrollView style={styles.flex} keyboardShouldPersistTaps="handled"
+        keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "none"}
+        automaticallyAdjustKeyboardInsets
+        contentContainerStyle={[styles.content, { paddingBottom: Math.max(36, insets.bottom + 16) }]}>
+        {children}
+      </ScrollView>
+    </View>
+  </SafeAreaView>;
 }
 export function Heading({children}: React.PropsWithChildren) { return <Text accessibilityRole="header" style={styles.heading}>{children}</Text>; }
 export function Copy({children}: React.PropsWithChildren) { return <Text style={styles.copy}>{children}</Text>; }

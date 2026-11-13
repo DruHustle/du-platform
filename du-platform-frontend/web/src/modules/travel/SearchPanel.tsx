@@ -183,7 +183,8 @@ export default function SearchPanel({
   const c = draft.criteria;
   const [error, setError] = useState("");
   const [reviewed, setReviewed] = useState<TravelCriteria | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [copyState, setCopyState] = useState<"ready" | "copied" | "manual">("ready");
+  const manualBrief = useRef<HTMLTextAreaElement>(null);
   const [notice, setNotice] = useState("");
   const [reference, setReference] = useState<TravelReference | null>(null);
   const [referenceError, setReferenceError] = useState(false);
@@ -200,7 +201,7 @@ export default function SearchPanel({
     setError("");
     setNotice("");
     setReviewed(null);
-    setCopied(false);
+    setCopyState("ready");
   }
   function set<K extends keyof TravelCriteria>(
     key: K,
@@ -483,8 +484,25 @@ export default function SearchPanel({
       {notice && <p role="status">{notice}</p>}
       {reviewed && (
         <div className="travel-review surface-card">
-          <h3 role="status">{t("travel.search-ready")}</h3>
-          <p>{searchBrief(reviewed)}</p>
+          <h3 id="travel-reviewed-title" role="status">{t("travel.search-ready")}</h3>
+          {copyState === "manual" ? (
+            <>
+              <textarea
+                aria-labelledby="travel-reviewed-title"
+                aria-describedby="travel-manual-copy"
+                className="w-full"
+                ref={manualBrief}
+                readOnly
+                autoFocus
+                rows={4}
+                value={searchBrief(reviewed)}
+                onFocus={event => event.currentTarget.select()}
+              />
+              <p id="travel-manual-copy" role="status">{t("travel.copy-error")}</p>
+            </>
+          ) : (
+            <p>{searchBrief(reviewed)}</p>
+          )}
           {category === "car-hire" && <p>{t("travel.no-results")}</p>}
           {category !== "car-hire" && (
             <SupplierResults
@@ -504,7 +522,7 @@ export default function SearchPanel({
                     { category, criteria: reviewed },
                   ],
                 }));
-                setCopied(false);
+                setCopyState("ready");
                 setNotice(t("travel.added"));
               }}
             >
@@ -515,13 +533,14 @@ export default function SearchPanel({
               onClick={async () => {
                 try {
                   await navigator.clipboard.writeText(searchBrief(reviewed));
-                  setCopied(true);
+                  setCopyState("copied");
                 } catch {
-                  setError(t("travel.copy-error"));
+                  setCopyState("manual");
+                  manualBrief.current?.focus();
                 }
               }}
             >
-              {t(copied ? "travel.copied" : "travel.copy-search")}
+              {t(copyState === "copied" ? "travel.copied" : "travel.copy-search")}
             </Button>
             {reference && <Button variant="outline" asChild>
               <a
