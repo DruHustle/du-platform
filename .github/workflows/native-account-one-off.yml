@@ -47,7 +47,7 @@ jobs:
       - name: Verify installed account lifecycle and request operator cleanup
         run: python3 scripts/store-screens/account-cycle.py ios
   android:
-    if: github.repository == 'DruHustle/du-platform' && github.ref == 'refs/heads/validation/native-accounts-20261113' && github.run_attempt == 1 && ((github.event_name == 'push' && (github.event.created == true || github.event.before == 'e94275963ab666b519508ff5d404c2eef91d0441') && github.event.head_commit.message == 'Qualify two native release QA accounts') || (github.event_name == 'workflow_dispatch' && inputs.confirm == true))
+    if: github.repository == 'DruHustle/du-platform' && github.ref == 'refs/heads/validation/native-accounts-20261113' && github.run_attempt == 1 && ((github.event_name == 'push' && ((github.event.before == '9141bc1358cfe6054e137440d7718f3f3f3b792b' && github.event.head_commit.message == 'Retry owned Android account before registration') || ((github.event.created == true || github.event.before == 'e94275963ab666b519508ff5d404c2eef91d0441') && github.event.head_commit.message == 'Qualify two native release QA accounts'))) || (github.event_name == 'workflow_dispatch' && inputs.confirm == true))
     runs-on: ubuntu-24.04
     timeout-minutes: 85
     defaults:
