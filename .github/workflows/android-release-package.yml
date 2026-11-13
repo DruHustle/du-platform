@@ -16,6 +16,8 @@ on:
       - "du-platform-frontend/mobile/plugins/withUnsignedRelease.cjs"
       - "du-platform-frontend/mobile/scripts/sign-release-apk.sh"
       - "du-platform-frontend/mobile/scripts/test-release-apk.py"
+      - "du-platform-frontend/mobile/scripts/sign-play-bundle.py"
+      - "du-platform-frontend/mobile/scripts/test-play-bundle.py"
 
 permissions:
   contents: read
@@ -50,8 +52,16 @@ jobs:
         run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0"'
       - name: Exercise signature and rejection checks with temporary credentials
         run: python3 scripts/test-release-apk.py
-      - name: Compile the unsigned Release APK for arm64 Android phones
-        run: bash android/gradlew -p android --no-daemon :app:assembleRelease -PreactNativeArchitectures=arm64-v8a
+      - name: Install the pinned Google bundletool for Play qualification
+        run: |
+          tool="$RUNNER_TEMP/bundletool.jar"
+          curl --fail --location --retry 3 --silent --show-error https://github.com/google/bundletool/releases/download/1.18.3/bundletool-all-1.18.3.jar -o "$tool"
+          echo "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29  $tool" | sha256sum --check
+          echo "BUNDLETOOL_JAR=$tool" >> "$GITHUB_ENV"
+      - name: Exercise Play bundle signing and rejection with temporary credentials
+        run: python3 scripts/test-play-bundle.py
+      - name: Compile the unsigned Release APK and AAB for arm64 Android phones
+        run: bash android/gradlew -p android --no-daemon :app:assembleRelease :app:bundleRelease -PreactNativeArchitectures=arm64-v8a
       - name: Verify the compiled product through the signing path
         run: |
           # The ephemeral QA key and its APK stay in this run and are never uploaded.
@@ -69,3 +79,10 @@ jobs:
           export ANDROID_RELEASE_CERT_SHA256
           scripts/sign-release-apk.sh sign android/app/build/outputs/apk/release/app-release-unsigned.apk "$qa_dir/verified.apk"
           scripts/sign-release-apk.sh verify "$qa_dir/verified.apk"
+          export PLAY_UPLOAD_KEYSTORE="$ANDROID_RELEASE_KEYSTORE" PLAY_UPLOAD_ALIAS="$ANDROID_RELEASE_ALIAS"
+          export PLAY_UPLOAD_CERT_SHA256="$ANDROID_RELEASE_CERT_SHA256"
+          export PLAY_UPLOAD_STORE_PASSWORD="$ANDROID_RELEASE_STORE_PASSWORD" PLAY_UPLOAD_KEY_PASSWORD="$ANDROID_RELEASE_KEY_PASSWORD"
+          bundle=android/app/build/outputs/bundle/release/app-release.aab
+          version=$(java -jar "$BUNDLETOOL_JAR" dump manifest --bundle="$bundle" --xpath='/manifest/@android:versionCode')
+          python3 scripts/sign-play-bundle.py sign "$bundle" "$qa_dir/verified.aab" --version-code "$version"
+          python3 scripts/sign-play-bundle.py verify "$qa_dir/verified.aab" --version-code "$version"
