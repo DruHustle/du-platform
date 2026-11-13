@@ -54,6 +54,7 @@ try {
       r.fulfill({ contentType: "text/html", body: "<h1>Simulated referral network</h1>" })
     );
     let referralFails = true;
+    let approvedPlacement = false;
     let referralRequests = 0;
     let privateMode = false;
     let storageFails = false;
@@ -172,7 +173,7 @@ try {
                 reviewAfter: new Date(Date.now() + 300000).toISOString(),
               },
               changed: true,
-              referralAvailable: true,
+              referralAvailable: approvedPlacement,
             },
           },
         });
@@ -457,6 +458,12 @@ try {
       .getByText("The supplier amount has changed.", { exact: false })
       .waitFor();
     const referralButton = page.getByRole("button", { name: "Allow referral tracking and continue" });
+    await page.getByText("If a link can earn Diaspora Unlocked a commission", { exact: false }).waitFor();
+    await page.getByRole("link", { name: "Continue to Kiwi.com ↗", exact: true }).waitFor();
+    assert.equal(await referralButton.count(), 0);
+    assert.equal(await page.getByText("Awin can use cookies", { exact: false }).count(), 0);
+    approvedPlacement = true;
+    await page.getByRole("button", { name: "Check current price", exact: true }).click();
     await page.getByText("Awin can use cookies", { exact: false }).waitFor();
     assert.equal(referralRequests, 0);
     await referralButton.click();
