@@ -1,0 +1,99 @@
+name: One-off native account qualification
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        type: boolean
+        required: true
+        default: false
+        description: Exercise the two release QA identities and request their deletion
+  push:
+    branches:
+      - validation/native-accounts-20261113
+permissions:
+  contents: read
+concurrency:
+  group: du-one-off-native-accounts-20261113
+  cancel-in-progress: false
+env:
+  EXPO_PUBLIC_API_URL: https://www.diasporaunlocked.com/api
+  EXPO_PUBLIC_WEB_URL: https://www.diasporaunlocked.com
+  DU_ACCOUNT_ACTIVATED: 'yes'
+  CI: '1'
+  EXPO_NO_TELEMETRY: '1'
+jobs:
+  ios:
+    if: github.repository == 'DruHustle/du-platform' && github.ref == 'refs/heads/validation/native-accounts-20261113' && github.run_attempt == 1 && ((github.event_name == 'push' && (github.event.created == true || github.event.before == 'e94275963ab666b519508ff5d404c2eef91d0441') && github.event.head_commit.message == 'Qualify two native release QA accounts') || (github.event_name == 'workflow_dispatch' && inputs.confirm == true))
+    runs-on: macos-26
+    timeout-minutes: 85
+    defaults:
+      run:
+        working-directory: du-platform-frontend/mobile
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: du-platform-frontend/mobile/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: pod install --project-directory=ios
+      - name: Prepare the one-off iPhone test target
+        run: |
+          cp scripts/store-screens/AccountCycleTest.swift scripts/store-screens/DUNativeSmokeTests.swift
+          ruby scripts/store-screens/prepare-ui-tests.rb ios/DiasporaUnlocked.xcodeproj
+      - name: Verify installed account lifecycle and request operator cleanup
+        run: python3 scripts/store-screens/account-cycle.py ios
+  android:
+    if: github.repository == 'DruHustle/du-platform' && github.ref == 'refs/heads/validation/native-accounts-20261113' && github.run_attempt == 1 && ((github.event_name == 'push' && (github.event.created == true || github.event.before == 'e94275963ab666b519508ff5d404c2eef91d0441') && github.event.head_commit.message == 'Qualify two native release QA accounts') || (github.event_name == 'workflow_dispatch' && inputs.confirm == true))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 85
+    defaults:
+      run:
+        working-directory: du-platform-frontend/mobile
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: du-platform-frontend/mobile/package-lock.json
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: npm ci --no-audit --no-fund
+      - name: Build a Release APK for the Intel emulator
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;36.0.0'
+          bash android/gradlew -p android --no-daemon :app:assembleRelease -PreactNativeArchitectures=x86_64
+      - name: Sign this installation with a temporary QA key
+        run: |
+          qa_dir=$(mktemp -d "$RUNNER_TEMP/screenshot-qa.XXXXXX")
+          trap 'rm -rf -- "$qa_dir"' EXIT
+          export ANDROID_RELEASE_KEYSTORE="$qa_dir/qa.p12" ANDROID_RELEASE_ALIAS=qa
+          ANDROID_RELEASE_STORE_PASSWORD=$(openssl rand -hex 24)
+          export ANDROID_RELEASE_STORE_PASSWORD ANDROID_RELEASE_KEY_PASSWORD="$ANDROID_RELEASE_STORE_PASSWORD"
+          keytool -genkeypair -keystore "$ANDROID_RELEASE_KEYSTORE" -alias qa -storepass:env ANDROID_RELEASE_STORE_PASSWORD -keypass:env ANDROID_RELEASE_KEY_PASSWORD -keyalg RSA -keysize 2048 -dname 'CN=Temporary screenshot QA' -validity 7
+          ANDROID_RELEASE_CERT_SHA256=$(keytool -exportcert -keystore "$ANDROID_RELEASE_KEYSTORE" -alias qa -storepass:env ANDROID_RELEASE_STORE_PASSWORD | sha256sum | cut -d' ' -f1)
+          export ANDROID_RELEASE_CERT_SHA256
+          scripts/sign-release-apk.sh sign android/app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/screen-app.apk"
+      - name: Enable accelerated emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Android phone Home to Travel
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          force-avd-creation: true
+          disable-animations: true
+          script: DU_SMOKE_APK="$RUNNER_TEMP/screen-app.apk" python3 du-platform-frontend/mobile/scripts/store-screens/account-cycle.py android
