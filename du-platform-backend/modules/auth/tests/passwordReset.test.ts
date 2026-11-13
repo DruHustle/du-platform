@@ -1,3 +1,4 @@
+import { passwordResetLink } from "../../../domain/passwordResetProtocol";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AuthService } from "../services/authService";
 import { sendResetEmail } from "../../../shared/email";
@@ -57,4 +58,23 @@ describe("password reset service", () => {
     expect(sendResetEmail).not.toHaveBeenCalled();
     expect(JSON.stringify(log.mock.calls)).not.toMatch(/private-|@/);
   });
+});
+
+describe("password recovery task link", () => {
+  it("links only to the configured frontend and an approved task, with the token in the fragment", () => {
+    const url = new URL(passwordResetLink("https://example.test", "de", "opaque", "/travel/my-trips"));
+    expect(url.origin + url.pathname).toBe("https://example.test/reset-password");
+    expect(url.searchParams.get("lng")).toBe("de");
+    expect(url.searchParams.get("next")).toBe("/travel/my-trips");
+    expect(url.search).not.toContain("opaque");
+    expect(url.hash).toBe("#token=opaque");
+  });
+
+  it.each([undefined, "/shop/order-status?token=private", "/travel/flights?name=private", "https://example.test", "//example.test"])(
+    "omits unrecognised or sensitive destinations from a recovery email",
+    next => {
+      const url = new URL(passwordResetLink("https://du.example.test", "en", "opaque", next));
+      expect(url.searchParams.has("next")).toBe(false);
+    }
+  );
 });

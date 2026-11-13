@@ -10,8 +10,8 @@ import {
 import { TransactionalService } from "../../notifications/transactionalService";
 
 export class AuthRepository {
-  queuePasswordReset(userId: number, language?: string) {
-    return new TransactionalService().passwordReset(userId, language);
+  queuePasswordReset(userId: number, language?: string, next?: string) {
+    return new TransactionalService().passwordReset(userId, language, next);
   }
   resetPasswordWithToken(token: string, passwordHash: string) {
     return resetPasswordWithToken(token, passwordHash);

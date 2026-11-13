@@ -12,6 +12,7 @@ import { sealOrderAccess, openOrderAccess } from "../shop/orderAccess";
 import { NewsletterService } from "../newsletter/service";
 import { newsletterOrigin, renderNewsletter } from "../newsletter/content";
 import type { NewsletterEmail } from "../newsletter/provider";
+import { passwordResetLink } from "../../domain/passwordResetProtocol";
 import { customerLanguage } from "../../domain/customerLanguage";
 import { contactInquirySchema } from "./dto/notification.dto";
 import copy from "../../resources/transactionalEmailCopy.json";
@@ -112,13 +113,13 @@ export class TransactionalService extends NewsletterService {
     });
     return { received: true, requestId, message: text.contact_body };
   }
-  async passwordReset(userId: number, requestedLanguage = "en") {
+  async passwordReset(userId: number, requestedLanguage = "en", next?: string) {
     const language = customerLanguage(requestedLanguage),
       text = copy[language];
     const from = await getNotifyFromEmail();
     const token = randomBytes(48).toString("hex");
     const hash = createHash("sha256").update(token).digest("hex");
-    const link = `${newsletterOrigin()}/reset-password?lng=${language}#token=${token}`;
+    const link = passwordResetLink(newsletterOrigin(), language, token, next);
     return this.transaction(async c => {
       // Same lock order as reset consumption and login: user, token, delivery.
       const [users] = await c.query<RowDataPacket[]>(

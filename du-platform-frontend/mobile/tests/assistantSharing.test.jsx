@@ -10,9 +10,9 @@ const fakes = vi.hoisted(() => ({
 vi.mock("react-native", () => ({
   Platform: fakes.platform, StyleSheet: { create: value => value }, Linking: {},
   View: "View", Text: "Text", TextInput: "TextInput", Pressable: "Pressable",
-  ActivityIndicator: "ActivityIndicator", ScrollView: "ScrollView", KeyboardAvoidingView: "KeyboardAvoidingView",
+  ActivityIndicator: "ActivityIndicator", ScrollView: "ScrollView", Keyboard: { metrics: () => undefined, addListener: () => ({ remove() {} }) },
 }));
-vi.mock("react-native-safe-area-context", () => ({ SafeAreaView: "SafeAreaView" }));
+vi.mock("react-native-safe-area-context", () => ({ SafeAreaView: "SafeAreaView", useSafeAreaInsets: () => ({ bottom: 0 }) }));
 vi.mock("expo-web-browser", () => ({ openBrowserAsync: vi.fn() }));
 vi.mock("expo-crypto", () => ({ randomUUID: () => "report-request" }));
 vi.mock("@react-navigation/native", () => ({ useNavigation: () => ({ navigate: fakes.navigate }) }));
@@ -38,8 +38,9 @@ describe.each(["ios", "android"])("Onesa on %s", platform => {
   });
   async function render(element) {
     await act(async () => { screen = create(element); });
-    const keyboard = screen.root.findByType("KeyboardAvoidingView");
-    expect(keyboard.props.behavior).toBe(platform === "ios" ? "padding" : undefined);
+    const scroll = screen.root.findByType("ScrollView");
+    expect(scroll.props.keyboardDismissMode).toBe(platform === "ios" ? "interactive" : "none");
+    expect(scroll.props.keyboardShouldPersistTaps).toBe("handled");
   }
   function buttons(title) {
     return screen.root.findAllByType("Pressable").filter(b => b.findByType("Text").props.children === title);
