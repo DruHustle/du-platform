@@ -53,7 +53,7 @@ Upload the checked AAB to the existing testing track. Record the version code an
 
 ## iOS
 
-Select the owner’s existing App Store Connect record for `com.diasporaunlocked.app`. Match the team, registered identifier, version history and next available build number before archiving. Select that team in Xcode and configure the app’s release signing and distribution profile. Enable Associated Domains for the registered app ID if the app uses universal links. Its entitlement names `applinks:www.diasporaunlocked.com`. Publish the AASA configuration for the actual team and bundle identifier to enable those links. The repository’s EAS production profile has no linked Expo project ID or Apple credentials. The checked-in native Xcode project can be archived independently. CI simulator apps cannot be installed through TestFlight or the App Store.
+Select the owner’s existing App Store Connect record for `com.diasporaunlocked.app`. Match the team, registered identifier, version history and next available build number before archiving. Select that team in Xcode and configure the app’s release signing and distribution profile. Enable Associated Domains for the registered app ID if the app uses universal links. Its entitlement names `applinks:www.diasporaunlocked.com`. Publish the AASA configuration for the actual team and bundle identifier to enable those links. The repository’s EAS production profile has no linked Expo project ID or Apple credentials. The checked-in native Xcode project can be archived independently. Release-branch pull requests retain the unsigned iPhoneOS archive for two days. A manual run of Generic iOS Release archive can also retain it. The GitHub job summary includes its SHA-256. CI simulator apps cannot be installed through TestFlight or the App Store.
 
 On a Mac with the supported Xcode and a signed-in owner account, set `APPLE_TEAM_ID` to the team identifier. From this mobile directory create a Release archive for a physical iOS destination.
 
@@ -67,7 +67,7 @@ xcodebuild -workspace ios/DiasporaUnlocked.xcworkspace -scheme DiasporaUnlocked 
   DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic archive
 ```
 
-In Xcode Organizer, validate the archive and distribute to App Store Connect with the owner’s distribution signing. For public beta installs, complete external TestFlight review and enable a public invitation. For general availability, complete App Review and release the listing. Open the actual link from a signed-out iPhone and verify it identifies Diaspora Unlocked before setting the website’s `VITE_IOS_DOWNLOAD_URL` to its public TestFlight or App Store URL. The current native projects use the same product identifier for preview and release.
+In Xcode Organizer, validate the archive and distribute to App Store Connect with the owner’s distribution signing. For public beta installs, complete external TestFlight review and enable a public invitation. For general availability, complete App Review and release the listing. Open the actual link from a signed-out iPhone and verify it identifies Diaspora Unlocked before setting the website’s `VITE_IOS_DOWNLOAD_URL` to its verified customer App Store listing. Use the private TestFlight group for pre-release testing. The current native projects use the same product identifier for preview and release.
 
 ### HTTPS links from email and the website
 
