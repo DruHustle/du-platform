@@ -92,7 +92,13 @@ def web_text(label,seconds,swipe=False):
 def investment():
     press('Browse investment research')
     live.find('Investment')
-    press('Open website')
+    candidates=[n for n in screen.tree().iter('node') if n.get('package')==screen.PACKAGE and 'Open website' in (n.get('text'),n.get('content-desc'))]
+    for candidate in candidates:
+        print('Investment node kind='+str(candidate.get('class'))+' clickable='+str(candidate.get('clickable'))+' bounds='+str(candidate.get('bounds')),flush=True)
+    button=next((n for n in candidates if n.get('clickable')=='true' and n.get('enabled')=='true'),None)
+    assert button is not None, 'No enabled clickable Open website action'
+    screen.adb('shell','logcat','-c')
+    live.tap(button)
     started=time.monotonic()
     exact=False
     foreground=False
@@ -105,6 +111,9 @@ def investment():
         if exact and foreground:break
         time.sleep(0.7)
     print('Investment handoff exact path='+str(exact)+' browser foreground='+str(foreground)+' elapsed='+str(round(time.monotonic()-started)),flush=True)
+    if not exact or not foreground:
+        markers=[(n.get('package'),n.get('class'),(n.get('text') or n.get('content-desc',''))[:100]) for n in screen.tree().iter('node') if (n.get('text') or n.get('content-desc'))]
+        print('Post-tap public UI '+str(markers[:12]),flush=True)
     for label in ['Use without an account','Continue without an account','No thanks','Essential only']:
         node=web_text(label,5)
         if node is not None:
