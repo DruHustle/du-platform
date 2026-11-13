@@ -5,12 +5,12 @@ import uuid
 import urllib.request
 import urllib.error
 import urllib.parse
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 class Handler(BaseHTTPRequestHandler):
     first = None
     def forward_public(self, method, body=None):
-        by_method={'GET':{'/api/travel/airports','/api/search'},'POST':{'/api/travel/search','/api/travel/revalidate','/api/auth/login'}}
+        by_method={'GET':{'/api/travel/capabilities'},'POST':{'/api/travel/search','/api/travel/revalidate','/api/auth/login'}}
         if urllib.parse.urlsplit(self.path).path not in by_method[method]:
             self.send_error(404)
             return
@@ -67,4 +67,4 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(b'{"success":true,"data":[]}')
     def log_message(self,*args):
         pass
-HTTPServer(('127.0.0.1',int(sys.argv[1])),Handler).serve_forever()
+ThreadingHTTPServer(('127.0.0.1',int(sys.argv[1])),Handler).serve_forever()
