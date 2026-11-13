@@ -1,3 +1,8 @@
+import { z } from "zod";
+import { AppError } from "../../../core/errorHandler";
+import { ok } from "../../../shared/responseFormatter";
+import { parseNewsletter } from "../../newsletter/routes";
+import { AccountDeletionService } from "../accountDeletion";
 import { Router } from "express";
 import { rateLimiter } from "../../../core/rateLimiter";
 import { requireJwtAuth } from "../../../middleware/jwtAuth";
@@ -98,9 +103,61 @@ export function createAuthModuleRouter() {
     "/profile",
     requireJwtAuth,
     requireCurrentUser,
-    rateLimiter({ keyPrefix: "api:auth:profile", windowMs: 60_000, maxRequests: 10, keyByUser: true }),
+    rateLimiter({
+      keyPrefix: "api:auth:profile",
+      windowMs: 60_000,
+      maxRequests: 10,
+      keyByUser: true,
+    }),
     validateProfile,
     controller.updateProfile
+  );
+  router.post(
+    "/deletion-request",
+    requireJwtAuth,
+    requireCurrentUser,
+    rateLimiter({
+      keyPrefix: "api:auth:deletion-request",
+      windowMs: 300000,
+      maxRequests: 6,
+      keyByUser: true,
+    }),
+    async (req, res, next) => {
+      try {
+        const input = parseNewsletter(
+          z
+            .object({
+              accountId: z.number().int().positive(),
+              password: z.string().min(1).max(1024),
+              confirm: z.literal(true),
+            })
+            .strict(),
+          req.body
+        );
+        if (input.accountId !== req.auth!.userId)
+          throw new AppError(
+            409,
+            "DELETION_ACCOUNT_CHANGED",
+            "Your account changed. Review the request again."
+          );
+        const result = await new AccountDeletionService().request(
+          input.accountId,
+          Number(req.auth!.claims.av),
+          input.password
+        );
+        res.status(202).json(ok(result));
+      } catch (error) {
+        next(
+          error instanceof AppError
+            ? error
+            : new AppError(
+                503,
+                "DELETION_UNAVAILABLE",
+                "The request could not be confirmed. Retry to recover its reference."
+              )
+        );
+      }
+    }
   );
   router.post(
     "/token/refresh",

@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Linking, View } from "react-native";
+import { Linking, Platform, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AirportField, useAirportDirectory } from "../AirportField";
 import { airportCode } from "../travelAirports";
 import * as WebBrowser from "expo-web-browser";
 import { request, type TravelCriteria, type TravelQuote } from "../api";
 import { useSession } from "../session";
+import { currentQuote, flightLegSummary, validAwinReferral } from "../travelHandoff";
 import { travelLink } from "../links";
 import { nativeSavedSearch, partySummary, prepareNativeSearch, type SavedTravel, type TravelParty } from "../nativeTravelSearch";
 import { TravelPartyFields } from "../TravelPartyFields";
@@ -38,6 +39,7 @@ export function TravelScreen({route}: {route?: TravelRoute}) {
 
 function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<typeof useSession>}) {
   const [category,setCategory]=useState<"flights"|"stays">("flights");const [origin,setOrigin]=useState("FRA");const [destination,setDestination]=useState("HRE");const [departure,setDeparture]=useState(day(30));const [returnDate,setReturnDate]=useState(day(37));const [quotes,setQuotes]=useState<TravelQuote[]|null>(null);const [busy,setBusy]=useState(false);const [error,setError]=useState("");const [feedback,setFeedback]=useState("");const [checked,setChecked]=useState<TravelQuote|null>(null);const [tripName,setTripName]=useState("");const [saved,setSaved]=useState<SavedTravel[]|null>(null);const [savedError,setSavedError]=useState("");const [savedLoading,setSavedLoading]=useState(false);
+  const [referralAvailable, setReferralAvailable] = useState(false);
   const [nationality, setNationality] = useState("");
   const [tripType, setTripType] = useState<TravelCriteria["tripType"]>("return");
   const [party, setParty] = useState<TravelParty>({ adults: 1, rooms: 1, childAges: [], currency: "EUR" });
@@ -49,6 +51,15 @@ function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<
   const directory = useAirportDirectory();
   const link = travelLink(route?.params?.section);
   const navigation = useNavigation<{ setParams: (params: { section: string }) => void }>();
+
+  useEffect(() => {
+    if (!checked || typeof checked.reviewAfter !== "string") return;
+    const timer = setTimeout(() => {
+      setChecked(null);
+      setFeedback("Check the price again before continuing. Your search details are still here.");
+    }, Math.max(0, Date.parse(checked.reviewAfter) - Date.now()));
+    return () => clearTimeout(timer);
+  }, [checked]);
 
   const clearResults = useCallback(() => {
     if (providerRequest.current) {
@@ -195,7 +206,8 @@ function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<
     }
   }
   const check = (quote: TravelQuote) => readProvider(async signal => {
-    const result = await request<{ quote: TravelQuote; changed: boolean }>("/travel/revalidate", {
+    const result = await request<{ quote: TravelQuote; changed: boolean; referralAvailable?: boolean }>(
+      Platform.OS === "android" ? "/travel/revalidate?channel=android" : "/travel/revalidate", {
       method: "POST",
       body: quote,
       timeoutMs: 30_000,
@@ -207,11 +219,46 @@ function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<
       throw new Error("Provider link could not be verified.");
     }
     if (signal.aborted) return;
+    if (!currentQuote(result.quote)) throw new Error("This price check has expired. Check the option again.");
     setChecked(result.quote);
+    setReferralAvailable(Platform.OS === "android" && result.quote.provider === "Kiwi.com" && result.referralAvailable === true);
     setFeedback(result.changed
       ? "The provider's price or details changed. Review the updated option before opening it."
       : "Provider details checked. Review them before continuing.");
   });
+  async function openProvider(quote: TravelQuote, referral = false) {
+    if (busy || providerRequest.current || !safeSupplierLink(quote.provider, quote.bookingUrl)) return;
+    if (!currentQuote(quote)) {
+      setChecked(null);
+      setFeedback("Check the price again before continuing. Your search details are still here.");
+      return;
+    }
+    const controller = new AbortController();
+    providerRequest.current = controller;
+    setBusy(true);
+    setError("");
+    try {
+      let url = quote.bookingUrl;
+      if (referral) {
+        if (!referralAvailable || Platform.OS !== "android") return;
+        const result = await request<{ url: string }>("/travel/referrals/awin", {
+          method: "POST", body: { quote, channel: "android", consent: true }, signal: controller.signal,
+        });
+        if (!validAwinReferral(result?.url, quote)) throw new Error("Invalid referral link.");
+        url = result.url;
+      }
+      if (!controller.signal.aborted && currentQuote(quote)) await Linking.openURL(url);
+    } catch {
+      if (!controller.signal.aborted) setError(referral
+        ? "The referral link could not open. Your flight is still selected. Continue directly or try again."
+        : "Could not open the provider. Your selection is still here. Try again.");
+    } finally {
+      if (providerRequest.current === controller) {
+        providerRequest.current = null;
+        setBusy(false);
+      }
+    }
+  }
   return <Screen><Heading>Travel</Heading><Copy>Research journeys to, from and within Southern Africa. Prices and availability can change; the provider handles any booking.</Copy>{link.website && <Card><Copy>This Travel page is available on the website.</Copy><Action title="Open requested Travel page" secondary onPress={()=>void WebBrowser.openBrowserAsync(`https://www.diasporaunlocked.com${link.website}`).catch(()=>setError("Could not open the browser."))}/></Card>}<Card><Heading>Find options</Heading><View style={{flexDirection: "row", flexWrap: "wrap", gap: 8}}>
       {(["flights", "stays"] as const).map(option => {
         const label = option === "flights" ? "Flights" : "Stays";
@@ -253,7 +300,31 @@ function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<
     <TravelPartyFields party={party} category={category} disabled={busy}
       onChange={value => { clearResults(); setParty(value); }}/>
     <Action title={busy?"Please wait…":"Search providers"} disabled={busy} onPress={()=>void search()}/>{!!error&&<Message error message={error}/>}{!!feedback&&<Message message={feedback}/>}</Card>
-  {quotes && !quotes.length && <Copy>No options were returned for this search. Try different dates or locations.</Copy>}{quotes?.map(quote=><Card key={quote.id}><Heading>{quote.title}</Heading><Copy>{quote.provider} · {quote.currency} {quote.price.toFixed(2)}</Copy><Copy>Supplier observation, not a booking or guaranteed price.</Copy><Action title="Check current provider details" disabled={busy} onPress={()=>void check(quote)} />{checked?.identity===quote.identity&&<><Copy>Checked price: {checked.currency} {checked.price.toFixed(2)}</Copy><Action title={`Continue to ${checked.provider}`} secondary onPress={()=>{if(safeSupplierLink(checked.provider,checked.bookingUrl))void Linking.openURL(checked.bookingUrl).catch(()=>setError("Could not open the provider. Try again."));}} /></>}</Card>)}
+  {quotes && !quotes.length && <Copy>No options were returned for this search. Try different dates or locations.</Copy>}
+  {quotes?.map(quote => {
+    const selected = checked?.identity === quote.identity ? checked : null;
+    const displayed = selected ?? quote;
+    return <Card key={quote.id}>
+      <Heading>{displayed.title}</Heading>
+      <Copy>{displayed.provider} · {displayed.currency} {displayed.price.toFixed(2)}</Copy>
+      {Array.isArray(displayed.legs) && displayed.legs.map((leg, i) => {
+        const summary = flightLegSummary(leg);
+        return summary && <Copy key={i}>{i ? "Return" : "Outbound"} · {summary} (airport local times)</Copy>;
+      })}
+      <Copy>{quote.category === "flights" ? "Observed fare for the travelling party. Check baggage, fees and cancellation terms at checkout."
+        : "Confirm whether the price covers a night or the full stay, plus taxes and cancellation conditions."}</Copy>
+      <Action title="Check current provider details" disabled={busy} onPress={() => void check(quote)} />
+      {selected && <>
+        <Copy>Checked price: {selected.currency} {selected.price.toFixed(2)} · {partySummary(party, category)}</Copy>
+        <Copy>{selected.provider} handles checkout, payment and booking support. Confirm your itinerary and final total there.</Copy>
+        {referralAvailable && <>
+          <Copy>Awin can use cookies to attribute your booking. Diaspora Unlocked may earn a commission if you choose the referral link. You can also continue directly to Kiwi.com.</Copy>
+          <Action title="Allow referral tracking and continue" disabled={busy} onPress={() => void openProvider(selected, true)} />
+        </>}
+        <Action title={`Continue to ${selected.provider}`} disabled={busy} secondary onPress={() => void openProvider(selected)} />
+      </>}
+    </Card>;
+  })}
   <Card><Heading>Saved searches</Heading>{session.user?<><Field label="Name this search" value={tripName} onChangeText={setTripName} maxLength={100}/><Action title="Save this search" disabled={busy||!tripName.trim()} onPress={()=>void save()}/>{savedLoading&&<Loading/>}{!!savedError&&<><Message error message={savedError}/><Action title="Retry saved searches" secondary onPress={()=>void loadSaved()}/></>}{saved&&!saved.length&&!savedError&&<Copy>No saved searches yet.</Copy>}{saved?.map(item=>{
     const selected = nativeSavedSearch(item);
     let summary = "View the full itinerary in My Trips on the website using the same account.";

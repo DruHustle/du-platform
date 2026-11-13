@@ -1,3 +1,4 @@
+import AccountDeletionRequests from "./AccountDeletionRequests";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -60,6 +61,7 @@ export default function ServiceInbox() {
       aria-label="Service inbox"
     >
       <h2 className="text-xl font-semibold">Service inbox</h2>
+      <AccountDeletionRequests />
       <p className="text-sm text-slate-300">
         Enquiries are durably received before success is returned. Operator
         notifications and customer acknowledgements are separate. Provider

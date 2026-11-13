@@ -44,6 +44,8 @@ export async function checkCatalogueDiscovery({ browser, base, language, locale,
     const category = page.getByRole("combobox", { name: filters.category, exact: true });
     const segment = page.getByRole("combobox", { name: filters.select_segment, exact: true });
     const availability = page.getByRole("checkbox", { name: locale.pilot.available_now });
+    const approvedDestinations = language === "en" ? "Approved delivery destinations: Germany, Zimbabwe." : null;
+    if (approvedDestinations) await page.getByText(approvedDestinations, { exact: true }).waitFor();
     await category.selectOption("sports");
     await segment.selectOption("apparel");
     await availability.check();
@@ -56,6 +58,7 @@ export async function checkCatalogueDiscovery({ browser, base, language, locale,
     await details.focus();
     await page.keyboard.press("Enter");
     await page.getByRole("heading", { name: jersey.name, exact: true }).waitFor();
+    if (approvedDestinations) await page.getByText(approvedDestinations, { exact: true }).waitFor();
     await page.getByRole("link", { name: locale.pilot.browse_products, exact: true }).click();
     await selected.waitFor();
     assert.equal(await search.inputValue(), "jersey Chevrons");

@@ -4,9 +4,9 @@ import Layout from "@/components/Layout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { api, getApiErrorMessage } from "@/lib/api";
+import { api } from "@/lib/api";
 import { ArrowLeft, Search } from "lucide-react";
-import { Link, useSearch } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import { useTranslation } from "react-i18next";
 
 type NTIREntity = {
@@ -145,8 +145,9 @@ function searchFallbackEntities(query: string): NTIREntity[] {
 
 export default function NTIRSearchPage() {
   const { t } = useTranslation();
+  const [, setLocation] = useLocation();
   const search = useSearch();
-  const routeQuery = new URLSearchParams(search).get("q") ?? "";
+  const routeQuery = (new URLSearchParams(search).get("q") ?? "").trim();
   const [query, setQuery] = useState(routeQuery);
   const [results, setResults] = useState<NTIREntity[]>([]);
   const [loading, setLoading] = useState(false);
@@ -168,17 +169,15 @@ export default function NTIRSearchPage() {
         timeout: 15_000,
       });
       if (controller.signal.aborted) return;
-      setResults(Array.isArray(data?.results) ? data.results : []);
-    } catch (err: any) {
+      if (!Array.isArray(data?.results)) throw new Error("Invalid directory response");
+      setResults(data.results);
+    } catch {
       if (controller.signal.aborted) return;
-      const apiMessage = getApiErrorMessage(err, "");
       setResults(searchFallbackEntities(q));
       setError(
-        apiMessage ||
-          t("investment.ntir.service_unavailable", {
-            defaultValue:
-              "Search is unavailable. Showing the directory entries included with the site.",
-          })
+        t("investment.ntir.service_unavailable", {
+          defaultValue: "Search is unavailable. Showing the directory entries included with the site.",
+        })
       );
     } finally {
       if (!controller.signal.aborted) setLoading(false);
@@ -222,7 +221,16 @@ export default function NTIRSearchPage() {
             className="flex gap-3"
             onSubmit={e => {
               e.preventDefault();
-              runSearch(query);
+              const submitted = query.trim();
+              if (submitted === routeQuery) {
+                void runSearch(submitted);
+              } else {
+                const params = new URLSearchParams(search);
+                if (submitted) params.set("q", submitted);
+                else params.delete("q");
+                const suffix = params.toString();
+                setLocation(suffix ? `/ntir?${suffix}` : "/ntir");
+              }
             }}
           >
             <Input
@@ -281,7 +289,7 @@ export default function NTIRSearchPage() {
                 />
               </div>
             ))}
-            {!loading && results.length === 0 ? (
+            {!loading && !error && results.length === 0 ? (
               <p className="text-white/70">
                 {t("investment.ntir.empty", {
                   defaultValue:

@@ -51,6 +51,17 @@ export function shopDestination(path: string, title?: string): ShopDestination |
   return { screen: "Shop", params: { q: params.get("q") || "", category: category as ShopFilters["category"], availableOnly: available === "1" } };
 }
 
+export function deliveryCoverage(catalog: Catalog): string | undefined {
+  if (catalog.source !== "db" || !catalog.readiness) return;
+  const { commercialReady, mode, enforcement, destinationCountries } = catalog.readiness;
+  const codes = commercialReady && mode === "pilot" && enforcement === "enforced" && Array.isArray(destinationCountries)
+    ? destinationCountries.filter(code => /^[A-Z]{2}$/.test(code))
+    : [];
+  if (!codes.length) return "Delivery is currently unavailable to all destinations.";
+  const names = typeof Intl.DisplayNames === "function" ? new Intl.DisplayNames("en", { type: "region" }) : undefined;
+  return `Approved delivery destinations: ${codes.map(code => names?.of(code) || code).join(", ")}.`;
+}
+
 export function canRequestProduct(catalog: Catalog, product: Product) {
   const r = catalog.readiness;
   return catalog.source === "db" && r?.commercialReady === true && r.mode === "pilot" &&

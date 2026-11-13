@@ -48,6 +48,12 @@ export default function PrivacyPolicy() {
           <a href="/legal-notice" className="text-zim-gold underline">
             {t("pilot.operator_title")}
           </a>
+          <a
+            href="/account-deletion"
+            className="inline-flex min-h-11 items-center text-zim-gold underline"
+          >
+            {t("deletion.title")}
+          </a>
           <p className="text-white/70">
             {tr(
               "legal.privacy.p3",

@@ -1,3 +1,4 @@
+import { AccountDeletionService } from "../auth/accountDeletion";
 import { Router } from "express";
 import { z } from "zod";
 import { parseNewsletter } from "../newsletter/routes";
@@ -36,6 +37,41 @@ export function createTransactionalAdminRouter(
       );
     }
   });
+  const deletion = new AccountDeletionService();
+  router.get("/deletion-requests", async (req, res, next) => {
+    try {
+      const page = parseNewsletter(
+        z.coerce.number().int().min(1).max(10000).default(1),
+        req.query.page
+      );
+      res.json(ok({ requests: await deletion.pending(page) }));
+    } catch (error) {
+      next(error);
+    }
+  });
+  router.post(
+    "/deletion-requests/:reference/fulfill",
+    async (req, res, next) => {
+      try {
+        const reference = parseNewsletter(
+          z.string().uuid(),
+          req.params.reference
+        );
+        parseNewsletter(
+          z
+            .object({
+              associatedDataReviewed: z.literal(true),
+              customerNotificationArranged: z.literal(true),
+            })
+            .strict(),
+          req.body
+        );
+        res.json(ok(await deletion.fulfill(reference)));
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
   router.post(
     "/:id/action",
     rateLimiter({

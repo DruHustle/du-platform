@@ -229,8 +229,12 @@ try {
     await page.getByRole("heading", { name: "slow", exact: true }).count(),
     0
   );
+  assert.equal(new URL(page.url()).searchParams.get("q"), "Latest entity");
+  await page.reload();
+  await page.getByRole("heading", { name: "Latest entity", exact: true }).waitFor();
+  assert.equal(await page.locator("#ntir-search").inputValue(), "Latest entity");
   await page.unroute("**/api/investment/ntir/search?**");
-  pass("registry searches keep the latest response and announce loading");
+  pass("registry searches retain their query and results on refresh and reject late responses");
 
   await page.goto(`${baseUrl}/onesa-ai-book-trip`);
   const startDate = page.locator('input[type="date"]').first();
@@ -387,6 +391,25 @@ try {
   pass(
     "registration returns to the requested trip after switching account forms without persisting bearer tokens"
   );
+  await page.goto(`${baseUrl}/privacy-policy`);
+  await page.getByRole("link", { name: "Request account deletion", exact: true }).click();
+  await page.getByLabel("Current password", { exact: true }).fill(password);
+  let deletionAttempts = 0;
+  await page.route("**/api/auth/deletion-request", async route => {
+    const input = route.request().postDataJSON();
+    assert(input.accountId > 0 && input.confirm === true && input.password === password);
+    deletionAttempts++;
+    if (deletionAttempts === 1) return route.fulfill({ status: 503, json: { success: false, error: { code: "DELETION_UNAVAILABLE" } } });
+    return route.fulfill({ json: { success: true, data: { status: "requested", requestId: "synthetic-deletion-reference" } } });
+  });
+  await page.getByRole("button", { name: "Confirm deletion request" }).click();
+  await page.getByRole("alert").filter({ hasText: "Retry to recover" }).waitFor();
+  assert.equal(await page.getByLabel("Current password", { exact: true }).inputValue(), password);
+  await page.getByRole("button", { name: "Confirm deletion request" }).click();
+  await page.getByRole("status").filter({ hasText: "synthetic-deletion-reference" }).waitFor();
+  await page.unroute("**/api/auth/deletion-request");
+  await page.goto(`${baseUrl}${returnPath}`);
+  pass("account deletion clearly distinguishes a retry from a durable request receipt");
   const crossSiteLogout = await context.request.post(
     `${baseUrl}/api/auth/logout`,
     { headers: { Origin: "https://evil.example" } }
