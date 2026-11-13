@@ -605,6 +605,28 @@ try {
     "newsletter feedback handles failure and success using local test responses"
   );
 
+  const impactSection = page.locator("#impact-stories");
+  const publicStory = { id: 1, is_published: 1, title: "Community harvest", category: "Agriculture", author: "Community growers", story: "The growers delivered their first harvest." };
+  const draftStory = { ...publicStory, id: 2, is_published: 0, title: "Unpublished editorial draft" };
+  let impactAvailable = false;
+  let impactStories = [publicStory, draftStory];
+  await page.route("**/api/impact/stories", route => route.fulfill(impactAvailable
+    ? { json: { success: true, data: { stories: impactStories } } }
+    : { status: 503, json: { success: false } }));
+  await page.goto(`${baseUrl}/investment#impact-stories`);
+  await impactSection.getByRole("status").filter({ hasText: "could not be loaded" }).waitFor();
+  impactAvailable = true;
+  await impactSection.getByRole("button", { name: "Try again" }).click();
+  await impactSection.getByRole("heading", { name: publicStory.title }).waitFor();
+  await impactSection.getByText(publicStory.story).waitFor();
+  assert.equal(await impactSection.getByText(draftStory.title).count(), 0);
+  impactStories = [draftStory];
+  await page.reload();
+  await impactSection.getByRole("status").filter({ hasText: "No impact stories" }).waitFor();
+  assert.equal(await impactSection.locator("article").count(), 0);
+  await page.unroute("**/api/impact/stories");
+  pass("Investment recovers a failed impact feed, shows published stories, and distinguishes an empty feed from an outage");
+
   const anonymous = await browser.newContext();
   const response = await anonymous.request.get(`${baseUrl}/api/admin/overview`);
   assert.equal(response.status(), 401);

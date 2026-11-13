@@ -1280,7 +1280,7 @@
       "markets_placeholder": "Imisika (isib. EU, UK)",
       "story_placeholder": "Okuqukethwe yindaba",
       "testimonial_placeholder": "Ubufakazi",
-      "display_label": "Veza ekhasini lenguquko",
+      "display_label": "Veza ekhasini lokutshalwa kwemali",
       "add_story": "Ngezani indaba yenguquko",
       "badge_display": "Veza",
       "badge_hide": "Ungavezi",
@@ -1747,6 +1747,12 @@
   "cancel": "Khansela",
   "close": "Vala",
   "impact": {
+    "feed": {
+      "loading": "Izindaba zenguquko ziyalayishwa…",
+      "unavailable": "Izindaba zenguquko zehlulekile ukulayishwa.",
+      "retry": "Zama futhi",
+      "empty": "Akukashicilelwa zindaba zenguquko."
+    },
     "cta_button": "Qala Ubambiswano",
     "cta_subtitle": "Sisebenzisana nabaholi be-diaspora, izikhungo, namabhizinisi ukukhulisa umthelela. Vumela",
     "cta_title": "Uzakwethu",
