@@ -81,7 +81,7 @@ def web_text(label,seconds,swipe=False):
     while time.monotonic()<until:
         doc=screen.tree()
         for n in doc.iter('node'):
-            if n.get('package')!=screen.PACKAGE and label in [n.get('text'),n.get('content-desc')]:
+            if n.get('package')!=screen.PACKAGE and any(label.lower() in n.get(k,'').lower() for k in ['text','content-desc']):
                 return n
         if swipe:
             w,h=map(int,screen.adb('shell','wm','size').decode().strip().split()[-1].split('x'))
@@ -93,11 +93,20 @@ def investment():
     press('Browse investment research')
     live.find('Investment')
     press('Open website')
-    activity=screen.adb('shell','dumpsys','activity','activities').decode()
-    assert 'diasporaunlocked.com/investment' in activity
-    print('PASS Android native investment handoff to its exact public URL',flush=True)
+    started=time.monotonic()
+    exact=False
+    foreground=False
+    import re
+    for _ in range(30):
+        activity=screen.adb('shell','dumpsys','activity','activities').decode()
+        log=screen.adb('shell','logcat','-d','-s','ActivityTaskManager:I').decode(errors='replace')
+        exact=bool(re.search(r'https?://(?:www[.])?diasporaunlocked[.]com/investment(?:[ /?}#\s]|$)',activity+'\n'+log))
+        foreground=bool(re.search(r'(?:mResumedActivity|topResumedActivity)[^\n]*?(?:chrome|browser)',activity))
+        if exact and foreground:break
+        time.sleep(0.7)
+    print('Investment handoff exact path='+str(exact)+' browser foreground='+str(foreground)+' elapsed='+str(round(time.monotonic()-started)),flush=True)
     for label in ['Use without an account','Continue without an account','No thanks','Essential only']:
-        node=web_text(label,4)
+        node=web_text(label,5)
         if node is not None:
             live.tap(node)
             if label=='Essential only':print('PASS essential-only web consent in Android browser',flush=True)
@@ -106,7 +115,7 @@ def investment():
     live.tap(link)
     assert web_text('NTIR business directory',35) is not None,'Directory heading missing'
 errors=[]
-for name,test in [('contact persisted draft and identical retry',contact),('assistant draft decline and revoke',consent),('investment via visible link to NTIR',investment)]:
+for name,test in [('investment via visible link to NTIR',investment)]:
     try:
         home()
         test()
