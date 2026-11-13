@@ -1,6 +1,11 @@
 name: Generic iOS Release archive
 on:
   workflow_dispatch:
+    inputs:
+      keep_unsigned_archive:
+        description: Retain the unsigned device archive for distribution signing
+        type: boolean
+        default: false
   pull_request:
     paths:
       - ".github/workflows/ios-device-archive.yml"
@@ -66,3 +71,22 @@ jobs:
           xcrun lipo -archs "$app/$executable" >> "$GITHUB_STEP_SUMMARY"
           shasum -a 256 "$app/$executable" >> "$GITHUB_STEP_SUMMARY"
           echo 'com.diasporaunlocked.app, generic physical iOS, Release, no distribution signature' >> "$GITHUB_STEP_SUMMARY"
+      - name: Package the unsigned archive for the release owner
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.keep_unsigned_archive) ||
+          (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
+          startsWith(github.head_ref, 'release/'))
+        run: |
+          ditto -c -k -X --keepParent "$RUNNER_TEMP/DiasporaUnlocked.xcarchive" "$RUNNER_TEMP/Diaspora-Unlocked-unsigned-xcarchive.zip"
+          shasum -a 256 "$RUNNER_TEMP/Diaspora-Unlocked-unsigned-xcarchive.zip" >> "$GITHUB_STEP_SUMMARY"
+      - name: Retain the unsigned iPhoneOS archive
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.keep_unsigned_archive) ||
+          (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
+          startsWith(github.head_ref, 'release/'))
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: unsigned-device-archive-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/Diaspora-Unlocked-unsigned-xcarchive.zip
+          if-no-files-found: error
+          retention-days: 2
