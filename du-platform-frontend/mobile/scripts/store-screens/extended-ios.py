@@ -12,5 +12,5 @@ subprocess.run(['xcodebuild','build-for-testing','-workspace','ios/DiasporaUnloc
 if phone['state']!='Booted':subprocess.run(['xcrun','simctl','boot',udid],check=True)
 subprocess.run(['xcrun','simctl','bootstatus',udid,'-b'],check=True)
 runfile,=(tmp/'Build'/'Products').glob('*.xctestrun')
-res=subprocess.run(['xcodebuild','test-without-building','-xctestrun',str(runfile),'-parallel-testing-enabled','NO','-destination','id='+udid,'-resultBundlePath',str(tmp/'results.xcresult')])
+res=subprocess.run(['xcodebuild','test-without-building','-xctestrun',str(runfile),'-parallel-testing-enabled','NO','-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testUncertainContactSurvivesRelaunchAndRetriesOnce','-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testInvestmentOpensPublicBusinessDirectory','-destination','id='+udid,'-resultBundlePath',str(tmp/'results.xcresult')])
 raise SystemExit(res.returncode)

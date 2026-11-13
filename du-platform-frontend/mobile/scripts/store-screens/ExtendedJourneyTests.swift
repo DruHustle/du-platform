@@ -28,7 +28,7 @@ final class DUNativeSmokeTests: XCTestCase {
         let input = multiline ? app.textViews[label] : app.textFields[label]
         reach(input)
         input.tap()
-        input.typeText(value)
+        for character in value { input.typeText(String(character)) }
         XCTAssertEqual(input.value as? String, value)
         if !multiline { input.typeText("\n") }
     }
@@ -74,10 +74,23 @@ final class DUNativeSmokeTests: XCTestCase {
         if consent.waitForExistence(timeout:5) { consent.tap(); print("PASS essential-only web consent in iPhone browser sheet") }
         let directory=web.links["Search the directory"].firstMatch
         XCTAssertTrue(directory.waitForExistence(timeout:35))
-        if !directory.isHittable {
-            for _ in 0..<20 { if directory.isHittable {break}; web.swipeUp() }
+        let visibleArea = web.frame.insetBy(dx: 8,dy: 40)
+        var tapped = false
+        for _ in 0..<25 {
+            let bounds = directory.frame.intersection(visibleArea)
+            if !bounds.isNull && bounds.height >= 12 && bounds.width >= 20 {
+                let origin=app.coordinate(withNormalizedOffset:CGVector(dx:0,dy:0))
+                origin.withOffset(CGVector(dx:bounds.midX,dy:bounds.midY)).tap()
+                tapped=true
+                break
+            }
+            let top=web.coordinate(withNormalizedOffset:CGVector(dx:0.5,dy:0.26))
+            let bottom=web.coordinate(withNormalizedOffset:CGVector(dx:0.5,dy:0.76))
+            if directory.frame.maxY > 0 && directory.frame.maxY < visibleArea.minY {
+                top.press(forDuration:0.1,thenDragTo:bottom)
+            } else { bottom.press(forDuration:0.1,thenDragTo:top) }
         }
-        directory.tap()
+        XCTAssertTrue(tapped,"Directory link never appeared inside the browser viewport")
         let heading=web.descendants(matching:.any).matching(NSPredicate(format:"label CONTAINS[c] %@", "NTIR business directory")).firstMatch
         XCTAssertTrue(heading.waitForExistence(timeout:30))
     }
