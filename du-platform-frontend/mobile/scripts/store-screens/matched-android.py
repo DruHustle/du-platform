@@ -44,14 +44,64 @@ def exact_flight():
     details=['matched inputs London–Harare 15–22 January 2027, two adults, GBP',
              'selected and revalidated a Kiwi.com GBP offer']
     print('PASS ' + ', '.join(details), flush=True)
-    press('Continue to Kiwi.com')
-    for _ in range(20):
+    # Clip coordinates to the visible ScrollView; partially obscured nodes can otherwise tap foot navigation.
+    button=live.find('Continue to Kiwi.com',True,45)
+    for attempt in range(3):
+        scroll=next((n for n in screen.tree().iter('node') if n.get('class')=='android.widget.ScrollView' and n.get('package')==screen.PACKAGE),None)
+        box=screen.rect(button.get('bounds'))
+        if scroll:
+            sx1,sy1,sx2,sy2=screen.rect(scroll.get('bounds'))
+            x1,y1,x2,y2=box
+            if y2-y1<32 or y1<sy1+6 or y2>sy2-6:
+                pos=(sx1+sx2)//2
+                screen.adb('shell','input','swipe',str(pos),str(sy1+(sy2-sy1)*2//3),str(pos),str(sy1+(sy2-sy1)//3),'420')
+                button=live.find('Continue to Kiwi.com',True,12)
+                continue
+        break
+    print('Selected offer button enabled='+str(button.get('enabled'))+' bounds='+str(button.get('bounds')),flush=True)
+    start=time.monotonic()
+    seen=set()
+    def summary():
         state=screen.adb('shell','dumpsys','activity','activities').decode()
-        if live.re.search(r'Intent \{[^\n]*?act=android.intent.action.VIEW[^\n]*?dat=https?://(?:[\w-]+\.)*kiwi\.com(?:[/ ?}]|$)',state) and live.re.search(r'(?:mResumedActivity|topResumedActivity)[^\n]*(?:com\.android\.(?:chrome|browser)|org\.chromium)',state):
-            print('PASS matching Android provider host and foreground checkout browser',flush=True)
-            return
-        time.sleep(1)
-    raise AssertionError('No Kiwi.com handoff')
+        log=screen.adb('shell','logcat','-d','-s','ActivityTaskManager:I','ActivityManager:I').decode(errors='replace')
+        foreground=[m.group(1) for m in live.re.finditer(r'(?:mResumedActivity|topResumedActivity)[^\n]*?\bu\d+\s+([\w.]+/[^\s}]+)',state)]
+        hosts=sorted(set(live.re.findall(r'(?:dat=|data=)https?://([\w.-]+)',state+'\n'+log)))
+        return foreground,hosts
+    screen.adb('shell','logcat','-c')
+    for click in range(2):
+        live.tap(button)
+        for i in range(18):
+            fg,hosts=summary()
+            current=(tuple(fg),tuple(hosts))
+            if current not in seen:
+                seen.add(current)
+                print('Elapsed seconds='+str(round(time.monotonic()-start))+' foreground='+str(fg)+' VIEW hosts='+str(hosts),flush=True)
+            matched=any(h=='kiwi.com' or h.endswith('.kiwi.com') for h in hosts)
+            if matched and any(('chrome' in a or 'browser' in a) for a in fg):
+                print('PASS matching Android provider host and foreground checkout browser',flush=True)
+                return
+            if i in (4,10):
+                doc=screen.tree()
+                chrome=[(n.get('text') or n.get('content-desc','')) for n in doc.iter('node') if n.get('package','') in ('com.android.chrome','com.android.browser') and (n.get('text') or n.get('content-desc'))]
+                paths=[s.split('?')[0].split('/')[0][:55] for s in chrome if 'kiwi.com' in s]
+                if matched and chrome and paths:
+                    print('PASS matched Android provider host and visible browser address '+str(paths),flush=True)
+                    return
+                permitted=['Use without an account','Continue without an account','No thanks','Just once','Open']
+                for label in permitted:
+                    control=next((n for n in doc.iter('node') if n.get('package','') in ('com.android.chrome','android','com.android.intentresolver') and n.get('text')==label),None)
+                    if control is not None:
+                        print('Browser/chooser action '+label,flush=True)
+                        live.tap(control)
+                        break
+            time.sleep(1)
+        doc=screen.tree()
+        button=screen.node_for(doc,'Continue to Kiwi.com')
+        text=[n.get('text') or n.get('content-desc','') for n in doc.iter('node') if n.get('package')==screen.PACKAGE]
+        issues=[s for s in text if any(t in s.lower() for t in ('expired','could not open','checked price','problems','retry','checked.','your selection'))]
+        print('After provider press retained button='+str(button is not None)+' visible feedback='+str(issues[:6]),flush=True)
+        if button is None:break
+    raise AssertionError('Provider foreground or Android VIEW host did not confirm the handoff')
 
 def recover():
     open_page('reset-password')
@@ -108,7 +158,7 @@ def wait_for_home():
     screen.wait_for_label('Explore what connects us')
 
 failures=[]
-for name,case in [('Flight',exact_flight),('Reset',recover),('Catalogue',shop),('Basket',basket),('Consent',consent)]:
+for name,case in [('Flight',exact_flight)]:
     try:
         screen.adb('shell','am','force-stop',screen.PACKAGE)
         screen.adb('shell','am','start','-W','-n',screen.PACKAGE+'/.MainActivity')

@@ -1,4 +1,4 @@
-name: Android installed matched journey retry
+name: Android exact production handoff diagnosis
 on:
   push:
     branches: [validation/android-matched-retry-20261113]
