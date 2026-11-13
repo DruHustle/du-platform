@@ -34,7 +34,7 @@ With Android SDK Platform 36 and Build Tools 36.0.0 installed, run `python3 scri
 
 ### Google Play App Bundle
 
-In the existing listing for `com.diasporaunlocked.app`, check the highest version code across all tracks and the registered **upload certificate** fingerprint under App integrity. Use the release code approved for the next upload, update the Expo and tracked native versions together, and build the full release bundle. The Android release packaging workflow builds the full AAB and checks each configured ABI. Its manual “Retain the complete unsigned AAB” option saves the original bundle for owner signing for two days. The separate directly installable QA APK targets arm64.
+In the existing listing for `com.diasporaunlocked.app`, check the highest version code across all tracks and the registered **upload certificate** fingerprint under App integrity. Use the release code approved for the next upload, update the Expo and tracked native versions together, and build the full release bundle. The Android release packaging workflow builds the full AAB and checks each configured ABI. Pull requests from release/ branches in this repository retain the original unsigned bundle for owner signing for two days. The manual “Retain the complete unsigned AAB” option also saves it for two days. The separate directly installable QA APK targets arm64.
 
 ```sh
 export EXPO_PUBLIC_API_URL=https://www.diasporaunlocked.com/api

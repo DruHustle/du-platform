@@ -618,6 +618,26 @@ try {
           `${width}: hotel pricing basis stays unknown and supplier failure preserves previous options`
         );
       }
+      if (path === "car-hire") {
+        await page.evaluate(() => {
+          Object.defineProperty(navigator, "clipboard", {
+            configurable: true,
+            value: {
+              writeText: async () => { throw new DOMException("Denied", "NotAllowedError"); },
+            },
+          });
+        });
+        await page.getByRole("button", { name: "Copy search details" }).click();
+        const manualBrief = page.getByRole("textbox", { name: "Your search brief" });
+        await manualBrief.waitFor();
+        assert.match(await manualBrief.inputValue(), /VFA 14:00/);
+        assert.match(await manualBrief.inputValue(), /GBP/);
+        assert.equal(await manualBrief.evaluate(el =>
+          document.activeElement === el && el.selectionStart === 0 && el.selectionEnd === el.value.length
+        ), true);
+        await page.evaluate(() => Reflect.deleteProperty(navigator, "clipboard"));
+        checks.push(`${width}: clipboard denial selects the complete car search brief for manual copying`);
+      }
       await page.getByRole("button", { name: "Add search to trip" }).click();
       await fit(path + " shared context");
       await page.screenshot({

@@ -435,9 +435,9 @@ try {
       .locator("button[type=submit]")
       .click();
     await page.waitForURL(url => url.pathname === "/login" && url.searchParams.get("next") === nextPath);
-    await page.locator("form input[type=email]").fill(ordinary.email);
-    await page.locator("form input[type=password]").fill(replacement);
-    await page.locator("form button[type=submit]").click();
+    await page.locator("main form input[type=email]").fill(ordinary.email);
+    await page.locator("main form input[type=password]").fill(replacement);
+    await page.locator("main form button[type=submit]").click();
     await page.waitForURL(url => url.pathname === nextPath);
     await page.locator("main input[type=password]").waitFor();
     assert.equal((await call("/auth/me", { token: oldAccess })).status, 401);

@@ -13,9 +13,9 @@ const fakes = vi.hoisted(() => ({
 vi.mock("react-native", () => ({
   Platform: fakes.platform, StyleSheet: { create: styles => styles },
   Text: "Text", TextInput: "TextInput", View: "View", Pressable: "Pressable",
-  ActivityIndicator: "ActivityIndicator", ScrollView: "ScrollView", KeyboardAvoidingView: "KeyboardAvoidingView",
+  ActivityIndicator: "ActivityIndicator", ScrollView: "ScrollView", Keyboard: { metrics: () => undefined, addListener: () => ({ remove() {} }) },
 }));
-vi.mock("react-native-safe-area-context", () => ({ SafeAreaView: "SafeAreaView" }));
+vi.mock("react-native-safe-area-context", () => ({ SafeAreaView: "SafeAreaView", useSafeAreaInsets: () => ({ bottom: 0 }) }));
 vi.mock("@react-navigation/native", () => ({ useNavigation: () => fakes.navigation }));
 vi.mock("../src/session", () => ({ useSession: () => fakes.session }));
 vi.mock("../src/api", async importOriginal => ({ ...await importOriginal(), request: fakes.request }));
