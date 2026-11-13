@@ -1,11 +1,12 @@
 """Exercise the installed Release APK using its actual accessibility hierarchy."""
+import io
 import re
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 import time
 from xml.etree import ElementTree
+
 
 
 PACKAGE = 'com.diasporaunlocked.app'
@@ -43,19 +44,22 @@ def wait_for_label(label):
 
 
 def capture(output):
+    from PIL import Image
     png = adb('exec-out', 'screencap', '-p')
     if not png.startswith(b'\x89PNG\r\n\x1a\n'):
         raise ValueError('Android did not return a PNG')
     # Google Play accepts 24-bit PNGs without an alpha channel. Keep every pixel and the original resolution.
-    converter = shutil.which('magick') or shutil.which('convert')
-    if not converter:
-        raise RuntimeError('ImageMagick is required to export the captured Android screen as RGB.')
-    subprocess.run([converter, 'png:-', '-alpha', 'off', f'PNG24:{output}'], check=True, input=png)
+    with Image.open(io.BytesIO(png)) as captured:
+        if captured.mode not in ('RGB', 'RGBA'):
+            raise RuntimeError('Unexpected Android capture pixel format')
+        if captured.mode == 'RGBA' and captured.getextrema()[-1] != (255, 255):
+            raise RuntimeError('Unexpected transparent pixels in Android capture')
+        captured.convert('RGB').save(output, format='PNG')
 
 
 def main():
     output = Path(sys.argv[1]); output.mkdir(parents=True, exist_ok=True)
-    width, height, density = {'phone': (1080, 1920, 420), 'tablet': (1600, 2560, 300)}[output.name]
+    width, height, density = {'phone': (1080, 1920, 420), 'tablet': (1440, 2560, 300)}[output.name]
     adb('shell', 'wm', 'size', f'{width}x{height}')
     adb('shell', 'wm', 'density', str(density))
     adb('shell', 'settings', 'put', 'system', 'accelerometer_rotation', '0')

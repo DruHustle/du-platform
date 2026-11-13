@@ -78,6 +78,11 @@ jobs:
           ANDROID_RELEASE_CERT_SHA256=$(keytool -exportcert -keystore "$ANDROID_RELEASE_KEYSTORE" -alias qa -storepass:env ANDROID_RELEASE_STORE_PASSWORD | sha256sum | cut -d' ' -f1)
           export ANDROID_RELEASE_CERT_SHA256
           scripts/sign-release-apk.sh sign android/app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/screen-app.apk"
+      - name: Install 24-bit PNG encoder
+        run: |
+          python3 -m venv "$RUNNER_TEMP/screenshot-python"
+          "$RUNNER_TEMP/screenshot-python/bin/pip" install --quiet --disable-pip-version-check 'Pillow==11.3.0'
+          echo "$RUNNER_TEMP/screenshot-python/bin" >> "$GITHUB_PATH"
       - name: Enable accelerated emulator
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -95,6 +100,7 @@ jobs:
           script: |
             python3 du-platform-frontend/mobile/scripts/store-screens/capture-android.py "$RUNNER_TEMP/du-android/screens/phone" "$RUNNER_TEMP/screen-app.apk"
             python3 du-platform-frontend/mobile/scripts/store-screens/live-android.py || touch "$RUNNER_TEMP/du-android-live-failed"
+            python3 du-platform-frontend/mobile/scripts/store-screens/live-android.py product "$RUNNER_TEMP/du-android/screens/phone/Product.png" || touch "$RUNNER_TEMP/du-android-live-failed"
       - name: Android tablet Home to Travel
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
@@ -105,7 +111,9 @@ jobs:
           avd-name: store_tablet
           force-avd-creation: true
           disable-animations: true
-          script: python3 du-platform-frontend/mobile/scripts/store-screens/capture-android.py "$RUNNER_TEMP/du-android/screens/tablet" "$RUNNER_TEMP/screen-app.apk"
+          script: |
+            python3 du-platform-frontend/mobile/scripts/store-screens/capture-android.py "$RUNNER_TEMP/du-android/screens/tablet" "$RUNNER_TEMP/screen-app.apk"
+            python3 du-platform-frontend/mobile/scripts/store-screens/live-android.py product "$RUNNER_TEMP/du-android/screens/tablet/Product.png" || touch "$RUNNER_TEMP/du-android-live-failed"
       - name: Check Android live travel and sign-in outcomes
         run: test ! -f "$RUNNER_TEMP/du-android-live-failed"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

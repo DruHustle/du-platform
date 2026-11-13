@@ -1,3 +1,4 @@
+import ImpactStories from "../components/ImpactStories";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import SwipeRail from "@/components/discovery/SwipeRail";
@@ -232,6 +233,8 @@ export default function Investment() {
             ))}
           </SwipeRail>
         </DiscoverySection>
+
+        <ImpactStories />
 
         <DiscoverySection
           id="eu-partnerships"

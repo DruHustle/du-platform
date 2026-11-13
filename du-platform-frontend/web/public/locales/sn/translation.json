@@ -1280,7 +1280,7 @@
       "markets_placeholder": "Misika (semuenzaniso EU, UK)",
       "story_placeholder": "Zviri munyaya",
       "testimonial_placeholder": "Uchapupu",
-      "display_label": "Ratidzai papeji reshanduko",
+      "display_label": "Ratidza papeji rekudyara mari",
       "add_story": "Wedzerai nyaya yeshanduko",
       "badge_display": "Ratidzai",
       "badge_hide": "Musaratidze",
@@ -1747,6 +1747,12 @@
   "cancel": "Kanzura",
   "close": "Vharai",
   "impact": {
+    "feed": {
+      "loading": "Nyaya dzeshanduko dziri kuiswa…",
+      "unavailable": "Nyaya dzeshanduko hadzina kukwanisa kuiswa.",
+      "retry": "Edza zvakare",
+      "empty": "Hapana nyaya dzeshanduko dzakaburitswa parizvino."
+    },
     "cta_button": "Tanga Kudyidzana",
     "cta_subtitle": "Isu tinodyidzana nevatungamiriri vediaspora, masangano, uye mabhizinesi kuti tiwedzere maitiro. Regai",
     "cta_title": "Shamwaridzana nesu",
@@ -2039,7 +2045,7 @@
     "payment_draft": "Zvarongwa: simbisa mutengo wekupedzisira nemirayiridzo yekubhadhara nechitoro. Kubhadhara nekadhi kuburikidza neStripe kuri kurongwa asi hakusati kwawanikwa; hapana mari inotorwa pano. Nyora mari yagamuchirwa chete nenhamba yayo; tumira mushure mekuongorora mari nechigadzirwa. Maitiro echibvumirano nekubhadhara anofanira kubvumirwa kutengesa kusati kwatanga.",
     "returns_draft": "Kero iri kurongwa yekudzorera: Onesa UG (haftungsbeschränkt), Diaspora Unlocked, Steinhofweg 47, 69123 Heidelberg, Germany; info@diasporaunlocked.com. Bata chitoro nenhamba yechikumbiro kuti ukumbire kukanzura, utaure dambudziko kana kuronga kudzosa zvinhu. Mashoko nefomu rekukanzura, anobhadhara kutumira, zvinosiyiwa zvinoshanda nemaitiro ekudzorera mari zvinofanira kubvumirwa nekuburitswa kutengeserana kusati kwagamuchirwa. Kodzero dzemutengi dziri mumutemo hadzichinjwi.",
     "complaints": "Zvichemo, kukanzura kana kuvanzika: info@diasporaunlocked.com nenhamba yechikumbiro. Usatumira mashoko ekadhi rekubhadhara.",
-    "privacy_flows": "Zvikumbiro zvinochengeta zita, email, kero, zvigadzirwa nemitengo panguva yechikumbiro, mitengo yekupedzisira, nhoroondo nekutumirwa kweemail muMySQL iri paAiven. API iri paOracle uye peji riri paVercel. Resend inotumira email dzeodha netsamba dzakasimbiswa. Kukumbira odha hakukunyoresi kutsamba dzenhau.",
+    "privacy_flows": "Zvikumbiro zvinochengeta zita, email, kero, zvigadzirwa nemitengo panguva yechikumbiro, mitengo yekupedzisira, nhoroondo nekutumirwa kweemail muMySQL iri paAiven. API iri paRender uye peji riri paVercel. Resend inotumira email dzeodha netsamba dzakasimbiswa. Kukumbira odha hakukunyoresi kutsamba dzenhau.",
     "privacy_ai": "Onesa inotumira hurukuro nezvaunoda murwendo kuGoogle Gemini; Groq, Anthropic neCerebras dzinogona kushandiswa kana zvichidiwa. Usaisa mashoko akavanzika kana ekubhadhara. Mifananidzo yekamera yeAR inogadziriswa pamudziyo; haitumirwi neAR. Muridzi anofanira kuongorora zvibvumirano, kuchengetwa nekuendeswa kwemashoko kune dzimwe nyika kutengesa kusati kwatanga.",
     "privacy_controls": "Kuchengetwa kunodiwa kunobatsira sarudzo, bhasikiti nereceipt yakavanzika mutab. Ongororo yeVercel nezviitiko zvisina mazita zvinoda mvumo. Bvisa mvumo muCookie settings. Mazita, email, kero, token nehurukuro hazviendeswi muzviitiko zvekuongorora.",
     "privacy_retention": "Gwaro rekutanga: muridzi anofanira kusarudza nguva yekuchengeta maodha nemaakaundi, zvinodiwa nemutemo, zvibvumirano nevanochengeta data nekudzima. Tsamba dzinochengeta kusimbisa, kubuda nenhoroondo yekutumira. Link yekubuda inomisa dzimwe tsamba. Bata muridzi kuti uone, ugadzirise kana kudzima mashoko.",
