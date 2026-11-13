@@ -49,11 +49,17 @@ def main():
     work = root / 'work'
     work.mkdir(parents=True)
     data = work / 'derived'
-    base = ['xcodebuild', '-workspace', 'ios/DiasporaUnlocked.xcworkspace', '-scheme', 'DUNativeSmoke', '-configuration', 'Release', '-derivedDataPath', str(data), '-parallel-testing-enabled', 'NO', 'CODE_SIGNING_ALLOWED=NO']
-    run(*base, '-destination', 'generic/platform=iOS Simulator', 'build-for-testing')
     inventory = json.loads(run('xcrun', 'simctl', 'list', 'devices', 'available', '--json', capture_output=True).stdout)['devices']
-    for family, model in [('iPhone', re.compile(r'iPhone .*Pro Max')), ('iPad', re.compile(r'iPad Pro .*13-inch.*'))]:
-        device = simulator(inventory, model)
+    devices = {'iPhone': simulator(inventory, re.compile(r'iPhone .*Pro Max')),
+               'iPad': simulator(inventory, re.compile(r'iPad Pro .*13-inch.*'))}
+    run('xcodebuild', 'build-for-testing', '-workspace', 'ios/DiasporaUnlocked.xcworkspace',
+        '-scheme', 'DUNativeSmoke', '-configuration', 'Release', '-sdk', 'iphonesimulator',
+        '-destination', 'id=' + devices['iPhone']['udid'], '-derivedDataPath', str(data),
+        'ONLY_ACTIVE_ARCH=YES', 'CODE_SIGN_IDENTITY=-', 'CODE_SIGNING_ALLOWED=YES', 'CODE_SIGNING_REQUIRED=YES')
+    test_runs = list((data / 'Build' / 'Products').glob('*.xctestrun'))
+    if len(test_runs) != 1:
+        raise RuntimeError(f'Expected one simulator test configuration, got {test_runs}')
+    for family, device in devices.items():
         udid = device['udid']
         print(f'{family}: {device["name"]}', flush=True)
         if device['state'] != 'Booted':
@@ -64,7 +70,8 @@ def main():
         try:
             run('xcrun', 'simctl', 'status_bar', udid, 'override', '--time', '9:41')
             result = work / f'{family}.xcresult'
-            run(*base, '-destination', f'id={udid}', '-resultBundlePath', str(result), 'test-without-building')
+            run('xcodebuild', 'test-without-building', '-xctestrun', str(test_runs[0]), '-parallel-testing-enabled', 'NO',
+                '-destination', f'id={udid}', '-resultBundlePath', str(result))
             folder = work / f'{family}-attachments'
             run('xcrun', 'xcresulttool', 'export', 'attachments', '--path', str(result), '--output-path', str(folder))
             extract(folder, out, udid)
