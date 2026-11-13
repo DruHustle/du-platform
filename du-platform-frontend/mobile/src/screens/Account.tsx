@@ -30,7 +30,11 @@ export function AccountScreen() {
     {error ? <Message error message={error} /> : null}{feedback ? <Message message={feedback} /> : null}
     <Action title={busy ? "Please wait…" : mode === "forgot" ? "Send reset instructions" : mode === "register" ? "Create account" : "Sign in"} disabled={busy} onPress={() => void run(async () => {
       if (mode === "forgot") { await request("/auth/forgot-password", {method:"POST",body:{email:email.trim(),language:"en"}}); setFeedback("If this address matches an account, reset instructions may be emailed to you."); }
-      else if (mode === "register") { await session.register(name.trim(),email.trim(),password); setPassword(""); }
+      else if (mode === "register") {
+        await session.register(name.trim(), email.trim(), password);
+        setPassword("");
+        setMode("login");
+      }
       else { await session.signIn(email.trim(),password); setPassword(""); }
     })} />
   </Card><Action title={mode === "login" ? "Create an account" : "Back to sign in"} secondary onPress={() => {setMode(mode === "login" ? "register" : "login"); setError(""); setFeedback("");}} />{mode === "login" && <Action title="Forgot password?" secondary onPress={() => {setMode("forgot");setError("");setFeedback("");}} />}</Screen>;

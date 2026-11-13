@@ -1276,7 +1276,7 @@
       "markets_placeholder": "Märkte (z. B. EU, UK)",
       "story_placeholder": "Inhalt der Geschichte",
       "testimonial_placeholder": "Erfahrungsbericht",
-      "display_label": "Auf der Wirkungsseite anzeigen",
+      "display_label": "Auf der Investitionsseite anzeigen",
       "add_story": "Wirkungsgeschichte hinzufügen",
       "badge_display": "Anzeigen",
       "badge_hide": "Ausblenden",
@@ -1743,6 +1743,12 @@
   "cancel": "Stornieren",
   "close": "Schließen",
   "impact": {
+    "feed": {
+      "loading": "Wirkungsgeschichten werden geladen…",
+      "unavailable": "Die Wirkungsgeschichten konnten nicht geladen werden.",
+      "retry": "Erneut versuchen",
+      "empty": "Es wurden noch keine Wirkungsgeschichten veröffentlicht."
+    },
     "cta_button": "Partnerschaft starten",
     "cta_subtitle": "Wir arbeiten mit Diaspora-Führungskräften, Institutionen und Unternehmen zusammen, um die Wirkung zu steigern. Lassen",
     "cta_title": "Arbeiten Sie mit uns zusammen",
@@ -2035,7 +2041,7 @@
     "payment_draft": "Vorschlag: Endgültiges Angebot und Zahlungsanweisung direkt mit dem Shop prüfen. Kartenzahlung über Stripe ist geplant, aber noch nicht verfügbar; die Website zieht kein Geld ein. Nur tatsächlich eingegangene Zahlungen mit Referenz erfassen; nach Zahlung und Warenprüfung versenden. Vertragsschluss und Zahlung müssen vor Verkaufsstart freigegeben werden.",
     "returns_draft": "Vorgeschlagener Rücksendekontakt: Onesa UG (haftungsbeschränkt), Diaspora Unlocked, Steinhofweg 47, 69123 Heidelberg, Deutschland; info@diasporaunlocked.com. Für Stornierungen, Probleme oder Rückgaben den Shop mit der Referenz kontaktieren. Widerrufsinformationen und Formular, Kostentragung, anwendbare Ausnahmen und Erstattungsverfahren müssen vor Annahme kommerzieller Bestellungen freigegeben und veröffentlicht werden. Gesetzliche Verbraucherrechte bleiben unberührt.",
     "complaints": "Beschwerden, Stornierungen oder Datenschutzanfragen: info@diasporaunlocked.com mit Referenz. Keine Zahlungskartendaten senden.",
-    "privacy_flows": "Bestellanfragen speichern Kontakt- und Adressdaten, Produkt- und Preisstände, Angebote, Statusverlauf und E-Mail-Versanddaten in einer MySQL-Datenbank bei Aiven. Die API läuft auf Oracle, das Frontend auf Vercel. Resend versendet Transaktionsmails und bestätigte Newsletter. Eine Bestellanfrage ist kein Newsletter-Abonnement.",
+    "privacy_flows": "Bestellanfragen speichern Kontakt- und Adressdaten, Produkt- und Preisstände, Angebote, Statusverlauf und E-Mail-Versanddaten in einer MySQL-Datenbank bei Aiven. Die API läuft auf Render, das Frontend auf Vercel. Resend versendet Transaktionsmails und bestätigte Newsletter. Eine Bestellanfrage ist kein Newsletter-Abonnement.",
     "privacy_ai": "Onesa sendet Gespräche und Reisepräferenzen an konfigurierte KI-Anbieter: Google Gemini sowie Groq, Anthropic und Cerebras als Ausweichziele. Keine sensiblen oder Zahlungsdaten eingeben. AR-Kamerabilder werden lokal verarbeitet und von dieser Funktion nicht hochgeladen. Verträge, Aufbewahrung und internationale Übermittlungen sind vor Verkaufsstart zu prüfen.",
     "privacy_controls": "Notwendiger Speicher unterstützt Einstellungen, Warenkorb und private Belege im Browser-Tab. Optionale Vercel-Telemetrie und anonyme Trichterereignisse benötigen Analyse-Einwilligung. Widerruf über Cookie-Einstellungen. Namen, E-Mails, Adressen, Zugangstoken und Chattexte werden nicht als Trichterereignisse übertragen.",
     "privacy_retention": "Entwurf zur Aufbewahrung: Der Betreiber muss Fristen für Bestellungen und Konten, gesetzliche Pflichten, Auftragsverarbeitungsverträge und Löschabläufe festlegen. Newsletter-Daten umfassen Bestätigung, Abmeldung und Versandnachweise. Abmeldelinks stoppen weitere Kampagnen. Für Auskunft, Berichtigung oder Löschung den Betreiber kontaktieren.",

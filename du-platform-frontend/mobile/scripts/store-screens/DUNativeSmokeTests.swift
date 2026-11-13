@@ -38,6 +38,24 @@ final class DUNativeSmokeTests: XCTestCase {
         attach("Travel")
     }
 
+    func testOpenProductFromHome() {
+        let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
+        app.launch()
+        let browse = app.buttons["Browse products"]
+        XCTAssertTrue(app.staticTexts["Explore what connects us"].waitForExistence(timeout: 60))
+        scrollTo(browse, in: app); browse.tap()
+        XCTAssertTrue(app.textFields["Search products"].waitForExistence(timeout: 20))
+        let product = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "View details for ")).firstMatch
+        XCTAssertTrue(product.waitForExistence(timeout: 30), "Catalogue did not return a product")
+        scrollTo(product, in: app)
+        let name = String(product.label.dropFirst("View details for ".count))
+        product.tap()
+        XCTAssertTrue(app.staticTexts[name].waitForExistence(timeout: 30))
+        let price = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Indicative price:")).firstMatch
+        XCTAssertTrue(price.waitForExistence(timeout: 20))
+        attach("Product")
+    }
+
     func testDirectFlightHandoff() {
         let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
         openTravel(in: app)
@@ -59,12 +77,15 @@ final class DUNativeSmokeTests: XCTestCase {
     func testRejectedSignInCanRetry() {
         let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
         app.launch()
-        let account = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Account")).firstMatch
-        XCTAssertTrue(account.waitForExistence(timeout: 60)); account.tap()
+        app.open(URL(string: "diasporaunlocked://login")!)
+        XCTAssertTrue(app.staticTexts["Welcome back"].waitForExistence(timeout: 30))
         let email = app.textFields["Email address"], password = app.secureTextFields["Password"]
         XCTAssertTrue(email.waitForExistence(timeout: 20)); email.tap()
         let address = "qa-\(UUID().uuidString.prefix(8).lowercased())@example.test"
-        email.typeText(address); password.tap(); password.typeText("FixtureOnly123!")
+        for character in address { email.typeText(String(character)) }
+        XCTAssertEqual(email.value as? String, address, "Complete email must be present before submitting")
+        password.tap()
+        for character in "FixtureOnly123!" { password.typeText(String(character)) }
         let signIn = app.buttons["Sign in"]
         scrollTo(signIn, in: app); signIn.tap()
         let rejection = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "Invalid email or password")).firstMatch

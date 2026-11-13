@@ -22,7 +22,7 @@ def simulator(inventory, model):
     raise RuntimeError(f'No available simulator matching {model.pattern}')
 
 
-def extract(folder, out, device_id):
+def extract(folder, out, device_id, expected):
     tests = json.loads((folder / 'manifest.json').read_text())
     found = set()
     for test in tests:
@@ -30,7 +30,7 @@ def extract(folder, out, device_id):
             if attachment.get('deviceId') != device_id:
                 continue
             name = attachment.get('suggestedHumanReadableName', '')
-            match = re.match(r'^DU-(Home|Travel)(?:\b|_)', name)
+            match = re.match(r'^DU-(Home|Travel|Product)(?:\b|_)', name)
             if not match:
                 continue
             source = folder / attachment['exportedFileName']
@@ -41,7 +41,7 @@ def extract(folder, out, device_id):
                 raise ValueError(f'Duplicate {view} capture')
             shutil.copyfile(source, out / f'{view}.png')
             found.add(view)
-    if found != {'Home', 'Travel'}:
+    if found != expected:
         raise ValueError(f'Missing named captures, found: {found}')
 
 
@@ -77,7 +77,16 @@ def main():
                 '-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testOpenTravelFromHome')
             folder = work / f'{family}-attachments'
             run('xcrun', 'xcresulttool', 'export', 'attachments', '--path', str(result), '--output-path', str(folder))
-            extract(folder, out, udid)
+            extract(folder, out, udid, {'Home', 'Travel'})
+            shop_result = work / f'{family}-Shop.xcresult'
+            shop = subprocess.run(['xcodebuild', 'test-without-building', '-xctestrun', str(test_runs[0]),
+                '-parallel-testing-enabled', 'NO', '-destination', 'id=' + udid, '-resultBundlePath', str(shop_result),
+                '-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testOpenProductFromHome'])
+            live_outcomes.append((family + ' product detail', shop.returncode))
+            if shop.returncode == 0:
+                shop_folder = work / f'{family}-shop-attachments'
+                run('xcrun', 'xcresulttool', 'export', 'attachments', '--path', str(shop_result), '--output-path', str(shop_folder))
+                extract(shop_folder, out, udid, {'Product'})
             if family == 'iPhone':
                 for name in ('testDirectFlightHandoff', 'testRejectedSignInCanRetry'):
                     status = subprocess.run(['xcodebuild', 'test-without-building', '-xctestrun', str(test_runs[0]),

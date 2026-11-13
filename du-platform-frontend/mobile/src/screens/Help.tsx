@@ -40,14 +40,23 @@ export function AssistantScreen() {
   const navigation = useNavigation<any>();
   const [text, setText] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [sharing, setSharing] = useState<"review" | "allowed" | "declined">("review");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const active = useRef<AbortController | null>(null);
   const draftVersion = useRef(0);
   useEffect(() => () => active.current?.abort(), []);
 
+  function stopSharing() {
+    active.current?.abort();
+    active.current = null;
+    setBusy(false);
+    setError("");
+    setSharing("declined");
+  }
+
   async function send() {
-    if (active.current || !text.trim()) return;
+    if (sharing !== "allowed" || active.current || !text.trim()) return;
     const controller = new AbortController();
     active.current = controller;
     const submittedVersion = draftVersion.current;
@@ -62,16 +71,32 @@ export function AssistantScreen() {
     } catch (failure) {
       if (!controller.signal.aborted) setError(errorMessage(failure));
     } finally {
-      active.current = null;
-      if (!controller.signal.aborted) setBusy(false);
+      if (active.current === controller) {
+        active.current = null;
+        setBusy(false);
+      }
     }
   }
   return <Screen>
     <Heading>Onesa assistant</Heading>
     <Copy>Ask about Diaspora Unlocked, products, travel and business information. Onesa cannot book travel or accept payments.</Copy>
+    <Card>
+      <Heading>Sharing this chat</Heading>
+      <Copy>When you send a message, Diaspora Unlocked shares it and recent messages in this chat with Google Gemini to generate a reply. Groq, Anthropic or Cerebras may process the same messages if a fallback provider is used.</Copy>
+      {sharing === "review" ? <>
+        <Action title="Allow sharing for this chat" onPress={() => setSharing("allowed")} />
+        <Action title="Keep my draft private" secondary onPress={stopSharing} />
+      </> : sharing === "allowed" ? <Action title="Revoke chat sharing" secondary onPress={stopSharing} /> : <>
+        <Copy>Sharing is off. Your draft stays here.</Copy>
+        <Action title="Review chat sharing" secondary onPress={() => setSharing("review")} />
+      </>}
+    </Card>
     {messages.map((message, index) => <Card key={index}>
       <Copy>{message.role === "user" ? "You" : "Onesa"}</Copy>
-      {message.role === "assistant" ? <AssistantReply content={message.content} /> : <Copy>{message.content}</Copy>}
+      {message.role === "assistant" ? <>
+        <AssistantReply content={message.content} />
+        <Action title="Report this reply" secondary onPress={() => navigation.navigate("Contact", { reportReply: message.content.slice(0, 4000) })} />
+      </> : <Copy>{message.content}</Copy>}
     </Card>)}
     <Card>
       <Field label="Your message" value={text} multiline maxLength={4000} onChangeText={value => {
@@ -79,12 +104,14 @@ export function AssistantScreen() {
         setText(value);
       }} />
       {!!error && <Message error message={error}/>}
-      <Action title={busy ? "Sending…" : "Send message"} disabled={busy || !text.trim()} onPress={() => void send()}/>
+      <Action title={busy ? "Sending…" : "Send message"} disabled={sharing !== "allowed" || busy || !text.trim()} onPress={() => void send()}/>
     </Card>
     <Action title="Contact the team" secondary onPress={() => navigation.navigate("Contact")}/>
   </Screen>;
 }
-export function ContactScreen() {
+export function ContactScreen({ route }: { route: { params?: { reportReply?: string } } }) {
+  const selectedReply = route?.params?.reportReply;
+  const [includedReply, setIncludedReply] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
@@ -152,6 +179,19 @@ export function ContactScreen() {
   return <Screen>
     <Heading>Contact and help</Heading>
     <Copy>Send a message to the Diaspora Unlocked team. Please do not include passwords or payment details.</Copy>
+    {typeof selectedReply === "string" && selectedReply.length > 0 && selectedReply !== includedReply && <Card>
+      <Heading>Report an Onesa reply</Heading>
+      <Copy>Review the selected reply and edit or remove any details before sending it to the team.</Copy>
+      <Copy>{selectedReply}</Copy>
+      {pending ? <Copy>Finish your pending support message first. It is still in the form below.</Copy>
+        : (subject || message) ? <Copy>Clear the subject and message if you want to use the selected reply instead.</Copy> : null}
+      <Action title="Use selected reply in report" secondary disabled={!editable || !!subject || !!message} onPress={() => {
+        if (!editable || subject || message) return;
+        setSubject("Report an Onesa reply");
+        setMessage(selectedReply.slice(0, 4000));
+        setIncludedReply(selectedReply);
+      }} />
+    </Card>}
     <Card>
       <Field label="Full name" value={name} onChangeText={setName} editable={editable} autoComplete="name" maxLength={120} />
       <Field label="Email address" value={email} onChangeText={setEmail} editable={editable} keyboardType="email-address" autoCapitalize="none" autoComplete="email" maxLength={254} />
