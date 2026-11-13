@@ -92,7 +92,9 @@ jobs:
           profile: pixel_6
           force-avd-creation: true
           disable-animations: true
-          script: python3 du-platform-frontend/mobile/scripts/store-screens/capture-android.py "$RUNNER_TEMP/du-android/screens/phone" "$RUNNER_TEMP/screen-app.apk"
+          script: |
+            python3 du-platform-frontend/mobile/scripts/store-screens/capture-android.py "$RUNNER_TEMP/du-android/screens/phone" "$RUNNER_TEMP/screen-app.apk"
+            python3 du-platform-frontend/mobile/scripts/store-screens/live-android.py || touch "$RUNNER_TEMP/du-android-live-failed"
       - name: Android tablet Home to Travel
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
@@ -104,6 +106,8 @@ jobs:
           force-avd-creation: true
           disable-animations: true
           script: python3 du-platform-frontend/mobile/scripts/store-screens/capture-android.py "$RUNNER_TEMP/du-android/screens/tablet" "$RUNNER_TEMP/screen-app.apk"
+      - name: Check Android live travel and sign-in outcomes
+        run: test ! -f "$RUNNER_TEMP/du-android-live-failed"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

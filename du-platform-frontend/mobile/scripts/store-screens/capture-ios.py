@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import re
+import os
 import shutil
 import subprocess
 import sys
@@ -59,6 +60,7 @@ def main():
     test_runs = list((data / 'Build' / 'Products').glob('*.xctestrun'))
     if len(test_runs) != 1:
         raise RuntimeError(f'Expected one simulator test configuration, got {test_runs}')
+    live_outcomes = []
     for family, device in devices.items():
         udid = device['udid']
         print(f'{family}: {device["name"]}', flush=True)
@@ -71,12 +73,25 @@ def main():
             run('xcrun', 'simctl', 'status_bar', udid, 'override', '--time', '9:41')
             result = work / f'{family}.xcresult'
             run('xcodebuild', 'test-without-building', '-xctestrun', str(test_runs[0]), '-parallel-testing-enabled', 'NO',
-                '-destination', f'id={udid}', '-resultBundlePath', str(result))
+                '-destination', f'id={udid}', '-resultBundlePath', str(result),
+                '-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testOpenTravelFromHome')
             folder = work / f'{family}-attachments'
             run('xcrun', 'xcresulttool', 'export', 'attachments', '--path', str(result), '--output-path', str(folder))
             extract(folder, out, udid)
+            if family == 'iPhone':
+                for name in ('testDirectFlightHandoff', 'testRejectedSignInCanRetry'):
+                    status = subprocess.run(['xcodebuild', 'test-without-building', '-xctestrun', str(test_runs[0]),
+                        '-parallel-testing-enabled', 'NO', '-destination', f'id={udid}',
+                        '-resultBundlePath', str(work / (name + '.xcresult')),
+                        '-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/' + name]).returncode
+                    live_outcomes.append((name, status))
         finally:
             run('xcrun', 'simctl', 'shutdown', udid)
+    with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as report:
+        for name, status in live_outcomes:
+            print(f'{name}: {"passed" if status == 0 else "not verified; see XCTest output"}', file=report)
+    if any(status for _, status in live_outcomes):
+        raise RuntimeError('One or more live iPhone journeys did not pass; independent screenshots were retained.')
 
 
 if __name__ == '__main__':
