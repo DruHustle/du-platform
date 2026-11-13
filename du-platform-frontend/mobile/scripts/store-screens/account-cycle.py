@@ -111,13 +111,18 @@ def ios(email, password):
         plistlib.dump(config, f)
     try:
         # XCTest can log keyboard input. Keep all UI-test logs and the result private to this runner.
-        result = subprocess.run(['xcodebuild','test-without-building','-xctestrun',str(runfile),
-            '-parallel-testing-enabled','NO','-destination','id='+udid,
+        with subprocess.Popen(['xcodebuild', 'test-without-building', '-xctestrun', str(runfile),
+            '-parallel-testing-enabled', 'NO', '-destination', 'id=' + udid,
             '-only-testing:DUNativeSmokeUITests/DUNativeSmokeTests/testOneAccountCycle'],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        if result.returncode:
-            raise RuntimeError('iPhone UI account lifecycle did not complete')
-        print('PASS iPhone installed registration, sign-out, sign-in and deletion receipt', flush=True)
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True) as process:
+            stages = set()
+            for line in process.stdout:
+                for stage in ('account-form', 'email-entered', 'first-sign-in', 'signed-out', 'second-sign-in', 'deletion-receipt'):
+                    if ('DU_STAGE ' + stage) in line and stage not in stages:
+                        print('Installed iPhone: ' + stage, flush=True)
+                        stages.add(stage)
+            if process.wait() or 'deletion-receipt' not in stages:
+                raise RuntimeError('The installed iPhone did not complete all six UI stages')
     finally:
         runfile.unlink(missing_ok=True)
 
@@ -132,13 +137,25 @@ def main():
         raise ValueError('A specific platform is required')
     email = 'qa-native-20261113-' + family + '@example.test'
     # Fixed emails prevent a retry or future run from registering another account.
-    password = 'Qa-' + secrets.token_hex(22) + '7'
+    password = 'Qa-' + secrets.token_hex(12) + '7'
     print('::add-mask::' + password, flush=True)
     status, _ = call('/auth/deletion-request', {'confirm':True})
     if status != 401:
         raise RuntimeError('Production did not expose authenticated cleanup; no account was created')
     try:
-        (ios if family == 'ios' else android)(email, password)
+        if family == 'ios':
+            status, owned = call('/auth/native/register', {
+                'email': email, 'password': password, 'confirmPassword': password,
+                'fullName': 'Diaspora iOS QA'})
+            if status == 409:
+                raise RuntimeError('The reserved iOS QA address already exists. Operator recovery is required.')
+            if status != 201 or owned.get('user', {}).get('email') != email:
+                raise RuntimeError(f'Could not provision the reserved iOS QA identity (HTTP {status})')
+            call('/auth/logout', {}, owned['sessionToken'])
+            print('The reserved iOS QA identity was provisioned for UI sign-in.', flush=True)
+            ios(email, password)
+        else:
+            android(email, password)
     finally:
         # If UI failed after registration, still enqueue cleanup for this exact test-owned account.
         # The API request is idempotent if the UI already enqueued it.

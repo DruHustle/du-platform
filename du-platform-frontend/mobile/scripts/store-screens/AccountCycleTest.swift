@@ -1,47 +1,70 @@
 import XCTest
 
 final class DUNativeSmokeTests: XCTestCase {
-    private func tapVisible(_ element: XCUIElement, in app: XCUIApplication) {
-        for _ in 0..<10 {
-            if element.isHittable { element.tap(); return }
+    private func reach(_ item: XCUIElement, in app: XCUIApplication) {
+        for _ in 0..<8 {
+            if item.isHittable { return }
             app.swipeUp()
         }
-        XCTFail("The expected account control was unreachable")
+        XCTAssertTrue(item.isHittable)
+    }
+
+    private func enter(_ value: String, in field: XCUIElement) {
+        XCTAssertTrue(field.waitForExistence(timeout: 20))
+        field.tap()
+        for character in value { field.typeText(String(character)) }
     }
 
     func testOneAccountCycle() throws {
         continueAfterFailure = false
-        guard let address = ProcessInfo.processInfo.environment["DU_QA_EMAIL"],
+        guard let email = ProcessInfo.processInfo.environment["DU_QA_EMAIL"],
               let password = ProcessInfo.processInfo.environment["DU_QA_PASSWORD"],
-              address == "qa-native-20261113-ios@example.test" else {
-            throw XCTSkip("This test requires activation for the release qualification account")
+              email == "qa-native-20261113-ios@example.test" else {
+            XCTFail("The fixed QA test identity was not passed to the runner")
+            return
         }
         let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
         app.launch()
-        let tab = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Account")).firstMatch
-        XCTAssertTrue(tab.waitForExistence(timeout: 60)); tab.tap()
-        let create = app.buttons["Create an account"]
-        tapVisible(create, in: app)
-        let name = app.textFields["Full name"]
-        XCTAssertTrue(name.waitForExistence(timeout: 10)); name.tap(); name.typeText("Diaspora iOS QA")
-        let email = app.textFields["Email address"]
-        email.tap(); email.typeText(address)
+        XCTAssertTrue(app.staticTexts["Explore what connects us"].waitForExistence(timeout: 60))
+        app.open(URL(string: "diasporaunlocked://login")!)
+        XCTAssertTrue(app.staticTexts["Welcome back"].waitForExistence(timeout: 30))
+        print("DU_STAGE account-form")
+        let address = app.textFields["Email address"]
+        enter(email, in: address)
+        XCTAssertEqual(address.value as? String, email)
+        print("DU_STAGE email-entered")
         let secret = app.secureTextFields["Password"]
-        secret.tap(); secret.typeText(password)
-        tapVisible(app.buttons["Create account"], in: app)
-        let identity = app.staticTexts["Signed in as " + address]
-        XCTAssertTrue(identity.waitForExistence(timeout: 30))
-        tapVisible(app.buttons["Sign out"], in: app)
-        XCTAssertTrue(email.waitForExistence(timeout: 30))
-        if email.value as? String != address { email.tap(); email.typeText(address) }
-        secret.tap(); secret.typeText(password)
-        tapVisible(app.buttons["Sign in"], in: app)
-        XCTAssertTrue(identity.waitForExistence(timeout: 30))
-        tapVisible(app.buttons["Request account deletion"], in: app)
+        let identity = app.staticTexts["Signed in as " + email]
+        let signIn = app.buttons["Sign in"]
+        for step in ["first-sign-in", "second-sign-in"] {
+            enter(password, in: secret)
+            reach(signIn, in: app)
+            signIn.tap()
+            XCTAssertTrue(identity.waitForExistence(timeout: 30))
+            print("DU_STAGE " + step)
+            if step == "first-sign-in" {
+                let signOut = app.buttons["Sign out"]
+                reach(signOut, in: app)
+                signOut.tap()
+                XCTAssertTrue(app.staticTexts["Welcome back"].waitForExistence(timeout: 25))
+                if address.value as? String != email {
+                    enter(email, in: address)
+                }
+                XCTAssertEqual(address.value as? String, email)
+                print("DU_STAGE signed-out")
+            }
+        }
+        let action = app.buttons["Request account deletion"]
+        reach(action, in: app)
+        action.tap()
         let current = app.secureTextFields["Current password"]
-        tapVisible(current, in: app); current.typeText(password)
-        tapVisible(app.buttons["Confirm deletion request"], in: app)
+        reach(current, in: app)
+        enter(password, in: current)
+        let confirm = app.buttons["Confirm deletion request"]
+        reach(confirm, in: app)
+        confirm.tap()
         let receipt = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", "Deletion request received. Reference:")).firstMatch
         XCTAssertTrue(receipt.waitForExistence(timeout: 30))
+        print("DU_STAGE deletion-receipt")
     }
 }

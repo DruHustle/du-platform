@@ -23,7 +23,7 @@ env:
   EXPO_NO_TELEMETRY: '1'
 jobs:
   ios:
-    if: github.repository == 'DruHustle/du-platform' && github.ref == 'refs/heads/validation/native-accounts-20261113' && github.run_attempt == 1 && ((github.event_name == 'push' && (github.event.created == true || github.event.before == 'e94275963ab666b519508ff5d404c2eef91d0441') && github.event.head_commit.message == 'Qualify two native release QA accounts') || (github.event_name == 'workflow_dispatch' && inputs.confirm == true))
+    if: github.repository == 'DruHustle/du-platform' && github.ref == 'refs/heads/validation/native-accounts-20261113' && github.run_attempt == 1 && github.event_name == 'push' && github.event.before == 'd83573f9a31a2a747be674c557e24aef4a068973' && github.event.head_commit.message == 'Verify iOS sign-in using the reserved release account'
     runs-on: macos-26
     timeout-minutes: 85
     defaults:
