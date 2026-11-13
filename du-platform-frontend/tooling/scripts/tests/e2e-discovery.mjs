@@ -295,6 +295,7 @@ try {
             "investment-innovation-opportunities",
             "collective-model",
             "active-projects",
+            "impact-stories",
             "eu-partnerships",
           ]
         );

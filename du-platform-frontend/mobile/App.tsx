@@ -17,7 +17,7 @@ import { AccountScreen, ResetPasswordScreen } from "./src/screens/Account";
 import { AssistantScreen, ContactScreen, SearchScreen, ExternalScreen } from "./src/screens/Help";
 import { colors } from "./src/ui";
 
-type RootStackParams = { Main: undefined; Product: {slug: string}; Cart: undefined; Search: undefined; Contact: undefined; Reset: {token?: string} | undefined; External: {path: string; title: string} };
+type RootStackParams = { Main: undefined; Product: {slug: string}; Cart: undefined; Search: undefined; Contact: {reportReply: string} | undefined; Reset: {token?: string} | undefined; External: {path: string; title: string} };
 const Tabs=createBottomTabNavigator();const Stack=createNativeStackNavigator<RootStackParams>();
 const icons: Record<string,string>={Home:"⌂",Shop:"▣",Travel:"✈",Assistant:"✦",Account:"●"};
 function MainTabs(){return <Tabs.Navigator screenOptions={({route})=>({headerStyle:{backgroundColor:colors.navy},headerTintColor:"white",headerTitleStyle:{fontWeight:"700"},tabBarActiveTintColor:colors.ink,tabBarInactiveTintColor:"#53657a",tabBarLabelStyle:{fontSize:12,fontWeight:"600"},tabBarIcon:({color})=><Text style={{color,fontSize:20}}>{icons[route.name]}</Text>})}><Tabs.Screen name="Home" component={HomeScreen} options={{headerTitle:"Diaspora Unlocked",tabBarLabel:"Home"}}/><Tabs.Screen name="Shop" component={ShopScreen}/><Tabs.Screen name="Travel" component={TravelScreen}/><Tabs.Screen name="Assistant" component={AssistantScreen}/><Tabs.Screen name="Account" component={AccountScreen}/></Tabs.Navigator>;}
