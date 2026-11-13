@@ -1,5 +1,7 @@
 name: Generic iOS Release archive
 on:
+  push:
+    branches: [validation/archive-release-173]
   workflow_dispatch:
   pull_request:
     paths:
@@ -66,3 +68,13 @@ jobs:
           xcrun lipo -archs "$app/$executable" >> "$GITHUB_STEP_SUMMARY"
           shasum -a 256 "$app/$executable" >> "$GITHUB_STEP_SUMMARY"
           echo 'com.diasporaunlocked.app, generic physical iOS, Release, no distribution signature' >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve the qualified unsigned archive for the release owner
+        run: |
+          ditto -c -k -X --keepParent "$RUNNER_TEMP/DiasporaUnlocked.xcarchive" "$RUNNER_TEMP/Diaspora-Unlocked-unsigned-xcarchive.zip"
+          shasum -a 256 "$RUNNER_TEMP/Diaspora-Unlocked-unsigned-xcarchive.zip" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: unsigned-device-archive-672e64f
+          path: ${{ runner.temp }}/Diaspora-Unlocked-unsigned-xcarchive.zip
+          if-no-files-found: error
+          retention-days: 2
