@@ -32,6 +32,7 @@ export async function request<T>(path: string, options: {
   const endpoint = new URL(API_URL + path);
   if (endpoint.origin !== base.origin || !endpoint.pathname.startsWith(`${base.pathname.replace(/\/$/, "")}/`)) throw new Error("Invalid API path");
   let response: Response;
+  let payload;
   const controller = new AbortController();
   const cancel = () => controller.abort();
   if (options.signal?.aborted) controller.abort();
@@ -45,14 +46,19 @@ export async function request<T>(path: string, options: {
       credentials: "omit",
       signal: controller.signal,
     });
+    try {
+      payload = await response.json();
+    } catch (error) {
+      if (controller.signal.aborted || options.signal?.aborted) throw error;
+      if (response.ok) throw new ApiError("The service returned an unreadable response. Please try again.", response.status, "INVALID_RESPONSE");
+    }
   } catch (error) {
-    if (options.signal?.aborted) throw error;
+    if (options.signal?.aborted || error instanceof ApiError) throw error;
     throw new ApiError(controller.signal.aborted ? "The request timed out. Please try again." : "Could not connect. Check your connection and try again.");
   } finally {
     clearTimeout(timer);
     options.signal?.removeEventListener("abort", cancel);
   }
-  const payload = await response.json().catch(() => null);
   if (!response.ok) {
     const error: ApiErrorPayload = payload?.error || {};
     throw new ApiError(error.message || payload?.message || "The service is unavailable. Please try again.", response.status, error.code || "API_ERROR");

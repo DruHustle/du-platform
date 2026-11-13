@@ -1550,11 +1550,13 @@
       "caption": "Lebensmittel · Kunsthandwerk · Fanartikel",
       "collections_cta": "Kategorien entdecken"
     },
+    "delivery_coverage": "Freigegebene Lieferländer: {{countries}}.",
+    "no_delivery_destinations": "Derzeit sind Lieferungen in kein Land möglich.",
     "currency": {
       "label": "Shop-Währung",
-      "EUR": "EUR · Europa",
-      "USD": "USD · Simbabwe",
-      "ZAR": "ZAR · Südafrika",
+      "EUR": "Euro (EUR)",
+      "USD": "US-Dollar (USD)",
+      "ZAR": "Südafrikanischer Rand (ZAR)",
       "note": "Preise sind Schätzwerte. Endgültige Produktpreise und DHL-Versandkosten werden vor der Zahlung bestätigt. Referenzumrechnung: 15. Oktober 2026."
     }
   },
@@ -2309,6 +2311,10 @@
       "changed": "Der Anbieterbetrag hat sich geändert. Vor dem Fortfahren den neuen angezeigten Betrag prüfen.",
       "expired": "Diese Option wurde bei der neuen Suche nicht geliefert. Reise bleibt erhalten. Suche nach Alternativen.",
       "continue": "Weiter zu {{provider}}",
+      "checkout-owner": "{{provider}} übernimmt Buchung, Zahlung und Kundenservice. Prüfe dort den Endpreis und die Stornierungsbedingungen.",
+      "affiliate-disclosure": "Awin kann Cookies verwenden, um deine Buchung zuzuordnen. Diaspora Unlocked kann eine Provision erhalten, wenn du den Empfehlungslink wählst. Du kannst auch direkt zu Kiwi.com gehen.",
+      "affiliate-choice": "Empfehlungstracking erlauben und weiter",
+      "referral-failed": "Der Empfehlungslink konnte nicht geöffnet werden. Dein Flug bleibt ausgewählt. Nutze den direkten Anbieterlink oder versuche es erneut.",
       "no-reservation": "DU erstellt keine Reservierung und hält keinen Preis. Buchung und endgültige Preise werden beim Anbieter bestätigt.",
       "nationality": "Nationalität des Gastes (Ländercode mit 2 Buchstaben)",
       "nationality-note": "Zum Beispiel DE, ZW, ZA oder GB. Hotelraten können von der Nationalität abhängen; keine Passnummer eingeben.",

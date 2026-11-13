@@ -229,8 +229,12 @@ try {
     await page.getByRole("heading", { name: "slow", exact: true }).count(),
     0
   );
+  assert.equal(new URL(page.url()).searchParams.get("q"), "Latest entity");
+  await page.reload();
+  await page.getByRole("heading", { name: "Latest entity", exact: true }).waitFor();
+  assert.equal(await page.locator("#ntir-search").inputValue(), "Latest entity");
   await page.unroute("**/api/investment/ntir/search?**");
-  pass("registry searches keep the latest response and announce loading");
+  pass("registry searches retain their query and results on refresh and reject late responses");
 
   await page.goto(`${baseUrl}/onesa-ai-book-trip`);
   const startDate = page.locator('input[type="date"]').first();
