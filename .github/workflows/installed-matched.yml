@@ -1,7 +1,7 @@
-name: Installed matched journey qualification
+name: Android installed matched journey retry
 on:
   push:
-    branches: [validation/matched-release-20261113-recovery]
+    branches: [validation/android-matched-retry-20261113]
 permissions:
   contents: read
 concurrency:
@@ -13,28 +13,6 @@ env:
   CI: '1'
   EXPO_NO_TELEMETRY: '1'
 jobs:
-  ios:
-    runs-on: macos-26
-    timeout-minutes: 85
-    defaults:
-      run:
-        working-directory: du-platform-frontend/mobile
-    steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
-        with:
-          node-version: '24'
-          cache: npm
-          cache-dependency-path: du-platform-frontend/mobile/package-lock.json
-      - run: npm ci --no-audit --no-fund
-      - run: pod install --project-directory=ios
-      - run: |
-          cp scripts/store-screens/MatchedJourneyTests.swift scripts/store-screens/DUNativeSmokeTests.swift
-          ruby scripts/store-screens/prepare-ui-tests.rb ios/DiasporaUnlocked.xcodeproj
-      - name: Run installed iPhone matched journeys
-        run: python3 scripts/store-screens/matched-ios.py
   android:
     runs-on: ubuntu-24.04
     timeout-minutes: 85
@@ -87,8 +65,13 @@ jobs:
           arch: x86_64
           target: google_apis
           profile: pixel_6
+          cores: 4
+          ram-size: 4096M
           force-avd-creation: true
           disable-animations: true
           script: |
+            adb shell input keyevent KEYCODE_WAKEUP
+            adb shell wm dismiss-keyguard
+            adb shell settings put system show_touches 0
             adb install -r "$RUNNER_TEMP/screen-app.apk"
             python3 du-platform-frontend/mobile/scripts/store-screens/matched-android.py
