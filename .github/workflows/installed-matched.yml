@@ -1,0 +1,94 @@
+name: Installed matched journey qualification
+on:
+  push:
+    branches: [validation/matched-release-20261113-recovery]
+permissions:
+  contents: read
+concurrency:
+  group: installed-matched-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  EXPO_PUBLIC_API_URL: https://www.diasporaunlocked.com/api
+  EXPO_PUBLIC_WEB_URL: https://www.diasporaunlocked.com
+  CI: '1'
+  EXPO_NO_TELEMETRY: '1'
+jobs:
+  ios:
+    runs-on: macos-26
+    timeout-minutes: 85
+    defaults:
+      run:
+        working-directory: du-platform-frontend/mobile
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: du-platform-frontend/mobile/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: pod install --project-directory=ios
+      - run: |
+          cp scripts/store-screens/MatchedJourneyTests.swift scripts/store-screens/DUNativeSmokeTests.swift
+          ruby scripts/store-screens/prepare-ui-tests.rb ios/DiasporaUnlocked.xcodeproj
+      - name: Run installed iPhone matched journeys
+        run: python3 scripts/store-screens/matched-ios.py
+  android:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 85
+    defaults:
+      run:
+        working-directory: du-platform-frontend/mobile
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: du-platform-frontend/mobile/package-lock.json
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: npm ci --no-audit --no-fund
+      - name: Build a Release APK for the Intel emulator
+        run: |
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;36.0.0'
+          bash android/gradlew -p android --no-daemon :app:assembleRelease -PreactNativeArchitectures=x86_64
+      - name: Sign this installation with a temporary QA key
+        run: |
+          qa_dir=$(mktemp -d "$RUNNER_TEMP/screenshot-qa.XXXXXX")
+          trap 'rm -rf -- "$qa_dir"' EXIT
+          export ANDROID_RELEASE_KEYSTORE="$qa_dir/qa.p12" ANDROID_RELEASE_ALIAS=qa
+          ANDROID_RELEASE_STORE_PASSWORD=$(openssl rand -hex 24)
+          export ANDROID_RELEASE_STORE_PASSWORD ANDROID_RELEASE_KEY_PASSWORD="$ANDROID_RELEASE_STORE_PASSWORD"
+          keytool -genkeypair -keystore "$ANDROID_RELEASE_KEYSTORE" -alias qa -storepass:env ANDROID_RELEASE_STORE_PASSWORD -keypass:env ANDROID_RELEASE_KEY_PASSWORD -keyalg RSA -keysize 2048 -dname 'CN=Temporary screenshot QA' -validity 7
+          ANDROID_RELEASE_CERT_SHA256=$(keytool -exportcert -keystore "$ANDROID_RELEASE_KEYSTORE" -alias qa -storepass:env ANDROID_RELEASE_STORE_PASSWORD | sha256sum | cut -d' ' -f1)
+          export ANDROID_RELEASE_CERT_SHA256
+          scripts/sign-release-apk.sh sign android/app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/screen-app.apk"
+      - name: Install 24-bit PNG encoder
+        run: |
+          python3 -m venv "$RUNNER_TEMP/screenshot-python"
+          "$RUNNER_TEMP/screenshot-python/bin/pip" install --quiet --disable-pip-version-check 'Pillow==11.3.0'
+          echo "$RUNNER_TEMP/screenshot-python/bin" >> "$GITHUB_PATH"
+      - name: Enable accelerated emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Android phone Home to Travel
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          force-avd-creation: true
+          disable-animations: true
+          script: |
+            adb install -r "$RUNNER_TEMP/screen-app.apk"
+            python3 du-platform-frontend/mobile/scripts/store-screens/matched-android.py
