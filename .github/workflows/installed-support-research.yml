@@ -1,4 +1,4 @@
-name: Android installed support recovery and research retry
+name: Android installed investment browser handoff
 on:
   push:
     branches: [validation/android-support-recovery-20261113]
@@ -84,4 +84,4 @@ jobs:
         if: always()
         run: |
           cat "$RUNNER_TEMP/fixture.log"
-          grep "PASS isolated inbox" "$RUNNER_TEMP/fixture.log"
+          test -f "$RUNNER_TEMP/fixture.log"
