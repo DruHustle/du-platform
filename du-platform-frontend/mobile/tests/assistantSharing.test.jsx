@@ -1,19 +1,19 @@
 import React from "react";
 import { act, create } from "react-test-renderer";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { AssistantScreen, ContactScreen } from "../src/screens/Help";
+import { AssistantScreen, ContactScreen, ExternalScreen } from "../src/screens/Help";
 
 const fakes = vi.hoisted(() => ({
-  platform: { OS: "ios" }, navigate: vi.fn(), reply: vi.fn(),
+  platform: { OS: "ios" }, dismiss: vi.fn(), browser: vi.fn(), navigate: vi.fn(), reply: vi.fn(),
   request: vi.fn(), restore: vi.fn(), save: vi.fn(), remove: vi.fn(),
 }));
 vi.mock("react-native", () => ({
   Platform: fakes.platform, StyleSheet: { create: value => value }, Linking: {},
   View: "View", Text: "Text", TextInput: "TextInput", Pressable: "Pressable",
-  ActivityIndicator: "ActivityIndicator", ScrollView: "ScrollView", Keyboard: { metrics: () => undefined, addListener: () => ({ remove() {} }) },
+  ActivityIndicator: "ActivityIndicator", ScrollView: "ScrollView", Keyboard: { dismiss: fakes.dismiss, metrics: () => undefined, addListener: () => ({ remove() {} }) },
 }));
 vi.mock("react-native-safe-area-context", () => ({ SafeAreaView: "SafeAreaView", useSafeAreaInsets: () => ({ bottom: 0 }) }));
-vi.mock("expo-web-browser", () => ({ openBrowserAsync: vi.fn() }));
+vi.mock("expo-web-browser", () => ({ openBrowserAsync: fakes.browser }));
 vi.mock("expo-crypto", () => ({ randomUUID: () => "report-request" }));
 vi.mock("@react-navigation/native", () => ({ useNavigation: () => ({ navigate: fakes.navigate }) }));
 vi.mock("../src/api", () => ({ ApiError: class extends Error {}, request: fakes.request, requestOnesaReply: fakes.reply }));
@@ -52,6 +52,50 @@ describe.each(["ios", "android"])("Onesa on %s", platform => {
     await act(async () => button.props.onPress());
   }
   async function enter(label, value) { await act(async () => field(label).props.onChangeText(value)); }
+
+  it("keeps the support draft and only sends on explicit submission after editing", async () => {
+    await render(<ContactScreen route={{}} />);
+    await enter("Full name", "Guest");
+    await enter("Email address", "guest@example.test");
+    await enter("Subject", "Help");
+    const draft = "First line\nSecond line";
+    expect(buttons("Done editing")).toHaveLength(0);
+    await act(async () => field("Message").props.onFocus());
+    await enter("Message", draft);
+    expect(field("Message").props.multiline).toBe(true);
+    if (platform === "ios") {
+      const scroll = screen.root.findByType("ScrollView");
+      expect(scroll.findAllByType("Pressable")).not.toContain(buttons("Done editing")[0]);
+      expect(buttons("Done editing")[0].props.accessibilityRole).toBe("button");
+      await press("Done editing");
+      expect(fakes.dismiss).toHaveBeenCalledOnce();
+    } else {
+      expect(buttons("Done editing")).toHaveLength(0);
+    }
+    await act(async () => field("Message").props.onBlur());
+    expect(buttons("Done editing")).toHaveLength(0);
+    expect(field("Message").props.value).toBe(draft);
+    expect(fakes.request).not.toHaveBeenCalled();
+    fakes.request.mockImplementation(async (_, { body }) => ({ received: true, requestId: body.requestId }));
+    await press("Send message");
+    expect(fakes.request).toHaveBeenCalledTimes(1);
+    expect(fakes.request.mock.calls[0][1].body.message).toBe(draft);
+  });
+
+  it("opens the directory directly from Investment, retries the same URL and preserves the main website action", async () => {
+    fakes.browser.mockRejectedValueOnce(new Error("No browser")).mockResolvedValue({type: "opened"});
+    await render(<ExternalScreen route={{params: {path: "/investment", title: "Investment"}}} />);
+    await press("Search the business directory");
+    expect(screen.root.findAllByType("Text").some(t => t.props.children === "Could not open the browser.")).toBe(true);
+    await press("Search the business directory");
+    await press("Open website");
+    expect(fakes.browser.mock.calls.map(([url]) => url)).toEqual([
+      "https://www.diasporaunlocked.com/ntir", "https://www.diasporaunlocked.com/ntir",
+      "https://www.diasporaunlocked.com/investment",
+    ]);
+    await act(async () => screen.update(<ExternalScreen route={{params:{path:"/travel/weather", title:"Weather"}}} />));
+    expect(buttons("Search the business directory")).toHaveLength(0);
+  });
 
   it("requires explicit permission, preserves drafts and can report only the selected reply", async () => {
     await render(<AssistantScreen />);

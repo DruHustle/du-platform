@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Linking, Text } from "react-native";
+import { Keyboard, Linking, Platform, Text } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import { useNavigation } from "@react-navigation/native";
 import * as Crypto from "expo-crypto";
@@ -110,6 +110,7 @@ export function AssistantScreen() {
   </Screen>;
 }
 export function ContactScreen({ route }: { route: { params?: { reportReply?: string } } }) {
+  const [editingMessage, setEditingMessage] = useState(false);
   const selectedReply = route?.params?.reportReply;
   const [includedReply, setIncludedReply] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -176,7 +177,9 @@ export function ContactScreen({ route }: { route: { params?: { reportReply?: str
     }
   }
   const editable = restored && !pending && !busy;
-  return <Screen>
+  return <>
+    {Platform.OS === "ios" && editingMessage && <Action title="Done editing" onPress={Keyboard.dismiss} />}
+    <Screen>
     <Heading>Contact and help</Heading>
     <Copy>Send a message to the Diaspora Unlocked team. Please do not include passwords or payment details.</Copy>
     {typeof selectedReply === "string" && selectedReply.length > 0 && selectedReply !== includedReply && <Card>
@@ -196,7 +199,8 @@ export function ContactScreen({ route }: { route: { params?: { reportReply?: str
       <Field label="Full name" value={name} onChangeText={setName} editable={editable} autoComplete="name" maxLength={120} />
       <Field label="Email address" value={email} onChangeText={setEmail} editable={editable} keyboardType="email-address" autoCapitalize="none" autoComplete="email" maxLength={254} />
       <Field label="Subject" value={subject} onChangeText={setSubject} editable={editable} maxLength={200} />
-      <Field label="Message" value={message} onChangeText={setMessage} editable={editable} multiline maxLength={4000} />
+      <Field label="Message" value={message} onChangeText={setMessage} editable={editable} multiline maxLength={4000}
+        onFocus={() => setEditingMessage(true)} onBlur={() => setEditingMessage(false)} />
       {!!error && <Message error message={error} />}
       {!!receipt && <Message message={`Your message was received. Reference: ${receipt}`} />}
       {!restored && !!error && <Action title="Retry loading saved message" secondary onPress={() => setRestoreAttempt(n => n + 1)} />}
@@ -206,7 +210,8 @@ export function ContactScreen({ route }: { route: { params?: { reportReply?: str
     </Card>
     <Action title="Email info@diasporaunlocked.com" secondary onPress={() =>
       void Linking.openURL("mailto:info@diasporaunlocked.com").catch(() => setError("Could not open your email app."))} />
-  </Screen>;
+    </Screen>
+  </>;
 }
 export function SearchScreen() {
   const navigation = useNavigation<any>();
@@ -277,7 +282,25 @@ export function SearchScreen() {
     </Card>)}
   </Screen>;
 }
-export function ExternalScreen({route}:{route:{params:{path:string;title:string}}}) {
-  const [error,setError]=useState("");const path=route.params.path;const valid=isSitePath(path);
-  return <Screen><Heading>{route.params.title}</Heading><Copy>This section opens on the Diaspora Unlocked website. You may need to sign in there.</Copy>{!!error&&<Message error message={error}/>}<Action title="Open website" disabled={!valid} onPress={()=>{if(valid)void WebBrowser.openBrowserAsync(`https://www.diasporaunlocked.com${path}`).catch(()=>setError("Could not open the browser."));}}/></Screen>;
+export function ExternalScreen({route}: {route: {params: {path: string; title: string}}}) {
+  const [error, setError] = useState("");
+  const { path, title } = route.params;
+
+  async function openWebsite(destination: string) {
+    if (!isSitePath(destination)) return;
+    setError("");
+    try {
+      await WebBrowser.openBrowserAsync(`https://www.diasporaunlocked.com${destination}`);
+    } catch {
+      setError("Could not open the browser.");
+    }
+  }
+
+  return <Screen>
+    <Heading>{title}</Heading>
+    <Copy>This section opens on the Diaspora Unlocked website. You may need to sign in there.</Copy>
+    {!!error && <Message error message={error}/>}
+    <Action title="Open website" disabled={!isSitePath(path)} onPress={() => void openWebsite(path)} />
+    {path === "/investment" && <Action secondary title="Search the business directory" onPress={() => void openWebsite("/ntir")} />}
+  </Screen>;
 }
