@@ -11,10 +11,15 @@ final class DUNativeSmokeTests: XCTestCase {
     func open(_ path: String) { app.open(URL(string: "diasporaunlocked://" + path)!) }
     func reach(_ item: XCUIElement, backward: Bool = false, timeout: TimeInterval = 28) {
         let deadline = Date().addingTimeInterval(timeout)
+        let scrollView = app.scrollViews.firstMatch
+        let upper = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.38, dy: 0.28))
+        let lower = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.38, dy: 0.60))
         while !item.isHittable && Date() < deadline {
-            if backward { app.swipeDown() } else { app.swipeUp() }
+            let above = item.exists && item.frame.midY < scrollView.frame.midY
+            if above || backward { upper.press(forDuration: 0.1, thenDragTo: lower) }
+            else { lower.press(forDuration: 0.1, thenDragTo: upper) }
         }
-        XCTAssertTrue(item.isHittable)
+        XCTAssertTrue(item.isHittable, "Requested element did not become hittable: " + item.identifier)
     }
     func press(_ name: String, backward: Bool = false) {
         let action = app.buttons[name]
@@ -28,6 +33,7 @@ final class DUNativeSmokeTests: XCTestCase {
         item.typeText(XCUIKeyboardKey.delete.rawValue)
         for c in value { item.typeText(String(c)) }
         XCTAssertEqual(item.value as? String, value)
+        if app.keyboards.firstMatch.exists { item.typeText("\n") }
     }
     func testExactFlight() {
         open("travel/flights")
