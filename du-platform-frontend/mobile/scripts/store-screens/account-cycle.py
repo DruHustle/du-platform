@@ -48,8 +48,9 @@ def android(email, password):
     screen.adb('install', '-r', os.environ['DU_SMOKE_APK'])
     screen.adb('shell', 'am', 'start', '-W', '-n', screen.PACKAGE + '/.MainActivity')
     screen.wait_for_label('Explore what connects us')
-    tab = next(n for n in screen.tree().iter('node') if n.get('content-desc', '').startswith('Account'))
-    live.tap(tab)
+    screen.adb('shell', 'am', 'start', '-W', '-a', 'android.intent.action.VIEW',
+               '-d', 'diasporaunlocked://login', screen.PACKAGE)
+    screen.wait_for_label('Welcome back')
     live.tap(live.find('Create an account', True))
 
     def enter(label, value):
