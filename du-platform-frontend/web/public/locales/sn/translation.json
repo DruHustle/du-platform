@@ -1,4 +1,16 @@
 {
+  "deletion": {
+    "title": "Kumbira kudzima akaundi",
+    "details": "Kumbira kuti akaundi yako yeDiaspora Unlocked, nzendo dzakachengetwa nemashoko ako ane chekuita nayo zvidzimwe zvachose. Anotungamirira sevhisi anoongorora mashoko akachengetwa kumwe uye anofanira kuramba achichengetwa asati avhara akaundi.",
+    "password": "Pasiwedhi yaunoshandisa iye zvino",
+    "confirm": "Simbisa chikumbiro chekudzima",
+    "receipt": "Chikumbiro chagamuchirwa. Nhamba yacho: {{reference}}. Anotungamirira sevhisi achakuzivisa kana zvapera.",
+    "sign_in": "Pinda kuti ukumbire kudzima akaundi",
+    "password_error": "Tarisa pasiwedhi yako woedza zvakare.",
+    "retry": "Hatina kukwanisa kusimbisa chikumbiro. Edza zvakare kuti uwane nhamba yacho.",
+    "again": "Edza zvakare",
+    "loading": "Tiri kutarisa akaundi…"
+  },
   "appearance": {
     "label": "Chitarisiko",
     "system": "Tevera mudziyo (otomatiki)",

@@ -1,4 +1,16 @@
 {
+  "deletion": {
+    "title": "Kontolöschung beantragen",
+    "details": "Beantragen Sie die dauerhafte Löschung Ihres Diaspora-Unlocked-Kontos, Ihrer gespeicherten Reisen und Ihrer zugehörigen personenbezogenen Daten. Der Betreiber prüft separat gespeicherte Daten und Aufbewahrungspflichten, bevor er das Konto schließt.",
+    "password": "Aktuelles Passwort",
+    "confirm": "Löschantrag bestätigen",
+    "receipt": "Antrag eingegangen. Referenz: {{reference}}. Der Betreiber informiert Sie über den Abschluss.",
+    "sign_in": "Zum Beantragen der Kontolöschung anmelden",
+    "password_error": "Prüfen Sie Ihr aktuelles Passwort und versuchen Sie es erneut.",
+    "retry": "Der Antrag konnte nicht bestätigt werden. Versuchen Sie es erneut, um die Referenz zu erhalten.",
+    "again": "Erneut versuchen",
+    "loading": "Konto wird geprüft…"
+  },
   "appearance": {
     "label": "Darstellung",
     "system": "System (automatisch)",

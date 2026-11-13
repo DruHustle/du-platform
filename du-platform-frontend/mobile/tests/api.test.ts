@@ -40,6 +40,12 @@ describe("mobile API boundary", () => {
     })));
     await expect(request("/test", { timeoutMs: 20 })).rejects.toMatchObject({ status: 0, message: "The request timed out. Please try again." });
   });
+  it("accepts a successful no-content action and rejects a failed JSON envelope", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(new Response(null, { status: 204 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ success: false, error: { code: "UNCONFIRMED", message: "Try again" } }))));
+    await expect(request("/test")).resolves.toBeNull();
+    await expect(request("/test")).rejects.toMatchObject({ code: "UNCONFIRMED", message: "Try again" });
+  });
   it("does not interpret an HTML success page as a completed API operation", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("<html>Unavailable</html>")));
     await expect(request("/test")).rejects.toMatchObject({ code: "INVALID_RESPONSE" });

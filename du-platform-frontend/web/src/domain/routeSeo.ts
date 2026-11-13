@@ -298,6 +298,16 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
     );
   }
 
+  if (pathname === "/account-deletion") {
+    return buildSeo(
+      "Request Account Deletion | Diaspora Unlocked",
+      "Sign in to request deletion of your Diaspora Unlocked account and associated personal data.",
+      "/account-deletion",
+      "Request account deletion",
+      "noindex,follow"
+    );
+  }
+
   if (pathname === "/privacy-policy") {
     return buildSeo(
       "Privacy Policy | Diaspora Unlocked",

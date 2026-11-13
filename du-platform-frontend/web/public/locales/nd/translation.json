@@ -1,4 +1,16 @@
 {
+  "deletion": {
+    "title": "Cela ukucitshwa kwe-akhawunti",
+    "details": "Cela ukuthi i-akhawunti yakho yeDiaspora Unlocked, uhambo olugcinileyo kanye lemininingwane yakho ephathelane layo kucitshwe unomphela. Umqhubi uhlola amarekhodi agcinwe eceleni lalawo okumele agcinwe engakavali i-akhawunti.",
+    "password": "Iphasiwedi oyisebenzisayo",
+    "confirm": "Qinisekisa isicelo sokucitshwa",
+    "receipt": "Isicelo sesamukelwe. Inombolo yaso: {{reference}}. Umqhubi uzakubikela nxa sekuqediwe.",
+    "sign_in": "Ngena ukuze ucele ukucitshwa kwe-akhawunti",
+    "password_error": "Hlola iphasiwedi yakho uzame futhi.",
+    "retry": "Sehlulekile ukuqinisekisa isicelo. Zama futhi ukuze uthole inombolo yaso.",
+    "again": "Zama futhi",
+    "loading": "Sihlola i-akhawunti…"
+  },
   "appearance": {
     "label": "Ukubukeka",
     "system": "Landela idivayisi (okuzenzakalelayo)",
