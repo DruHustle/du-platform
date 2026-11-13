@@ -352,9 +352,11 @@ describe.skipIf(!url)("durable transactional messages", () => {
   );
   it("persists a reset token and encrypted immutable email together with the unchanged 30-minute lifetime", async () => {
     const u = await user();
-    await service.passwordReset(u.id, "sn");
+    await service.passwordReset(u.id, "sn", "/travel/my-trips");
     const [job] = await jobs();
     const payload = JSON.parse(crypto.openOrderAccess(job.encrypted_payload));
+    const url = new URL(payload.text.match(/https?:\/\/[^\s]+#token=[a-f0-9]+/)[0]);
+    expect(url.searchParams.get("next")).toBe("/travel/my-trips");
     const token = payload.text.match(/#token=([a-f0-9]{96})/)[1];
     expect(JSON.stringify(await service.messageDeliveries())).not.toContain(
       token

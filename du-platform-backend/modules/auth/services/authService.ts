@@ -158,7 +158,7 @@ export class AuthService {
     return { message: "Logged out." };
   }
 
-  async forgotPassword(input: { email: string; language?: string }) {
+  async forgotPassword(input: { email: string; language?: string; next?: string }) {
     const normalizedEmail = String(input.email ?? "")
       .trim()
       .toLowerCase();
@@ -169,7 +169,8 @@ export class AuthService {
       if (user)
         await this.repository.queuePasswordReset(
           Number(user.id),
-          input.language
+          input.language,
+          input.next
         );
     } catch {
       // Neutral even during storage failure; no account, token or SQL/provider

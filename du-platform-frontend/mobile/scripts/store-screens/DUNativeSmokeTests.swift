@@ -74,6 +74,17 @@ final class DUNativeSmokeTests: XCTestCase {
         XCTAssertTrue(url.waitForExistence(timeout: 25), "Safari did not expose the Kiwi destination")
     }
 
+    func testMissingResetLinkOpensRecoveryForm() {
+        let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
+        app.launch()
+        app.open(URL(string: "diasporaunlocked://reset-password?next=%2Ftravel%2Fstays")!)
+        let request = app.buttons["Request a new reset link"]
+        XCTAssertTrue(request.waitForExistence(timeout: 30))
+        request.tap()
+        XCTAssertTrue(app.buttons["Send reset instructions"].waitForExistence(timeout: 20))
+        XCTAssertTrue(app.textFields["Email address"].exists)
+    }
+
     func testRejectedSignInCanRetry() {
         let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
         app.launch()

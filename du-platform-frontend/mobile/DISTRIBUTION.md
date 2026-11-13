@@ -34,7 +34,7 @@ With Android SDK Platform 36 and Build Tools 36.0.0 installed, run `python3 scri
 
 ### Google Play App Bundle
 
-In the existing listing for `com.diasporaunlocked.app`, check the highest version code across all tracks and the registered **upload certificate** fingerprint under App integrity. Use the release code approved for the next upload, update the Expo and tracked native versions together, and build the full release bundle (without the CI arm64-only qualification override).
+In the existing listing for `com.diasporaunlocked.app`, check the highest version code across all tracks and the registered **upload certificate** fingerprint under App integrity. Use the release code approved for the next upload, update the Expo and tracked native versions together, and build the full release bundle. The Android release packaging workflow builds the full AAB and checks each configured ABI. Pull requests from release/ branches in this repository retain the original unsigned bundle for owner signing for two days. The manual “Retain the complete unsigned AAB” option also saves it for two days. The separate directly installable QA APK targets arm64.
 
 ```sh
 export EXPO_PUBLIC_API_URL=https://www.diasporaunlocked.com/api
@@ -68,3 +68,23 @@ xcodebuild -workspace ios/DiasporaUnlocked.xcworkspace -scheme DiasporaUnlocked 
 ```
 
 In Xcode Organizer, validate the archive and distribute to App Store Connect with the owner’s distribution signing. For public beta installs, complete external TestFlight review and enable a public invitation. For general availability, complete App Review and release the listing. Open the actual link from a signed-out iPhone and verify it identifies Diaspora Unlocked before setting the website’s `VITE_IOS_DOWNLOAD_URL` to its public TestFlight or App Store URL. The current native projects use the same product identifier for preview and release.
+
+### HTTPS links from email and the website
+
+Set the public identifiers in the Vercel web project's Production environment and rebuild the website. Each platform can be activated independently.
+
+| Variable | Value from the registered app |
+| --- | --- |
+| `IOS_APP_ID_PREFIX` | The ten-character prefix before `.com.diasporaunlocked.app` in the signed app’s `application-identifier` entitlement. Confirm it on the distribution build. |
+| `PLAY_APP_SIGNING_CERT_SHA256` | The colon-separated SHA-256 fingerprint under Play Console → App integrity → App signing key certificate. If Play serves multiple signing certificates after rotation, enter their fingerprints separated by commas. The upload certificate signs the submitted bundle and belongs in the separate upload verification step. |
+
+After deployment, fetch `https://www.diasporaunlocked.com/.well-known/apple-app-site-association` and `https://www.diasporaunlocked.com/.well-known/assetlinks.json` directly. Compare each 200 JSON response with the signed app or Play Console. On a TestFlight install and a Play-track install, follow a reset link from a controlled mailbox, a product link and a Travel link. Record which app opened and whether the intended task was restored.
+
+### Upload the signed build for store testing
+
+The same signed files can be uploaded from an authorised release workstation using Fastlane. Keep credential files outside the repository. Read the version and track from the existing listing before choosing the file.
+
+- **TestFlight.** Export the App Store distribution IPA from the archive in Organizer. On macOS, set `ASC_API_KEY_JSON` to the local Fastlane App Store Connect API key JSON, and set `IOS_APP_ID_PREFIX`, `IOS_RELEASE_VERSION` and `IOS_RELEASE_BUILD` to the approved values. Run `scripts/upload-testflight.sh path/to/DiasporaUnlocked.ipa`. The helper verifies the signed app and its distribution profile and uploads to the existing bundle ID. Select the processed build in TestFlight and use the existing test group.
+- **Google Play testing.** Set `PLAY_SERVICE_ACCOUNT_JSON` to the registered publisher service account JSON and `PLAY_TEST_TRACK` to the existing active testing track. With the same signing-verification environment used above, run `scripts/upload-play-test.sh path/to/play-upload.aab`. It validates the signed AAB and sends the release to that track without changing listing text or screenshots. After an interrupted upload, first check the build or version code in the store before retrying.
+
+Record both the console’s processing status and the installation through its testing service. Once the installed sign-in and Travel checks pass, use App Review or Play Publishing overview to submit the verified release with the listing’s existing settings.

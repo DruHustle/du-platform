@@ -101,7 +101,8 @@ describe.skipIf(!url)("Awin referral and financial evidence in MySQL", () => {
       "different publisher",
     );
     const [history] = await connection.query<RowDataPacket[]>(
-      "SELECT status, commission, payment_id FROM travel_awin_observations ORDER BY sequence_id",
+      "SELECT status, commission, payment_id FROM travel_awin_observations WHERE transaction_id=? ORDER BY sequence_id",
+      [base.id],
     );
     expect(
       history.map((r) => [r.status, Number(r.commission), r.payment_id]),
@@ -110,6 +111,79 @@ describe.skipIf(!url)("Awin referral and financial evidence in MySQL", () => {
       ["approved", 3.15, null],
       ["approved", 3.15, 123],
       ["declined", 0, null],
+    ]);
+  });
+  it("matches later adjustments without a click reference only to an attributed transaction in the same account", async () => {
+    const ref = randomUUID();
+    await recordAwinHandoff(pool, {
+      clickRef: ref,
+      publisherId,
+      advertiserId,
+      channel: "android",
+    });
+    const sale = {
+      ...base,
+      id: 81,
+      clickRefs: { clickRef: ref },
+      commissionStatus: "approved",
+    };
+    const paid = {
+      ...sale,
+      clickRefs: null,
+      paidToPublisher: true,
+      paymentId: 789,
+    };
+    const cancelled = {
+      ...sale,
+      clickRefs: {},
+      commissionStatus: "declined",
+      commissionAmount: { amount: 0, currency: "GBP" },
+    };
+    const run = (rows: unknown[]) =>
+      applyAwinReport(connection, rows, publisherId, advertiserId);
+
+    // A previously unseen sale cannot bootstrap attribution from its partner ID alone.
+    expect(await run([paid])).toMatchObject({ recorded: 0, unmatched: 1 });
+    expect(await run([sale])).toMatchObject({ recorded: 1 });
+    expect(await run([paid, paid])).toMatchObject({
+      recorded: 1,
+      unchanged: 1,
+    });
+    expect(
+      await run([
+        { ...cancelled, clickRefs: { clickRef: "unrecognized-reference" } },
+      ]),
+    ).toMatchObject({ recorded: 0, unmatched: 1 });
+    expect(
+      await applyAwinReport(
+        connection,
+        [{ ...cancelled, advertiserId: 91 }],
+        publisherId,
+        91,
+      ),
+    ).toMatchObject({ recorded: 0, unmatched: 1 });
+    expect(
+      await applyAwinReport(
+        connection,
+        [{ ...cancelled, publisherId: 92 }],
+        92,
+        advertiserId,
+      ),
+    ).toMatchObject({ recorded: 0, unmatched: 1 });
+    expect(await run([cancelled, cancelled])).toMatchObject({
+      recorded: 1,
+      unchanged: 1,
+    });
+    const [history] = await connection.execute<RowDataPacket[]>(
+      "SELECT click_ref, status, payment_id FROM travel_awin_observations WHERE transaction_id=? ORDER BY sequence_id",
+      [sale.id],
+    );
+    expect(
+      history.map((row) => [row.click_ref, row.status, row.payment_id]),
+    ).toEqual([
+      [ref, "approved", null],
+      [ref, "approved", 789],
+      [ref, "declined", null],
     ]);
   });
 });

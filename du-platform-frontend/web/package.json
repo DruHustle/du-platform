@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build && node --import tsx scripts/build-route-documents.mjs && node scripts/check-deployment-size.mjs",
+    "build": "vite build && node --import tsx scripts/build-route-documents.mjs && node scripts/build-app-links.mjs && node scripts/check-deployment-size.mjs",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
     "lint": "tsc --noEmit",
-    "test": "vitest run --dir src",
+    "test": "vitest run --dir src && node --test scripts/app-links.test.mjs",
     "sitemap": "node --import tsx scripts/generate-sitemap.mjs"
   },
   "dependencies": {

@@ -31,6 +31,7 @@ export default function ForgotPassword() {
     try {
       await api.post("/auth/forgot-password", {
         email,
+        next: nextPath.split(/[?#]/, 1)[0],
         language: i18n.resolvedLanguage?.split("-")[0] || "en",
       });
       setStatus(
