@@ -391,6 +391,25 @@ try {
   pass(
     "registration returns to the requested trip after switching account forms without persisting bearer tokens"
   );
+  await page.goto(`${baseUrl}/privacy-policy`);
+  await page.getByRole("link", { name: "Request account deletion", exact: true }).click();
+  await page.getByLabel("Current password", { exact: true }).fill(password);
+  let deletionAttempts = 0;
+  await page.route("**/api/auth/deletion-request", async route => {
+    const input = route.request().postDataJSON();
+    assert(input.accountId > 0 && input.confirm === true && input.password === password);
+    deletionAttempts++;
+    if (deletionAttempts === 1) return route.fulfill({ status: 503, json: { success: false, error: { code: "DELETION_UNAVAILABLE" } } });
+    return route.fulfill({ json: { success: true, data: { status: "requested", requestId: "synthetic-deletion-reference" } } });
+  });
+  await page.getByRole("button", { name: "Confirm deletion request" }).click();
+  await page.getByRole("alert").filter({ hasText: "Retry to recover" }).waitFor();
+  assert.equal(await page.getByLabel("Current password", { exact: true }).inputValue(), password);
+  await page.getByRole("button", { name: "Confirm deletion request" }).click();
+  await page.getByRole("status").filter({ hasText: "synthetic-deletion-reference" }).waitFor();
+  await page.unroute("**/api/auth/deletion-request");
+  await page.goto(`${baseUrl}${returnPath}`);
+  pass("account deletion clearly distinguishes a retry from a durable request receipt");
   const crossSiteLogout = await context.request.post(
     `${baseUrl}/api/auth/logout`,
     { headers: { Origin: "https://evil.example" } }
