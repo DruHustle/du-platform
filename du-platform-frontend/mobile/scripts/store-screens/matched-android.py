@@ -85,12 +85,34 @@ def consent():
     press('Revoke chat sharing')
     live.find('Sharing is off. Your draft stays here.',True)
 
+def wait_for_home():
+    until=time.monotonic()+90
+    closed_launcher=False
+    while time.monotonic()<until:
+        try:
+            doc=screen.tree()
+        except Exception:
+            time.sleep(1)
+            continue
+        if screen.node_for(doc,'Explore what connects us') is not None:
+            return
+        launcher=any(n.get('package')=='android' and "Pixel Launcher isn't responding" in n.get('text','') for n in doc.iter('node'))
+        if launcher:
+            close=next((n for n in doc.iter('node') if n.get('package')=='android' and n.get('text')=='Close app'),None)
+            if close is not None and not closed_launcher:
+                live.tap(close)
+                closed_launcher=True
+                screen.adb('shell','am','start','-W','-n',screen.PACKAGE+'/.MainActivity')
+                print('Recovered the Pixel Launcher system alert before application assertions',flush=True)
+        time.sleep(0.8)
+    screen.wait_for_label('Explore what connects us')
+
 failures=[]
 for name,case in [('Flight',exact_flight),('Reset',recover),('Catalogue',shop),('Basket',basket),('Consent',consent)]:
     try:
         screen.adb('shell','am','force-stop',screen.PACKAGE)
         screen.adb('shell','am','start','-W','-n',screen.PACKAGE+'/.MainActivity')
-        screen.wait_for_label('Explore what connects us')
+        wait_for_home()
         case()
         print('PASS installed Android ' + name,flush=True)
     except Exception as error:
