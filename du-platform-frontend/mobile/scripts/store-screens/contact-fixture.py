@@ -10,12 +10,12 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 class Handler(BaseHTTPRequestHandler):
     first = None
     def forward_public(self, method, body=None):
-        by_method={'GET':{'/api/travel/capabilities'},'POST':{'/api/travel/search','/api/travel/revalidate','/api/auth/login'}}
+        by_method={'GET':{'/api/travel/capabilities'},'POST':{'/api/travel/search','/api/travel/revalidate','/api/auth/native/login'}}
         if urllib.parse.urlsplit(self.path).path not in by_method[method]:
             self.send_error(404)
             return
         target='https://www.diasporaunlocked.com'+self.path
-        if method=='POST' and self.path.startswith('/api/auth/login'):
+        if method=='POST' and self.path.startswith('/api/auth/native/login'):
             email=json.loads(body).get('email','')
             if not email.startswith('qa-') or not email.endswith('@example.test'):
                 self.send_error(403)

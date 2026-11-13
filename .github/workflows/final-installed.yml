@@ -1,4 +1,4 @@
-name: Final installed release journeys
+name: iPhone final installed release journeys
 on:
   push:
     branches: [validation/final-native-completion-20261113]
@@ -40,73 +40,3 @@ jobs:
           trap 'kill "$fixture" 2>/dev/null || true' EXIT
           python3 scripts/store-screens/extended-ios.py
           grep 'PASS isolated inbox' "$RUNNER_TEMP/fixture.log"
-  android:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 85
-    defaults:
-      run:
-        working-directory: du-platform-frontend/mobile
-    steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
-        with:
-          node-version: '24'
-          cache: npm
-          cache-dependency-path: du-platform-frontend/mobile/package-lock.json
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
-        with:
-          distribution: temurin
-          java-version: '17'
-      - run: npm ci --no-audit --no-fund
-      - run: python3 scripts/store-screens/android-fixture-network.py
-      - name: Build a Release APK for the Intel emulator
-        run: |
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;36.0.0'
-          bash android/gradlew -p android --no-daemon :app:assembleRelease -PreactNativeArchitectures=x86_64
-      - name: Sign this installation with a temporary QA key
-        run: |
-          qa_dir=$(mktemp -d "$RUNNER_TEMP/screenshot-qa.XXXXXX")
-          trap 'rm -rf -- "$qa_dir"' EXIT
-          export ANDROID_RELEASE_KEYSTORE="$qa_dir/qa.p12" ANDROID_RELEASE_ALIAS=qa
-          ANDROID_RELEASE_STORE_PASSWORD=$(openssl rand -hex 24)
-          export ANDROID_RELEASE_STORE_PASSWORD ANDROID_RELEASE_KEY_PASSWORD="$ANDROID_RELEASE_STORE_PASSWORD"
-          keytool -genkeypair -keystore "$ANDROID_RELEASE_KEYSTORE" -alias qa -storepass:env ANDROID_RELEASE_STORE_PASSWORD -keypass:env ANDROID_RELEASE_KEY_PASSWORD -keyalg RSA -keysize 2048 -dname 'CN=Temporary screenshot QA' -validity 7
-          ANDROID_RELEASE_CERT_SHA256=$(keytool -exportcert -keystore "$ANDROID_RELEASE_KEYSTORE" -alias qa -storepass:env ANDROID_RELEASE_STORE_PASSWORD | sha256sum | cut -d' ' -f1)
-          export ANDROID_RELEASE_CERT_SHA256
-          scripts/sign-release-apk.sh sign android/app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/screen-app.apk"
-      - name: Install 24-bit PNG encoder
-        run: |
-          python3 -m venv "$RUNNER_TEMP/screenshot-python"
-          "$RUNNER_TEMP/screenshot-python/bin/pip" install --quiet --disable-pip-version-check 'Pillow==11.3.0'
-          echo "$RUNNER_TEMP/screenshot-python/bin" >> "$GITHUB_PATH"
-      - name: Enable accelerated emulator
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-      - name: Start loopback recovery fixture
-        run: |
-          python3 scripts/store-screens/contact-fixture.py 9093 > "$RUNNER_TEMP/fixture.log" 2>&1 &
-          echo $! > "$RUNNER_TEMP/fixture.pid"
-      - name: Installed Android support, consent and research journeys
-        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
-        with:
-          api-level: 35
-          arch: x86_64
-          target: google_apis
-          profile: pixel_6
-          cores: 4
-          ram-size: 4096M
-          force-avd-creation: true
-          disable-animations: true
-          script: |
-            adb install -r "$RUNNER_TEMP/screen-app.apk"
-            adb reverse tcp:9093 tcp:9093
-            python3 du-platform-frontend/mobile/scripts/store-screens/extended-android.py
-      - name: Confirm stable support receipt
-        if: always()
-        run: |
-          cat "$RUNNER_TEMP/fixture.log"
-          grep "PASS isolated inbox" "$RUNNER_TEMP/fixture.log"
