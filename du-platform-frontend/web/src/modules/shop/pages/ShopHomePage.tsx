@@ -1,3 +1,4 @@
+import DeliveryCoverage from "../components/DeliveryCoverage";
 import { matchesShopSegment } from "../lib/shopContent";
 import { useTranslation } from "react-i18next";
 import { Link } from "wouter";
@@ -81,6 +82,7 @@ export default function Shop() {
         >
           <div className="mb-6">
             <ShopCurrencySelect />
+            <DeliveryCoverage />
           </div>
           <CatalogNotice status={status} source={source} pricingAvailable={pricing !== null} hasProducts={products.length > 0} onRetry={() => void refresh()} />
           <SwipeRail

@@ -33,6 +33,17 @@ describe("mobile API boundary", () => {
     expect(JSON.parse(post.mock.calls[0][1].body).messages).toEqual(conversation.slice(3));
     expect(conversation).toHaveLength(23);
   });
+  it("times out a stalled response body after headers arrive", async () => {
+    vi.stubGlobal("fetch", vi.fn(async (_url, { signal }) => ({
+      ok: true, status: 200,
+      json: () => new Promise((_resolve, reject) => signal.addEventListener("abort", () => reject(new Error("aborted")))),
+    })));
+    await expect(request("/test", { timeoutMs: 20 })).rejects.toMatchObject({ status: 0, message: "The request timed out. Please try again." });
+  });
+  it("does not interpret an HTML success page as a completed API operation", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("<html>Unavailable</html>")));
+    await expect(request("/test")).rejects.toMatchObject({ code: "INVALID_RESPONSE" });
+  });
   it("does not accept an absolute URL as an API path", async () => {
     await expect(request("//evil.test/path")).rejects.toThrow("Invalid API path");
     await expect(request("/../private")).rejects.toThrow("Invalid API path");

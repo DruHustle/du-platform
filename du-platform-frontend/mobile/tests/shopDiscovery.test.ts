@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Catalog, Product } from "../src/api";
-import { defaultShopFilters, filterShopProducts, shopDestination } from "../src/shopDiscovery";
+import { defaultShopFilters, deliveryCoverage, filterShopProducts, shopDestination } from "../src/shopDiscovery";
 import { readSearchResponse } from "../src/searchResults";
 
 const product: Product = { id: 2, slug: "mazoe-orange", name: "Mazöe", description: "Orange cordial",
@@ -10,6 +10,16 @@ const catalog: Catalog = { source: "db", products: [product, other], readiness: 
   enforcement: "enforced", commercialReady: true, approvedProductIds: [2, 3], destinationCountries: ["DE"] } };
 
 describe("Shop discovery", () => {
+  it("only advertises destinations from the current approved shop", () => {
+    expect(deliveryCoverage(catalog)).toBe("Approved delivery destinations: Germany.");
+    expect(deliveryCoverage({ ...catalog, source: "memory" })).toBeUndefined();
+    for (const readiness of [
+      { ...catalog.readiness, commercialReady: false }, { ...catalog.readiness, mode: "prelaunch" },
+      { ...catalog.readiness, enforcement: "report_only" }, { ...catalog.readiness, destinationCountries: [] },
+    ]) {
+      expect(deliveryCoverage({ ...catalog, readiness })).toBe("Delivery is currently unavailable to all destinations.");
+    }
+  });
   it.each(["/shop/product/mazoe-orange", "/shop/products?product=mazoe-orange"])("opens the specific product from %s", href => {
     expect(shopDestination(href)).toEqual({ screen: "Product", params: { slug: product.slug } });
   });
