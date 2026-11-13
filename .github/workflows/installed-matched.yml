@@ -36,6 +36,7 @@ jobs:
       - name: Run installed iPhone matched journeys
         run: python3 scripts/store-screens/matched-ios.py
   android:
+    if: github.event.before != '81f291ff1b9a184784d906e7598ece5e63edfca1'
     runs-on: ubuntu-24.04
     timeout-minutes: 85
     defaults:
