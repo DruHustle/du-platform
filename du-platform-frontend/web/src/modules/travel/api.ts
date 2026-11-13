@@ -71,12 +71,22 @@ export async function revalidateTravelQuote(
   quote: TravelQuote,
   signal: AbortSignal
 ) {
-  const response = await api.post("/travel/revalidate", quote, {
+  const response = await api.post("/travel/revalidate?channel=web", quote, {
     signal,
     timeout: 30000,
   });
   return z
-    .object({ quote: travelQuoteSchema, changed: z.boolean() })
+    .object({ quote: travelQuoteSchema, changed: z.boolean(), referralAvailable: z.boolean().optional() })
     .strict()
     .parse(response.data);
+}
+
+export async function requestAwinReferral(quote: TravelQuote, signal: AbortSignal) {
+  const response = await api.post("/travel/referrals/awin", { quote, channel: "web", consent: true }, { signal });
+  const result = z.object({ url: z.string().url() }).parse(response.data);
+  const url = new URL(result.url);
+  if (url.origin !== "https://www.awin1.com" || url.pathname !== "/cread.php" || url.username || url.password ||
+      url.searchParams.get("ued") !== quote.bookingUrl || url.searchParams.get("clickref") !== quote.id ||
+      url.searchParams.get("cons") !== "1") throw new Error("TRAVEL_INVALID_RESPONSE");
+  return url.href;
 }
