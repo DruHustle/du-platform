@@ -88,7 +88,19 @@ export async function applyAwinReport(
       results.otherTypes++;
       continue;
     }
-    const ref = row.clickRefs?.clickRef;
+    let ref = row.clickRefs?.clickRef;
+    if (!ref) {
+      // Later reports can omit the publisher click reference. A transaction
+      // can inherit only attribution already established in this account.
+      const [matched] = await connection.execute<RowDataPacket[]>(
+        `SELECT h.click_ref FROM travel_awin_observations o
+         JOIN travel_awin_handoffs h ON h.click_ref = o.click_ref
+         WHERE o.transaction_id = ? AND h.publisher_id = ? AND h.advertiser_id = ?
+         ORDER BY o.sequence_id DESC LIMIT 1`,
+        [row.id, publisher, advertiser],
+      );
+      ref = matched[0]?.click_ref;
+    }
     if (!ref || !z.string().uuid().safeParse(ref).success) {
       results.unmatched++;
       continue;

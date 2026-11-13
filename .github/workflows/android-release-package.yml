@@ -2,6 +2,11 @@ name: Android release packaging
 
 on:
   workflow_dispatch:
+    inputs:
+      keep_unsigned_bundle:
+        description: Retain the complete unsigned AAB for signing with the registered Play upload key
+        type: boolean
+        default: false
   pull_request:
     paths:
       - ".github/workflows/android-release-package.yml"
@@ -60,8 +65,28 @@ jobs:
           echo "BUNDLETOOL_JAR=$tool" >> "$GITHUB_ENV"
       - name: Exercise Play bundle signing and rejection with temporary credentials
         run: python3 scripts/test-play-bundle.py
-      - name: Compile the unsigned Release APK and AAB for arm64 Android phones
-        run: bash android/gradlew -p android --no-daemon :app:assembleRelease :app:bundleRelease -PreactNativeArchitectures=arm64-v8a
+      - name: Compile the arm64 qualification APK
+        run: bash android/gradlew -p android --no-daemon :app:assembleRelease -PreactNativeArchitectures=arm64-v8a
+      - name: Compile the full unsigned Play bundle
+        run: bash android/gradlew -p android --no-daemon :app:bundleRelease
+      - name: Check that the bundle contains every configured native ABI
+        run: |
+          python3 - <<'PYTHON'
+          import re
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          settings = Path('android/gradle.properties').read_text().splitlines()
+          abis, = [line.split('=', 1)[1] for line in settings if line.startswith('reactNativeArchitectures=')]
+          bundle = Path('android/app/build/outputs/bundle/release/app-release.aab')
+          with ZipFile(bundle) as archive:
+              actual = {name.split('/')[2] for name in archive.namelist()
+                        if re.fullmatch(r'base/lib/[^/]+/libreactnative[.]so', name)}
+          expected = {abi.strip() for abi in abis.split(',')}
+          if actual != expected:
+              raise SystemExit(f'Missing or unexpected React Native libraries: expected {expected}, found {actual}')
+          print('Verified Play bundle ABIs:', ', '.join(sorted(actual)))
+          PYTHON
       - name: Verify the compiled product through the signing path
         run: |
           # The ephemeral QA key and its APK stay in this run and are never uploaded.
@@ -86,3 +111,11 @@ jobs:
           version=$(java -jar "$BUNDLETOOL_JAR" dump manifest --bundle="$bundle" --xpath='/manifest/@android:versionCode')
           python3 scripts/sign-play-bundle.py sign "$bundle" "$qa_dir/verified.aab" --version-code "$version"
           python3 scripts/sign-play-bundle.py verify "$qa_dir/verified.aab" --version-code "$version"
+      - name: Retain the original unsigned AAB for the release owner
+        if: github.event_name == 'workflow_dispatch' && inputs.keep_unsigned_bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: unsigned-play-bundle-${{ github.sha }}
+          path: du-platform-frontend/mobile/android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          retention-days: 2

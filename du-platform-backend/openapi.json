@@ -373,6 +373,10 @@
                   },
                   "language": {
                     "type": "string"
+                  },
+                  "next": {
+                    "type": "string",
+                    "description": "Optional task path. Only supported in-app destinations are included in reset emails."
                   }
                 }
               }

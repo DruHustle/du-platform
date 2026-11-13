@@ -386,8 +386,9 @@ try {
       "UPDATE transactional_messages SET status='cancelled' WHERE status='pending'"
     );
     await db.execute("DELETE FROM rate_limit_buckets");
+    const nextPath = "/account-deletion";
     const known = await call("/auth/forgot-password", {
-        body: { email: ordinary.email, language: "de" },
+        body: { email: ordinary.email, language: "de", next: nextPath },
       }),
       unknown = await call("/auth/forgot-password", {
         body: { email: "missing@example.test", language: "de" },
@@ -401,6 +402,7 @@ try {
     const mail = JSON.parse(openOrderAccess(reset.encrypted_payload)),
       token = mail.text.match(/#token=([a-f0-9]{96})/)[1],
       link = mail.text.match(/https?:\/\/[^\s]+#token=[a-f0-9]+/)[0];
+    assert.equal(new URL(link).searchParams.get("next"), nextPath);
     const provider = async () => "synthetic-reset-provider";
     await processTransactionalMessages(db, provider, 1);
     const context = await browser.newContext({
@@ -432,7 +434,12 @@ try {
       .filter({ has: page.locator("input[type=password]").first() })
       .locator("button[type=submit]")
       .click();
-    await page.waitForURL("**/login");
+    await page.waitForURL(url => url.pathname === "/login" && url.searchParams.get("next") === nextPath);
+    await page.locator("form input[type=email]").fill(ordinary.email);
+    await page.locator("form input[type=password]").fill(replacement);
+    await page.locator("form button[type=submit]").click();
+    await page.waitForURL(url => url.pathname === nextPath);
+    await page.locator("main input[type=password]").waitFor();
     assert.equal((await call("/auth/me", { token: oldAccess })).status, 401);
     assert.equal(
       (await call("/auth/token/refresh", { body: {}, cookie: oldCookie }))
