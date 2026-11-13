@@ -63,7 +63,7 @@ final class DUNativeSmokeTests: XCTestCase {
     }
 
     func testExactFlight() {
-        open("travel/flights")
+        app.open(URL(string:"diasporaunlocked://travel/flights")!)
         edit(app.textFields["From airport code (e.g. FRA)"], "LHR")
         edit(app.textFields["Departure date (YYYY-MM-DD)"], "2027-01-15")
         edit(app.textFields["Return date (YYYY-MM-DD)"], "2027-01-22")
@@ -93,7 +93,9 @@ final class DUNativeSmokeTests: XCTestCase {
         XCTAssertTrue(done.waitForExistence(timeout:12))
         XCTAssertTrue(done.isHittable,"Done editing must be visible while the keyboard is open")
         done.tap()
-        XCTAssertFalse(app.keyboards.firstMatch.exists)
+        let hidden=NSPredicate(format:"exists == false")
+        let vanished=XCTNSPredicateExpectation(predicate:hidden,object:app.keyboards.firstMatch)
+        XCTAssertEqual(XCTWaiter.wait(for:[vanished],timeout:8),.completed)
         XCTAssertEqual(app.textViews["Message"].value as? String,"Isolated support recovery verification")
         print("PASS Done editing dismissed the open keyboard without changing the visible iPhone draft")
         press("Send message")
