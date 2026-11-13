@@ -50,6 +50,8 @@ try {
         body: "<h1>Synthetic supplier handoff</h1>",
       })
     );
+    let referralFails = true;
+    let referralRequests = 0;
     let privateMode = false;
     let storageFails = false;
     let malformedSavedResponse = false;
@@ -139,6 +141,16 @@ try {
           },
         });
       }
+      if (p === "/api/travel/referrals/awin") {
+        const { quote, channel, consent } = r.request().postDataJSON();
+        referralRequests++;
+        assert.equal(channel, "web");
+        assert.equal(consent, true);
+        if (referralFails) return r.fulfill({ status: 503, json: { error: { code: "TRAVEL_REFERRAL_UNAVAILABLE" } } });
+        const url = new URL("https://www.awin1.com/cread.php");
+        url.search = new URLSearchParams({ awinmid: "34", awinaffid: "12", cons: "1", clickref: quote.id, ued: quote.bookingUrl }).toString();
+        return r.fulfill({json:{success:true,data:{url:url.href}}});
+      }
       if (p === "/api/travel/revalidate") {
         if (offerExpires)
           return r.fulfill({
@@ -157,6 +169,7 @@ try {
                 reviewAfter: new Date(Date.now() + 300000).toISOString(),
               },
               changed: true,
+              referralAvailable: true,
             },
           },
         });
@@ -440,6 +453,12 @@ try {
     await page
       .getByText("The supplier amount has changed.", { exact: false })
       .waitFor();
+    const referralButton = page.getByRole("button", { name: "Allow referral tracking and continue" });
+    await page.getByText("Awin can use cookies", { exact: false }).waitFor();
+    assert.equal(referralRequests, 0);
+    await referralButton.click();
+    await page.getByText("The referral link could not open.", { exact: false }).waitFor();
+    assert.equal(referralRequests, 1);
     const supplierPopupPromise = context.waitForEvent("page");
     await page
       .getByRole("link", { name: "Continue to Kiwi.com ↗", exact: true })
@@ -448,6 +467,8 @@ try {
     await supplierPopup.waitForLoadState();
     assert.equal(supplierPopup.url(), "https://kiwi.com/u/synthetic");
     await supplierPopup.close();
+    assert.equal(referralRequests, 1);
+    referralFails = false;
     await fit("supplier result cards and revalidation contrast");
     await page
       .locator(".travel-supplier-results")
