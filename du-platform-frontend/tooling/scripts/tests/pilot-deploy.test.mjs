@@ -141,10 +141,13 @@ process.stdout.write('HTTP/2 200\\r\\nx-robots-tag: noindex, nofollow\\r\\nconte
       { env, encoding: "utf8" }
     );
     assert.equal(verified.status, 0, verified.stderr);
-    assert.equal(
-      (await fs.readFile(calls, "utf8")).trim().split("\n").length,
-      13
-    );
+    const routes = (await fs.readFile(calls, "utf8")).trim().split("\n");
+    assert.deepEqual(routes.sort(), [
+      "/", "/shop", "/shop/products", "/travel", "/business-guides", "/onesa",
+      "/care", "/legal-notice", "/delivery-and-returns", "/shop/order-status",
+      "/api/shop/products", "/api/admin/service-inbox", "/api/notifications/contact",
+      "/api/auth/forgot-password",
+    ].sort());
     await fs.unlink(calls);
     const refused = spawnSync(
       process.execPath,

@@ -33,7 +33,9 @@ export default function ProductPage() {
   const description = product
     ? shopProductDescription(product, (key, fallback) => t(key, { defaultValue: fallback }))
     : "";
-  const search = new URLSearchParams(useSearch());
+  const productTitle = product ? `${product.name} | ${t("nav.shop")} | Diaspora Unlocked` : "";
+  const searchString = useSearch();
+  const search = new URLSearchParams(searchString);
   const filters = readCatalogFilters(search);
   const language = search.has("lng") ? customerLanguage(i18n.language) : undefined;
   const [information, setInformation] = useState<{
@@ -77,15 +79,18 @@ export default function ProductPage() {
       document
         .querySelector('meta[name="robots"]')
         ?.setAttribute("content", "index,follow");
-      document.title = `${product.name} | Shop | Diaspora Unlocked`;
-      document
-        .querySelector('meta[name="description"]')
-        ?.setAttribute("content", description);
+      document.title = productTitle;
+      for (const selector of ['meta[name="description"]', 'meta[property="og:description"]', 'meta[name="twitter:description"]']) {
+        document.querySelector(selector)?.setAttribute("content", description);
+      }
+      for (const selector of ['meta[property="og:title"]', 'meta[name="twitter:title"]']) {
+        document.querySelector(selector)?.setAttribute("content", document.title);
+      }
     } else
       document
         .querySelector('meta[name="robots"]')
         ?.setAttribute("content", "noindex,follow");
-  }, [product, description, status, informationState]);
+  }, [product, productTitle, description, status, informationState, i18n.resolvedLanguage, searchString]);
   return (
     <Layout>
       <section className="document-section min-h-screen bg-slate-950 text-white">

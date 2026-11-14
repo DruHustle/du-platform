@@ -39,7 +39,7 @@ export default function CareHomePage() {
             key={choice}
             asChild
             variant="outline"
-            className="h-auto min-h-11 whitespace-normal border-slate-500 bg-slate-900 text-white"
+            className="h-auto min-h-11 max-w-full shrink whitespace-normal text-center border-slate-500 bg-slate-900 text-white"
           >
             <a href="#care-start" onClick={() => setGoal(choice)}>
               {t(`care.${choice}`)}
@@ -54,11 +54,11 @@ export default function CareHomePage() {
           description={t("care.lookup_help")}
         >
           <div className="max-w-3xl space-y-6">
-            <label className="grid gap-2 font-semibold">
+            <label className="grid min-w-0 gap-2 font-semibold">
               {t("care.goal")}
               <select
                 aria-label={t("care.goal")}
-                className="rounded-md border border-slate-500 bg-white p-3 text-slate-950"
+                className="w-full min-w-0 max-w-full rounded-md border border-slate-500 bg-white p-3 text-slate-950"
                 value={goal || ""}
                 onChange={(event) =>
                   setGoal((event.target.value as CareGoal) || null)
@@ -71,11 +71,11 @@ export default function CareHomePage() {
             </label>
             <div className="grid gap-4 sm:grid-cols-2">
               {(["applicant", "covered"] as const).map((field) => (
-                <label key={field} className="grid gap-2 font-semibold">
+                <label key={field} className="grid min-w-0 gap-2 font-semibold">
                   {t(`care.${field}`)}
                   <select
                     aria-label={t(`care.${field}`)}
-                    className="min-w-0 rounded-md border border-slate-500 bg-white p-3 text-slate-950"
+                    className="w-full min-w-0 max-w-full rounded-md border border-slate-500 bg-white p-3 text-slate-950"
                     value={field === "applicant" ? applicant : covered}
                     onChange={(event) =>
                       (field === "applicant" ? setApplicant : setCovered)(
