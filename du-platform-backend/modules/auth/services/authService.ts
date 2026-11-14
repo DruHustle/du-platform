@@ -88,7 +88,7 @@ export class AuthService {
     };
   }
 
-  async login(input: { email: string; password: string }) {
+  async verifyLogin(input: { email: string; password: string }) {
     const normalizedEmail = String(input.email ?? "")
       .trim()
       .toLowerCase();
@@ -121,6 +121,11 @@ export class AuthService {
     }
 
     clearLoginFailures(normalizedEmail);
+    return user;
+  }
+
+  async login(input: { email: string; password: string }) {
+    const user = await this.verifyLogin(input);
     let session: Awaited<ReturnType<AuthRepository["createSession"]>>;
     try {
       session = await this.repository.createSession(

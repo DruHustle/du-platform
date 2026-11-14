@@ -1,3 +1,5 @@
+import { decodeProtectedHeader } from "jose";
+import { resolveOnesa } from "../modules/auth/onesaAccounts";
 import crypto from "crypto";
 import type express from "express";
 import { error } from "../shared/responseFormatter";
@@ -92,8 +94,15 @@ function resolveBearerToken(req: express.Request): string {
   return token;
 }
 
-export function requireJwtAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
+export async function requireJwtAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
   try {
+    const token = resolveBearerToken(req);
+    if (decodeProtectedHeader(token).alg === "RS256") {
+      const {user, proof} = await resolveOnesa(token);
+      if (!user) return res.status(403).json(error("ONESA_LINK_REQUIRED", "Link your Diaspora Unlocked account."));
+      req.auth = {userId:Number(user.id), email:String(user.email), claims:{av:Number(user.auth_version ?? 0), sub:Number(user.id), federated:true, exp:proof.expires}};
+      return next();
+    }
     let secret = "";
     try {
       secret = resolveJwtSecret();
@@ -101,7 +110,6 @@ export function requireJwtAuth(req: express.Request, res: express.Response, next
       return res.status(500).json(error("JWT_CONFIG_ERROR", "JWT secret is not configured."));
     }
 
-    const token = resolveBearerToken(req);
     const claims = verifyToken(token, secret);
 
     const rawUserId = claims.sub ?? claims.userId;

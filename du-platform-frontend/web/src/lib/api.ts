@@ -6,6 +6,8 @@ const HAS_LOGGED_IN_KEY = "du_has_logged_in";
 const AUTH_HEADER_EXCLUDED_ENDPOINTS = new Set([
   "/auth/login",
   "/auth/register",
+  "/auth/onesa/link",
+  "/auth/onesa/exchange",
   "/auth/token/refresh",
   "/auth/forgot-password",
   "/auth/reset-password",
