@@ -88,7 +88,9 @@ def main():
                 run('xcrun', 'xcresulttool', 'export', 'attachments', '--path', str(shop_result), '--output-path', str(shop_folder))
                 extract(shop_folder, out, udid, {'Product'})
             if family == 'iPhone':
-                for name in ('testDirectFlightHandoff', 'testRejectedSignInCanRetry', 'testMissingResetLinkOpensRecoveryForm'):
+                for name in ('testCareLookupForFamilyInZimbabwe', 'testSearchForFamilyStay',
+                             'testPlannerExampleAndBusinessGuideBookmark', 'testDirectFlightHandoff',
+                             'testRejectedSignInCanRetry', 'testMissingResetLinkOpensRecoveryForm'):
                     status = subprocess.run(['xcodebuild', 'test-without-building', '-xctestrun', str(test_runs[0]),
                         '-parallel-testing-enabled', 'NO', '-destination', f'id={udid}',
                         '-resultBundlePath', str(work / (name + '.xcresult')),

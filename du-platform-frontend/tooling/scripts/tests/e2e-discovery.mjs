@@ -832,11 +832,24 @@ try {
             ?.getAttribute("data-waterfall-state") === "playing"
       );
       assert.equal(await motionControls.count(), 0);
-      const sky = { x: 8, y: 160, width: 80, height: 80 };
-      const water = { x: 20, y: 740, width: 80, height: 80 };
+      // Project sample points from the photograph into its responsive object-cover crop.
+      const { x, y, width: imageWidth, height: imageHeight } = await background.boundingBox();
+      const [naturalWidth, naturalHeight] = await background.evaluate(image => [
+        image.naturalWidth,
+        image.naturalHeight,
+      ]);
+      const scale = Math.max(imageWidth / naturalWidth, imageHeight / naturalHeight);
+      const sample = (horizontal, vertical) => ({
+        x: Math.round(x + imageWidth / 2 + (horizontal - 0.5) * naturalWidth * scale - 20),
+        y: Math.round(y + imageHeight / 2 + (vertical - 0.5) * naturalHeight * scale - 20),
+        width: 40,
+        height: 40,
+      });
+      const sky = sample(0.4, 0.24);
+      const water = sample(0.4, 0.86);
       const skyBefore = await page.screenshot({ clip: sky });
       const waterBefore = await page.screenshot({ clip: water });
-      const cliff = { x: width - 80, y: 720, width: 60, height: 80 };
+      const cliff = sample(0.93, 0.78);
       const cliffBefore =
         width === 1440 ? await page.screenshot({ clip: cliff }) : null;
       await page.clock.runFor(700);
@@ -878,7 +891,10 @@ try {
       await page.screenshot({ path: `${output}/home-waterfall-${width}.png` });
     }
     assert.equal(await motionControls.count(), 0);
-    assert.equal(await hero.getByRole("button").count(), 1);
+    assert.deepEqual(
+      await hero.getByRole("link").evaluateAll(links => links.map(link => link.getAttribute("href"))),
+      ["/travel/flights", "/travel/stays", "#explore-platform"]
+    );
     await page.clock.fastForward(18000);
     assert.equal(
       await state.getAttribute("data-waterfall-state"),

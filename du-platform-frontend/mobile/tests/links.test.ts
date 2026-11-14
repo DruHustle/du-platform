@@ -5,8 +5,10 @@ describe("account deep links", () => {
     expect(navigationPath(path)).toBe("onesa-ai-chat");
   });
   it("preserves the individual web guide and legacy project record", () => {
-    for (const path of ["/business-guides/farming", "/investment#farming", "/investment/projects/horticulture", "/ntir?q=farmer"]) {
-      expect(businessGuideLink(path)).toEqual({path, title: "Business guides"});
+    for (const [path,title] of [["/business-guides/farming?lng=sn", "Farming and food production guide"],
+      ["/investment#farming", "Farming and food production guide"], ["/investment/projects/horticulture", "Project profile"],
+      ["/ntir?q=farmer","Business directory"]]) {
+      expect(businessGuideLink(path)).toEqual({path, title});
     }
     expect(businessGuideLink("/investment-fake")).toBeUndefined();
   });
