@@ -22,12 +22,10 @@ function ResidenceField({
   const term = query.trim().toLowerCase();
   const matches =
     term && !selected
-      ? countryList
-          .filter(
-            ([code, name]) =>
-              code.toLowerCase() === term || name.toLowerCase().includes(term),
-          )
-          .slice(0, 6)
+      ? [
+          ...countryList.filter(([code]) => code.toLowerCase() === term),
+          ...countryList.filter(([code, name]) => code.toLowerCase() !== term && name.toLowerCase().includes(term)),
+        ].slice(0, 6)
       : [];
   return (
     <Card>
