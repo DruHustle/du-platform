@@ -28,7 +28,7 @@ def swipe_content(doc):
                    x, str(y1 + (y2-y1)//3), '370')
 
 
-def find(label, scroll=False, timeout=40, prefix=False):
+def find(label, scroll=False, timeout=40, prefix=False, field=False, actionable=False):
     until = time.monotonic() + timeout
     while time.monotonic() < until:
         try:
@@ -36,11 +36,12 @@ def find(label, scroll=False, timeout=40, prefix=False):
         except (ElementTree.ParseError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
             time.sleep(1)
             continue
-        if prefix:
-            node = next((n for n in doc.iter('node') if n.get('package') == screen.PACKAGE
-                        and any(n.get(k,'').startswith(label) for k in ('content-desc','text'))), None)
-        else:
-            node = screen.node_for(doc,label)
+        node = next((n for n in doc.iter('node')
+                     if n.get('package') == screen.PACKAGE
+                     and (not field or n.get('class') == 'android.widget.EditText')
+                     and (not actionable or n.get('clickable') == 'true' and n.get('class') != 'android.widget.EditText')
+                     and any(n.get(k, '').startswith(label) if prefix else n.get(k) == label
+                             for k in ('content-desc', 'text'))), None)
         if node is not None:
             return node
         if scroll:
@@ -53,7 +54,7 @@ def product_capture(target):
     assistant_target = Path(target).with_name('Onesa.png')
     screen.adb('shell','am','start','-W','-a','android.intent.action.VIEW',
                '-d', 'diasporaunlocked://onesa-ai-chat', screen.PACKAGE)
-    screen.wait_for_label('Onesa')
+    screen.wait_for_label('Plan three days in Victoria Falls')
     screen.capture(assistant_target)
     screen.adb('shell', 'am', 'force-stop', screen.PACKAGE)
     screen.adb('shell', 'am', 'start', '-W', '-n', screen.PACKAGE+'/.MainActivity')
@@ -114,12 +115,81 @@ def recover_missing_reset_link():
     print('PASS Android missing reset link opens the email recovery form')
 
 
+
+def open_home():
+    screen.adb('shell', 'am', 'force-stop', screen.PACKAGE)
+    screen.adb('shell', 'am', 'start', '-W', '-n', screen.PACKAGE + '/.MainActivity')
+    screen.wait_for_label('Plan your next trip home')
+
+
+def open_app_link(path):
+    screen.adb('shell', 'am', 'start', '-W', '-a', 'android.intent.action.VIEW',
+               '-d', 'diasporaunlocked://' + path, screen.PACKAGE)
+
+
+def type_in_field(label, value):
+    node = find(label, scroll=True, field=True)
+    tap(node)
+    screen.adb('shell', 'input', 'text', value)
+    # Exit the software keyboard only when the input method actually opened it.
+    if 'mInputShown=true' in screen.adb('shell', 'dumpsys', 'input_method').decode():
+        screen.adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
+
+
+def care_lookup():
+    open_home()
+    tap(find('Find funeral cover providers', scroll=True))
+    tap(find('How can I cover funeral costs for a relative in Zimbabwe?', scroll=True))
+    for label, country in [('Where do you live?', 'Germany'),
+                           ('Where does the person you want to cover live?', 'Zimbabwe')]:
+        type_in_field(label, country)
+        tap(find(country, scroll=True, actionable=True))
+    find('Read the cash funeral plan at ZB', scroll=True)
+    print('PASS installed Android family funeral cover lookup for a German resident and a relative in Zimbabwe')
+
+
+def family_stay():
+    open_home()
+    tap(find('Find a stay', scroll=True))
+    find('Choose the city or area where you want to stay.')
+    type_in_field('Guest nationality (two-letter country code)', 'DE')
+    tap(find('Edit travellers and currency', scroll=True))
+    tap(find('Add an adult', scroll=True))
+    tap(find('Add a child', scroll=True))
+    type_in_field('Child 1 age (0–17)', '6')
+    tap(find('Search Pilot', scroll=True))
+    until = time.monotonic() + 60
+    while time.monotonic() < until:
+        doc = screen.tree()
+        if screen.node_for(doc, 'Check current provider details') is not None:
+            print('PASS installed Android Pilot family search returned a stay')
+            return
+        if screen.node_for(doc, 'No options were returned for this search. Try different dates or locations.') is not None:
+            print('PASS installed Android Pilot family search returned no options')
+            return
+        swipe_content(doc)
+        time.sleep(1)
+    raise RuntimeError('No family stay results or valid empty search outcome')
+
+
+def planner_and_guide():
+    open_app_link('onesa')
+    tap(find('Plan three days in Victoria Falls', scroll=True))
+    find('Open trip planner')
+    open_app_link('business-guides/farming')
+    find('Farming and food production guide')
+    find('Open farming and food production guide')
+    print('PASS installed Android Onesa itinerary and farming bookmark reached their website handoff screens')
+
+
 if __name__=='__main__':
     if len(sys.argv) == 3 and sys.argv[1] == 'product':
         product_capture(sys.argv[2])
         sys.exit(0)
     failures=[]
-    for name,work in [('Direct flight handoff',flight),('Sign-in retry',sign_in),('Missing reset link',recover_missing_reset_link)]:
+    for name,work in [('Direct flight handoff',flight),('Sign-in retry',sign_in),('Missing reset link',recover_missing_reset_link),
+                      ('Care provider lookup',care_lookup),('Family stay search',family_stay),
+                      ('Planner and business guide',planner_and_guide)]:
         try: work()
         except Exception as error: failures.append(name);print(f'{name} not verified: {error}',flush=True)
     if failures: raise SystemExit('Live Android checks did not pass: '+', '.join(failures))

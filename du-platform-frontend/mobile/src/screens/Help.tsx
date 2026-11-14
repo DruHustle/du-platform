@@ -6,6 +6,7 @@ import * as Crypto from "expo-crypto";
 import { ApiError, request, requestOnesaReply, type ChatMessage } from "../api";
 import { onesaProductLinks } from "../onesaProductLinks";
 import { shopDestination, isSitePath } from "../shopDiscovery";
+import { businessGuideLink } from "../links";
 import { readSearchResponse, type SearchResponse } from "../searchResults";
 import { readContactAttempt, sendContactAttempt, type ContactAttempt } from "../contact";
 import { PENDING_CONTACT_KEY } from "../session";
@@ -288,6 +289,15 @@ export function SearchScreen() {
 export function ExternalScreen({route}: {route: {params: {path: string; title: string}}}) {
   const [error, setError] = useState("");
   const { path, title } = route.params;
+  const guide = businessGuideLink(path);
+  const displayTitle = guide?.title || title;
+  const planner = path.startsWith("/travel/planner");
+  const action = planner ? "Open trip planner" : guide ? "Open " + guide.title.toLowerCase() : "Open website";
+  let explanation = "This section opens on the Diaspora Unlocked website. You may need to sign in there.";
+  if (planner) explanation = "Continue in your browser to choose dates, estimate costs and generate your itinerary.";
+  else if (guide?.title === "Farming and food production guide")
+    explanation = "Continue to the farming guide on Diaspora Unlocked to research costs, suppliers and markets for your project in Zimbabwe.";
+  else if (guide) explanation = "Continue in your browser to read " + guide.title.toLowerCase() + " on Diaspora Unlocked.";
 
   async function openWebsite(destination: string) {
     if (!isSitePath(destination)) return;
@@ -300,10 +310,10 @@ export function ExternalScreen({route}: {route: {params: {path: string; title: s
   }
 
   return <Screen>
-    <Heading>{title}</Heading>
-    <Copy>{path.startsWith("/travel/planner") ? "Continue in your browser to choose dates, estimate costs and generate your itinerary." : "This section opens on the Diaspora Unlocked website. You may need to sign in there."}</Copy>
+    <Heading>{displayTitle}</Heading>
+    <Copy>{explanation}</Copy>
     {!!error && <Message error message={error}/>}
-    <Action title={path.startsWith("/travel/planner") ? "Open trip planner" : "Open website"} disabled={!isSitePath(path)} onPress={() => void openWebsite(path)} />
+    <Action title={action} disabled={!isSitePath(path)} onPress={() => void openWebsite(path)} />
     {(path === "/investment" || path === "/business-guides") && <Action secondary title="Search the business directory" onPress={() => void openWebsite("/ntir")} />}
   </Screen>;
 }

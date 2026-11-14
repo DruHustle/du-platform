@@ -120,11 +120,15 @@ describe.each(["ios", "android"])("Onesa on %s", platform => {
     await press("Search the business directory");
     expect(screen.root.findAllByType("Text").some(t => t.props.children === "Could not open the browser.")).toBe(true);
     await press("Search the business directory");
-    await press("Open website");
+    await press("Open business guides");
     expect(fakes.browser.mock.calls.map(([url]) => url)).toEqual([
       "https://www.diasporaunlocked.com/ntir", "https://www.diasporaunlocked.com/ntir",
       "https://www.diasporaunlocked.com/investment",
     ]);
+    const bookmark = "/business-guides/farming?lng=sn#guide";
+    await act(async () => screen.update(<ExternalScreen route={{params:{path:bookmark, title:"Business guides"}}} />));
+    await press("Open farming and food production guide");
+    expect(fakes.browser).toHaveBeenLastCalledWith("https://www.diasporaunlocked.com" + bookmark);
     await act(async () => screen.update(<ExternalScreen route={{params:{path:"/travel/weather", title:"Weather"}}} />));
     expect(buttons("Search the business directory")).toHaveLength(0);
   });

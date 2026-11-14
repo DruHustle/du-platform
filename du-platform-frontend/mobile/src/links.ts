@@ -23,5 +23,18 @@ export function travelLink(section?: string): { category?: "flights" | "stays"; 
 // Retain the query and fragment so an old bookmark still opens the selected record.
 export function businessGuideLink(path: string) {
   if (!/^\/(?:business-guides|investment|ntir|regulations)(?:[/?#]|$)/.test(path)) return;
+  const url = new URL(path, "https://www.diasporaunlocked.com");
+  const names: Record<string, string> = {
+    farming: "Farming and food production guide", mining: "Mining supplies and services guide",
+    construction: "Construction and home improvements guide", food: "Food processing and packaging guide",
+    solar: "Solar and water services guide",
+  };
+  const slug = url.pathname.match(/^\/business-guides\/([^/]+)\/?$/)?.[1] ||
+    (/^\/(?:investment|business-guides)\/?$/.test(url.pathname) ? url.hash.slice(1) : "");
+  if (slug && Object.prototype.hasOwnProperty.call(names, slug)) return { path, title: names[slug] };
+  if (url.pathname.startsWith("/ntir")) return {path, title: "Business directory"};
+  if (url.pathname.startsWith("/regulations")) return {path, title: "Business regulations"};
+  if (url.pathname.startsWith("/investment/projects/")) return {path, title: "Project profile"};
+  if (url.pathname.startsWith("/investment/opportunities")) return {path, title: "Project profiles"};
   return { path, title: "Business guides" };
 }
