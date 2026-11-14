@@ -1433,7 +1433,7 @@
       "oils_spreads": {
         "title": "Cooking Oils & Spreads",
         "description": "Everyday cooking oils and pantry spread essentials.",
-        "detail": "Browse products and register interest — no order or payment. Sales are not open yet."
+        "detail": "Browse cooking oils and spreads for your pantry. Open a product to check its size, price and availability."
       },
       "proteins": {
         "title": "Protein & Pantry",
@@ -1605,13 +1605,13 @@
         "each": "each"
       },
       "notify": {
-        "cta": "Register interest",
+        "cta": "Email me when available",
         "saving": "Saving...",
         "saved": "One-time product alert — no order, reservation or payment. Separate from our newsletter.",
         "saved_short": "Stock alert saved",
-        "dialog_title": "Register interest",
+        "dialog_title": "Email me when available",
         "dialog_description": "One-time product alert — no order, reservation or payment. Separate from our newsletter.",
-        "enter_email_prompt": "Register interest",
+        "enter_email_prompt": "Email me when available",
         "invalid_email": "Please enter a valid email address.",
         "login_required": "Please login to enable stock notifications.",
         "failed": "We could not save your stock alert. Please try again.",
@@ -2157,7 +2157,7 @@
     "remove_item": "Remove item",
     "indicative_price": "Indicative price",
     "quote_note": "Delivery and the final price are confirmed in an individual quote before payment.",
-    "saved_empty": "No saved items. Browse products and register interest."
+    "saved_empty": "No saved items. Browse the catalogue or choose a product for a one-time availability email."
   },
   "contact_enquiry": {
     "open": "Send a message",

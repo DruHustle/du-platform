@@ -1367,7 +1367,7 @@
       "oils_spreads": {
         "title": "Speiseöle und Aufstriche",
         "description": "Alltägliche Speiseöle und das Nötigste für die Vorratskammer.",
-        "detail": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet."
+        "detail": "Sehen Sie sich Speiseöle und Aufstriche für Ihren Vorrat an. Auf der Produktseite finden Sie Größe, Preis und Verfügbarkeit."
       },
       "proteins": {
         "title": "Protein & Speisekammer",
@@ -1539,13 +1539,13 @@
         "each": "jede"
       },
       "notify": {
-        "cta": "Interesse anmelden",
+        "cta": "Bei Verfügbarkeit per E-Mail benachrichtigen",
         "saving": "Sparen...",
         "saved": "Einmalige Produktbenachrichtigung — keine Bestellung, Reservierung oder Zahlung. Unabhängig vom Newsletter.",
         "saved_short": "Bestandsbenachrichtigung gespeichert",
-        "dialog_title": "Interesse anmelden",
+        "dialog_title": "Bei Verfügbarkeit per E-Mail benachrichtigen",
         "dialog_description": "Einmalige Produktbenachrichtigung — keine Bestellung, Reservierung oder Zahlung. Unabhängig vom Newsletter.",
-        "enter_email_prompt": "Interesse anmelden",
+        "enter_email_prompt": "Bei Verfügbarkeit per E-Mail benachrichtigen",
         "invalid_email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
         "login_required": "Bitte melden Sie sich an, um Bestandsbenachrichtigungen zu aktivieren.",
         "failed": "Deine Bestandsbenachrichtigung konnte nicht gespeichert werden. Bitte versuche es erneut.",
@@ -2157,7 +2157,7 @@
     "remove_item": "Artikel entfernen",
     "indicative_price": "Richtpreis",
     "quote_note": "Versand und Endpreis werden vor der Zahlung in einem individuellen Angebot bestätigt.",
-    "saved_empty": "Keine gespeicherten Artikel. Produkte entdecken und Interesse anmelden."
+    "saved_empty": "Keine gespeicherten Artikel. Blättern Sie im Katalog oder wählen Sie ein Produkt für eine einmalige E-Mail zur Verfügbarkeit."
   },
   "contact_enquiry": {
     "open": "Nachricht senden",

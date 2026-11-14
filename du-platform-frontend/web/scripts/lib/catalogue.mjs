@@ -50,6 +50,7 @@ export async function loadCatalogue({env = process.env, fetcher = fetch} = {}) {
         slug: p.slug,
         name: p.name,
         description: p.description,
+        translation_key: p.translation_key === `shop.products.descriptions.${p.slug}` ? p.translation_key : null,
         image_url: p.image_url,
         price_cents: p.price_cents,
         currency: p.currency,

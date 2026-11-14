@@ -35,6 +35,7 @@ function ResidenceField({
         label={label}
         placeholder="Type a country, then select its name"
         autoCorrect={false}
+        returnKeyType="done"
         value={query}
         onChangeText={(value) => {
           setQuery(value);

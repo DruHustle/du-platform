@@ -221,7 +221,7 @@ try {
   );
   await page.getByLabel("Email Address", { exact: true }).fill(adminEmail);
   await page.getByLabel("Password", { exact: true }).fill(password);
-  await page.getByRole("button", { name: "Login", exact: true }).click();
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await page.waitForURL(base + "/admin");
   await page
     .getByRole("heading", { name: "Admin Dashboard", exact: true })

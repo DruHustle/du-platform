@@ -121,7 +121,9 @@ const args=process.argv.slice(2);
 if(args[0]!=='curl'||args.includes('--token')||process.env.VERCEL_TOKEN!=='fixture-preview-token')process.exit(2);
 const route=args[1];
 fs.appendFileSync(process.env.PREVIEW_CLI_CALLS,route+'\\n');
-const body=route.startsWith('/api/')?JSON.stringify({error:{code:'PREVIEW_API_DISABLED'}}):'<main class="public-preview"><a href="https://www.diasporaunlocked.com'+route+'">Page</a></main><meta name="du-order-status-version" content="1">';
+const url=new URL(route,'https://www.diasporaunlocked.com'),lang=url.searchParams.get('lng')||'en';
+const meta='<html lang="'+lang+'"><meta property="og:locale" content="'+({en:'en_ZW',de:'de_DE',sn:'sn_ZW',nd:'nd_ZW'})[lang]+'">';
+const body=route.startsWith('/api/')?JSON.stringify({error:{code:'PREVIEW_API_DISABLED'}}):meta+'<main class="public-preview"><a href="https://www.diasporaunlocked.com'+url.pathname+'">Page</a></main><meta name="du-order-status-version" content="1">';
 process.stdout.write('HTTP/2 200\\r\\nx-robots-tag: noindex, nofollow\\r\\ncontent-security-policy: script-src \\'self\\'\\r\\n\\r\\n'+body);
 `,
       { mode: 0o700 }
@@ -145,6 +147,7 @@ process.stdout.write('HTTP/2 200\\r\\nx-robots-tag: noindex, nofollow\\r\\nconte
     assert.deepEqual(routes.sort(), [
       "/", "/shop", "/shop/products", "/travel", "/business-guides", "/onesa",
       "/care", "/legal-notice", "/delivery-and-returns", "/shop/order-status",
+      "/?lng=de", "/care?lng=sn", "/business-guides/farming?lng=nd",
       "/api/shop/products", "/api/admin/service-inbox", "/api/notifications/contact",
       "/api/auth/forgot-password",
     ].sort());

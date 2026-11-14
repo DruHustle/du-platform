@@ -70,6 +70,16 @@ for (const url of urls) {
   checkDocument(html, url.pathname, true);
   console.log(`PASS canonical ${url.pathname}`);
 }
+const product = urls.find(url => url.pathname.startsWith("/shop/product/"));
+for (const [pathname, language, ogLocale] of [
+  ["/", "de", "de_DE"], ["/care", "sn", "sn_ZW"], ["/business-guides/farming", "nd", "nd_ZW"],
+  ...(product ? [[product.pathname, "de", "de_DE"]] : []),
+]) {
+  const { response, html } = await read(`${pathname}?lng=${language}`);
+  assert.equal(response.status, 200);
+  checkDocument(html, pathname, true);
+  assert(html.includes(`<html lang="${language}">`) && html.includes(`property="og:locale" content="${ogLocale}"`));
+}
 for (const pathname of [
   "/admin",
   "/login",

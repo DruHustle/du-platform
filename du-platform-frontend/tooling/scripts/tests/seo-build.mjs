@@ -52,15 +52,18 @@ assert(
       r.permanent
   )
 );
+const languageQuery = [{ type: "query", key: "lng", value: "(?<locale>de|sn|nd)" }];
 assert.deepEqual(config.rewrites, [
   {
     source: "/api/:path*",
-    destination:
-      process.env.VERCEL_ENV === "preview"
-        ? "/preview-api-unavailable.json"
-        : "https://du-platform-api.onrender.com/api/:path*",
+    destination: process.env.VERCEL_ENV === "preview"
+      ? "/preview-api-unavailable.json" : "https://du-platform-api.onrender.com/api/:path*",
   },
+  { source: "/", has: languageQuery, destination: "/page-locales/:locale/index.html" },
+  { source: "/", destination: "/page-locales/en/index.html" },
+  { source: "/:path([^/.][^.]*)", has: languageQuery, destination: "/page-locales/:locale/:path.html" },
   { source: "/:path([^/.][^.]*)", destination: "/:path.html" },
+  { source: "/shop/product/:slug", has: languageQuery, destination: "/page-locales/:locale/shop/products.html" },
   { source: "/shop/product/:slug", destination: "/shop/products.html" },
 ]);
 const entryAssets = [
@@ -163,6 +166,40 @@ for (const pathname of paths) {
   if (seo.robots === "index,follow" && seo.canonicalPath === pathname) expectedLocations.push(canonical);
   console.log(`PASS initial HTML ${pathname}`);
 }
+const products = JSON.parse(fs.readFileSync(path.join(root, "catalogue-index.json"), "utf8"));
+for (const [language, ogLocale] of [["de","de_DE"], ["sn","sn_ZW"], ["nd","nd_ZW"]]) {
+  const translations = JSON.parse(fs.readFileSync(path.join(root, "locales", language, "translation.json"), "utf8"));
+  for (const pathname of paths) {
+    const file = pathname === "/" ? "index.html" : pathname.slice(1) + ".html";
+    const html = fs.readFileSync(path.join(root, "page-locales", language, file), "utf8");
+    const seo = resolveRouteSeo({ pathname });
+    assert(html.includes(`<html lang="${language}">`), pathname);
+    assert(html.includes(`<meta property="og:locale" content="${ogLocale}"`), pathname);
+    assert(html.includes(`<link rel="canonical" href="${resolveCanonicalUrl(origin, seo.canonicalPath)}"`), pathname);
+    assert(html.includes(`<meta name="robots" content="${seo.robots}"`), pathname);
+    const title = html.match(/<title>([^<]*)<\/title>/)?.[1];
+    const description = html.match(/<meta name="description" content="([^"]*)"/)?.[1];
+    assert(title && description, pathname);
+    for (const [field, value] of [["title", title], ["description", description]]) {
+      assert(html.includes(`<meta property="og:${field}" content="${value}"`), pathname);
+      assert(html.includes(`<meta name="twitter:${field}" content="${value}"`), pathname);
+    }
+    const text = html.replace(/&(?:amp|quot|lt|gt|#39|#x27);/g,
+      entity => ({ "&amp;": "&", "&quot;": '"', "&lt;": "<", "&gt;": ">", "&#39;": "'", "&#x27;": "'" })[entity]);
+    if (pathname === "/") assert(text.includes(translations.home.hero_title) && html.includes(`/travel/flights?lng=${language}`));
+    if (pathname === "/care") assert(text.includes(translations.care.funeral));
+    if (pathname === "/business-guides/farming") assert(text.includes(translations.investment.opportunities.farming.title));
+    if (pathname === "/shop/order-status") assert(html.includes('name="du-order-status-version" content="1"'));
+    const product = products.find(p => `/shop/product/${p.slug}` === pathname);
+    if (product) {
+      const expected = (product.translation_key && translations.shop.products.descriptions[product.slug]) || product.description;
+      const unescaped = description.replace(/&(?:amp|quot|lt|gt|#39);/g,
+        entity => ({ "&amp;": "&", "&quot;": '"', "&lt;": "<", "&gt;": ">", "&#39;": "'" })[entity]);
+      assert.equal(unescaped, expected, pathname);
+    }
+  }
+}
+assert.equal(fs.readFileSync(path.join(root, "page-locales/en/index.html"), "utf8"), homeHtml);
 assert.deepEqual(
   [...locations].sort(),
   expectedLocations.sort(),

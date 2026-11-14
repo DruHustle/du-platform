@@ -100,6 +100,16 @@ for (const pathname of [
     );
   console.log(`PASS preview HTML, CSP, noindex ${pathname}`);
 }
+for (const [route, language, ogLocale] of [
+  ["/", "de", "de_DE"],
+  ["/care", "sn", "sn_ZW"],
+  ["/business-guides/farming", "nd", "nd_ZW"],
+]) {
+  const { body } = await read(`${route}?lng=${language}`);
+  assert(body.includes(`<html lang="${language}">`) && body.includes(`property="og:locale" content="${ogLocale}"`));
+  assert(body.includes(`href="https://www.diasporaunlocked.com${route}"`));
+  console.log(`PASS localized preview ${route}?lng=${language}`);
+}
 for (const route of [
   "/api/shop/products",
   "/api/admin/service-inbox",
