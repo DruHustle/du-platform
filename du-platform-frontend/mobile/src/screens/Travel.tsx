@@ -297,7 +297,7 @@ function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<
     {(category === "stays" || tripType === "return") &&
       <Field label={category==="flights"?"Return date (YYYY-MM-DD)":"Check-out date (YYYY-MM-DD)"} value={returnDate}
         editable={!busy} onChangeText={value => { clearResults(); setReturnDate(value); }} maxLength={10}/>}
-    {category === "stays" && <Field label="Guest nationality (two-letter country code)" value={nationality} maxLength={2} autoCapitalize="characters" autoCorrect={false} editable={!busy} onChangeText={value => {
+    {category === "stays" && <Field label="Guest nationality (two-letter country code)" value={nationality} returnKeyType="done" maxLength={2} autoCapitalize="characters" autoCorrect={false} editable={!busy} onChangeText={value => {
     setNationality(value.toUpperCase()); clearResults();
   }} />}
     <TravelPartyFields party={party} category={category} disabled={busy}

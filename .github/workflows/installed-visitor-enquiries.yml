@@ -92,7 +92,7 @@ jobs:
           tree.write(manifest, encoding="utf-8", xml_declaration=True)
           Path("android/app/src/main/res/xml").mkdir(exist_ok=True)
           Path("android/app/src/main/res/xml/du_installed_network.xml").write_text(
-            '<network-security-config><domain-config cleartextTrafficPermitted="true"><domain>127.0.0.1</domain></domain-config></network-security-config>')
+            '<network-security-config><domain-config cleartextTrafficPermitted="true"><domain includeSubdomains="false">127.0.0.1</domain></domain-config></network-security-config>')
           PY
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;36.0.0'
           bash android/gradlew -p android --no-daemon :app:assembleRelease -PreactNativeArchitectures=x86_64

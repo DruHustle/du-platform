@@ -4,5 +4,7 @@ import { SHOP_SEED_PRODUCTS } from "../../../du-platform-backend/domain/shopCata
 if (!process.argv[2]) throw new Error("Fixture output file required");
 fs.writeFileSync(
   process.argv[2],
-  JSON.stringify({ products: SHOP_SEED_PRODUCTS })
+  JSON.stringify({ products: SHOP_SEED_PRODUCTS.map(product => ({
+    ...product, translation_key: `shop.products.descriptions.${product.slug}`,
+  })) })
 );

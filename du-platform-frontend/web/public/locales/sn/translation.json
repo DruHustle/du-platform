@@ -1367,7 +1367,7 @@
       "oils_spreads": {
         "title": "Kubikira Mafuta & Kupararira",
         "description": "Mazuva ese ekubikisa mafuta uye pantry zvinoparadzira zvakakosha.",
-        "detail": "Tarisa zvigadzirwa uye ratidza kufarira — hapana odha kana kubhadhara. Kutengesa hakusati kwavhurwa."
+        "detail": "Ona mafuta ekubikisa nezvinhu zvekuzora pachingwa. Vhura chigadzirwa kuti uone saizi, mutengo nekuti chiripo here."
       },
       "proteins": {
         "title": "Mapuroteni nezvekudya",
@@ -1539,13 +1539,13 @@
         "each": "chimwe nechimwe"
       },
       "notify": {
-        "cta": "Ratidza kufarira",
+        "cta": "Ndizivisei neemail kana chawanikwa",
         "saving": "Kuchengeta...",
         "saved": "Chiziviso chimwe chete chechigadzirwa — hapana odha, kuchengeterwa zvinhu kana kubhadhara. Chakasiyana netsamba yenhau.",
         "saved_short": "Chikumbiro chenhau chachengetwa",
-        "dialog_title": "Ratidza kufarira",
+        "dialog_title": "Ndizivisei neemail kana chawanikwa",
         "dialog_description": "Chiziviso chimwe chete chechigadzirwa — hapana odha, kuchengeterwa zvinhu kana kubhadhara. Chakasiyana netsamba yenhau.",
-        "enter_email_prompt": "Ratidza kufarira",
+        "enter_email_prompt": "Ndizivisei neemail kana chawanikwa",
         "invalid_email": "Ndokumbira uise kero yeimeri inoshanda.",
         "login_required": "Ndokumbira upinde mukati kuti uvhure zviziviso zvestock.",
         "failed": "Hatina kukwanisa kuchengetedza chikumbiro chako chenhau dzezvinhu. Edza zvakare.",
@@ -2157,7 +2157,7 @@
     "remove_item": "Bvisa chinhu",
     "indicative_price": "Mutengo wekufungidzira",
     "quote_note": "Kuendeswa nemutengo wekupedzisira zvinosimbiswa mumutengo waunopiwa wega usati wabhadhara.",
-    "saved_empty": "Hapana zvinhu zvakachengetwa. Tarisa zvigadzirwa uye ratidza kufarira."
+    "saved_empty": "Hapana chawakachengeta. Ona katarogu kana kusarudza chigadzirwa kuti uwane email imwe chete kana chava kuwanikwa."
   },
   "contact_enquiry": {
     "open": "Tumirai meseji",

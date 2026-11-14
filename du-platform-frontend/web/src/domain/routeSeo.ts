@@ -236,7 +236,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       description,
       pathname,
       title,
-      pathname === "/travel/my-trips" || input.search
+      pathname === "/travel/my-trips" || Array.from(searchParams.keys()).some(key => key !== "lng")
         ? "noindex,follow"
         : DEFAULT_ROBOTS
     );
@@ -429,6 +429,71 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   );
 }
 
+// Use the same translated copy that visitors see when they switch language.
+const localizedPages: Record<string, [string, string]> = {
+  "/": ["home.hero_title", "home.hero_subtitle"],
+  "/shop": ["shop.landing.title", "home.tiles.shop.description"],
+  "/shop/products": ["shop.products.title", "home.tiles.shop.description"],
+  "/investment/opportunities": ["nav.active_projects", "nav.active_projects_desc"],
+  "/ntir": ["investment.ntir.title", "investment.ntir.subtitle"],
+  "/regulations": ["regulations.title", "regulations.subtitle"],
+  "/onesa-ai-chat": ["onesa.title", "onesa.welcome"],
+  "/travel/virtual-experience": ["tourism.vr.seo.title", "tourism.vr.seo.description"],
+  "/travel/augmented-experience": ["tourism.ar.seo.title", "tourism.ar.seo.description"],
+  "/shop/order-status": ["pilot.request_status", "pilot.open_receipt_link"],
+  "/cookie-settings": ["cookies.settings.title", "cookies.settings.optional_description"],
+  "/account-deletion": ["deletion.title", "deletion.details"],
+  "/admin": ["admin.title", "admin.subtitle"],
+  "/404": ["notfound.subtitle", "notfound.message2"],
+  "/shop/interest": ["product_interest.title", "product_interest.scope"],
+  "/travel": ["travel.title", "travel.description"],
+  "/travel/flights": ["travel.flights", "travel.purpose.flights"],
+  "/travel/stays": ["travel.stays", "travel.purpose.stays"],
+  "/travel/car-hire": ["travel.car-hire", "travel.purpose.car-hire"],
+  "/travel/my-trips": ["travel.my-trips", "travel.private-note"],
+  "/travel/weather": ["weather.title", "weather.description"],
+  "/travel/explore": ["travel.explore-title", "travel.explore-description"],
+  "/travel/planner": [
+    "tourism.onesa.trip_planner.title",
+    "tourism.onesa.trip_planner.subtitle",
+  ],
+  "/onesa": ["tech.landing.title", "tech.landing.description"],
+  "/care": ["care.title", "care.intro"],
+  "/business-guides": [
+    "investment.landing.title",
+    "investment.landing.description",
+  ],
+  "/login": ["auth.login", "auth.login_subtitle"],
+  "/register": ["auth.create_account", "auth.register_subtitle"],
+  "/forgot-password": ["auth.forgot.title", "auth.forgot.subtitle"],
+  "/reset-password": ["auth.reset.title", "auth.reset.subtitle"],
+  "/newsletter": ["newsletter_preferences.manage_title", "newsletter_preferences.confirm_help"],
+  "/search": ["search.results.title_default", "search.description"],
+  "/legal-notice": ["pilot.operator_title", "pilot.operator_summary"],
+  "/delivery-and-returns": ["pilot.procedures_title", "pilot.procedures_summary"],
+  "/privacy-policy": ["legal.privacy.title", "legal.privacy.p1"],
+  "/terms-of-service": ["legal.terms.title", "legal.terms.p1"],
+};
+
+export function openGraphLocale(language: string) {
+  return ({ de: "de_DE", sn: "sn_ZW", nd: "nd_ZW" } as Record<string,string>)[language] ?? "en_ZW";
+}
+
+export function localizeRouteSeo(seo: RouteSeo, language: string, t: (key: string) => string,
+  product?: { name: string; description: string }): RouteSeo {
+  if (language === "en") return seo;
+  let keys = localizedPages[seo.canonicalPath];
+  const guide = seo.canonicalPath.match(/^\/business-guides\/([a-z-]+)$/)?.[1];
+  const project = seo.canonicalPath.match(/^\/investment\/projects\/([a-z_]+)$/)?.[1];
+  if (guide) keys = [`investment.opportunities.${guide}.title`, `investment.opportunities.${guide}.summary`];
+  if (project) keys = [`investment.projects.${project}.title`, `investment.projects.${project}.description`];
+  if (!keys && !product) return seo;
+  const bodyHeading = product?.name ?? t(keys[0]);
+  const title = product ? `${product.name} | ${t("nav.shop")} | Diaspora Unlocked` : `${bodyHeading} | Diaspora Unlocked`;
+  const description = product?.description ?? t(keys[1]);
+  return { ...seo, title, bodyHeading, description, socialTitle: title, socialDescription: description };
+}
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -466,7 +531,8 @@ export function resolveCanonicalUrl(
 export function injectSeoIntoHtml(
   html: string,
   seo: RouteSeo,
-  siteUrl: string
+  siteUrl: string,
+  language = "en"
 ): string {
   const canonicalUrl = resolveCanonicalUrl(siteUrl, seo.canonicalPath);
   const title = escapeHtml(seo.title);
@@ -480,41 +546,43 @@ export function injectSeoIntoHtml(
   const canonical = escapeHtml(canonicalUrl);
 
   return html
-    .replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`)
+    .replace(/(<html\b[^>]*?\blang=")[^"]*"/i, (_, prefix) => `${prefix}${escapeHtml(language)}"`)
+    .replace(/<meta\s+property="og:locale"\s+content="[^"]*"\s*\/?>/i, () => `<meta property="og:locale" content="${openGraphLocale(language)}" />`)
+    .replace(/<title>[\s\S]*?<\/title>/i, () => `<title>${title}</title>`)
     .replace(
       /<meta\s+name="description"\s+content="[\s\S]*?"\s*\/?>/i,
-      `<meta name="description" content="${description}" />`
+      () => `<meta name="description" content="${description}" />`
     )
     .replace(
       /<meta\s+name="robots"\s+content="[\s\S]*?"\s*\/?>/i,
-      `<meta name="robots" content="${robots}" />`
+      () => `<meta name="robots" content="${robots}" />`
     )
     .replace(
       /<meta\s+property="og:title"\s+content="[\s\S]*?"\s*\/?>/i,
-      `<meta property="og:title" content="${socialTitle}" />`
+      () => `<meta property="og:title" content="${socialTitle}" />`
     )
     .replace(
       /<meta\s+property="og:description"\s+content="[\s\S]*?"\s*\/?>/i,
-      `<meta property="og:description" content="${socialDescription}" />`
+      () => `<meta property="og:description" content="${socialDescription}" />`
     )
     .replace(
       /<meta\s+property="og:url"\s+content="[\s\S]*?"\s*\/?>/i,
-      `<meta property="og:url" content="${canonical}" />`
+      () => `<meta property="og:url" content="${canonical}" />`
     )
     .replace(
       /<meta\s+name="twitter:title"\s+content="[\s\S]*?"\s*\/?>/i,
-      `<meta name="twitter:title" content="${socialTitle}" />`
+      () => `<meta name="twitter:title" content="${socialTitle}" />`
     )
     .replace(
       /<meta\s+name="twitter:description"\s+content="[\s\S]*?"\s*\/?>/i,
-      `<meta name="twitter:description" content="${socialDescription}" />`
+      () => `<meta name="twitter:description" content="${socialDescription}" />`
     )
     .replace(
       /<link\s+rel="canonical"\s+href="[\s\S]*?"\s*\/?>/i,
-      `<link rel="canonical" href="${canonical}" />`
+      () => `<link rel="canonical" href="${canonical}" />`
     )
     .replace(
       /<h1 class="seo-h1">[\s\S]*?<\/h1>/i,
-      `<h1 class="seo-h1">${heading}</h1>`
+      () => `<h1 class="seo-h1">${heading}</h1>`
     );
 }

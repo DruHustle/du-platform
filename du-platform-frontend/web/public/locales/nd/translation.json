@@ -1367,7 +1367,7 @@
       "oils_spreads": {
         "title": "Amafutha Okupheka & Ukusabalala",
         "description": "Amafutha okupheka nsuku zonke kanye ne-pantry isakaza izinto ezibalulekile.",
-        "detail": "Khangela imikhiqizo utshengise intshisekelo — akula oda kumbe ukukhokha. Ukuthengisa akukavulwa."
+        "detail": "Khangela amafutha okupheka lezinto zokugcoba isinkwa. Vula umkhiqizo ukuze ubone ubukhulu bawo, intengo lokuthi uyatholakala yini."
       },
       "proteins": {
         "title": "Amaprotheni & Pantry",
@@ -1539,13 +1539,13 @@
         "each": "ngamunye"
       },
       "notify": {
-        "cta": "Tshengisa intshisekelo",
+        "cta": "Ngazisani nge-imeyili nxa sekutholakala",
         "saving": "Iyalondoloza...",
         "saved": "Isaziso esisodwa somkhiqizo — akula oda, kugcinelwa impahla kumbe ukukhokha. Sehlukile lencwadi yezindaba.",
         "saved_short": "Isaziso sesitoko sigciniwe",
-        "dialog_title": "Tshengisa intshisekelo",
+        "dialog_title": "Ngazisani nge-imeyili nxa sekutholakala",
         "dialog_description": "Isaziso esisodwa somkhiqizo — akula oda, kugcinelwa impahla kumbe ukukhokha. Sehlukile lencwadi yezindaba.",
-        "enter_email_prompt": "Tshengisa intshisekelo",
+        "enter_email_prompt": "Ngazisani nge-imeyili nxa sekutholakala",
         "invalid_email": "Ngicela ufake ikheli le-imeyili elilungile.",
         "login_required": "Sicela ungene ngemvume ukuze unike amandla izaziso zesitoko.",
         "failed": "Asenelisanga ukugcina isicelo sakho sesaziso sesitoko. Zama futhi.",
@@ -2157,7 +2157,7 @@
     "remove_item": "Susa into",
     "indicative_price": "Intengo elinganisiweyo",
     "quote_note": "Ukuhambisa lentengo yokucina kuqinisekiswa esicelweni sentengo esiqondene lawe ungakabhadali.",
-    "saved_empty": "Akula zinto ezigciniweyo. Khangela imikhiqizo utshengise intshisekelo."
+    "saved_empty": "Akulampahla oyigcinileyo. Khangela ikhathalogu kumbe ukhethe umkhiqizo ukuze uthole i-imeyili eyodwa nxa usutholakala."
   },
   "contact_enquiry": {
     "open": "Thumelani umlayezo",

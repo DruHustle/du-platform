@@ -13,20 +13,27 @@ type Product = {
   currency: string;
   stock_qty: number;
 };
-const sections = [
-  { href: "/shop", ...english.home.tiles.shop },
-  { href: "/care", ...english.home.tiles.care },
-  { href: "/onesa", ...english.home.tiles.onesa },
-  { href: "/business-guides", ...english.home.tiles.business },
-];
 export function PublicPagePreview({
-  pathname,
-  products = [],
+  pathname, products = [], copy = english, language = "en", seo = resolveRouteSeo({ pathname }),
 }: {
   pathname: string;
   products?: Product[];
+  copy?: typeof english;
+  language?: string;
+  seo?: ReturnType<typeof resolveRouteSeo>;
 }) {
-  const seo = resolveRouteSeo({ pathname });
+  const sections = [
+    { href: "/shop", ...copy.home.tiles.shop },
+    { href: "/care", ...copy.home.tiles.care },
+    { href: "/onesa", ...copy.home.tiles.onesa },
+    { href: "/business-guides", ...copy.home.tiles.business },
+  ];
+  function href(path: string) {
+    if (language === "en") return path;
+    const url = new URL(path, "https://www.diasporaunlocked.com");
+    url.searchParams.set("lng", language);
+    return url.pathname + url.search + url.hash;
+  }
   const draftPolicy = ["/legal-notice", "/delivery-and-returns"].includes(
     pathname,
   );
@@ -35,7 +42,7 @@ export function PublicPagePreview({
   const guide =
     pathname.startsWith("/business-guides/") &&
     Object.hasOwn(businessGuideTitles, guideSlug)
-      ? english.investment.opportunities[
+      ? copy.investment.opportunities[
           guideSlug as keyof typeof businessGuideTitles
         ]
       : undefined;
@@ -53,13 +60,13 @@ export function PublicPagePreview({
       }}
     >
       <nav
-        aria-label="Main navigation"
+        aria-label={copy.nav.menu}
         style={{ display: "flex", flexWrap: "wrap", gap: 24 }}
       >
-        <a href="/">Home</a>
-        <a href="/travel">Travel</a>
+        <a href={href("/")}>{copy.nav.home}</a>
+        <a href={href("/travel")}>{copy.nav.tourism}</a>
         {sections.map((s) => (
-          <a key={s.href} href={s.href}>
+          <a key={s.href} href={href(s.href)}>
             {s.title}
           </a>
         ))}
@@ -80,11 +87,11 @@ export function PublicPagePreview({
             height="112"
             style={{ margin: "auto" }}
           />
-          <h1>{english.home.hero_title}</h1>
-          <p>{english.home.hero_subtitle}</p>
+          <h1>{copy.home.hero_title}</h1>
+          <p>{copy.home.hero_subtitle}</p>
           <div>
-            <a href="/travel/flights">{english.home.flights_action}</a> ·{" "}
-            <a href="/travel/stays">{english.home.stays_action}</a>
+            <a href={href("/travel/flights")}>{copy.home.flights_action}</a> ·{" "}
+            <a href={href("/travel/stays")}>{copy.home.stays_action}</a>
           </div>
         </header>
       ) : (
@@ -93,39 +100,39 @@ export function PublicPagePreview({
       {pathname !== "/" && <p>{product?.description || seo.description}</p>}
       {draftPolicy && (
         <section>
-          <p role="note">{english.pilot.draft_notice}</p>
-          <h2>{english.pilot.operator_details_title}</h2>
+          <p role="note">{copy.pilot.draft_notice}</p>
+          <h2>{copy.pilot.operator_details_title}</h2>
           <address style={{ fontStyle: "normal" }}>
-            {english.pilot.operator_summary}
+            {copy.pilot.operator_summary}
           </address>
-          <p>{english.pilot.operator_missing}</p>
-          <h2>{english.pilot.delivery_title}</h2>
-          <p>{english.pilot.delivery_draft}</p>
-          <p>{english.pilot.payment_draft}</p>
-          <h2>{english.pilot.returns_title}</h2>
-          <p>{english.pilot.returns_draft}</p>
-          <p>{english.pilot.complaints}</p>
+          <p>{copy.pilot.operator_missing}</p>
+          <h2>{copy.pilot.delivery_title}</h2>
+          <p>{copy.pilot.delivery_draft}</p>
+          <p>{copy.pilot.payment_draft}</p>
+          <h2>{copy.pilot.returns_title}</h2>
+          <p>{copy.pilot.returns_draft}</p>
+          <p>{copy.pilot.complaints}</p>
         </section>
       )}
       {["/travel", "/travel/explore", "/travel/flights", "/travel/stays", "/travel/car-hire"].includes(pathname) && (
         <section>
-          <h2>{english.travel.guides}</h2>
-          <p>{english.travel.reviewed}</p>
+          <h2>{copy.travel.guides}</h2>
+          <p>{copy.travel.reviewed}</p>
           {travelGuides
             .filter(({ category }) => pathname === "/travel" || pathname === "/travel/explore" || pathname === `/travel/${category}`)
             .map(({ id }) => {
-              const guide = english.travel["guides-content"][id];
+              const guide = copy.travel["guides-content"][id];
               return <article key={id}>
-                <h3><a href={`/travel/explore#${id}`}>{guide.title}</a></h3>
+                <h3><a href={href(`/travel/explore#${id}`)}>{guide.title}</a></h3>
                 <p>{guide.body}</p>
               </article>;
             })}
-          <p>{english.travel["coverage-note"]}</p>
-          <a href="/travel/flights">Flights</a>
+          <p>{copy.travel["coverage-note"]}</p>
+          <a href={href("/travel/flights")}>{copy.travel.flights}</a>
           {" · "}
-          <a href="/travel/stays">Stays</a>
+          <a href={href("/travel/stays")}>{copy.travel.stays}</a>
           {" · "}
-          <a href="/travel/car-hire">Car Hire</a>
+          <a href={href("/travel/car-hire")}>{copy.travel["car-hire"]}</a>
         </section>
       )}
       {product && (
@@ -139,13 +146,13 @@ export function PublicPagePreview({
           />
           <p>
             {(product.price_cents / 100).toFixed(2)} {product.currency} ·
-            indicative catalogue price
+            {" "}{copy.product_interest.indicative_price}
           </p>
 
           <a
-            href={`/shop/product/${encodeURIComponent(product.slug)}#interest`}
+            href={href(`/shop/product/${encodeURIComponent(product.slug)}#interest`)}
           >
-            Check availability and email alert options
+            {copy.product_interest.view_product}
           </a>
         </section>
       )}
@@ -154,34 +161,34 @@ export function PublicPagePreview({
           <section key={s.href}>
             <h2>{s.title}</h2>
             <p>{s.description}</p>
-            <a href={s.href}>{s.stats}</a>
+            <a href={href(s.href)}>{s.stats}</a>
           </section>
         ))}
       {pathname === "/care" && (
         <section>
-          <h2>{english.care.funeral}</h2>
-          <p>{english.care.providers.zb.body}</p>
+          <h2>{copy.care.funeral}</h2>
+          <p>{copy.care.providers.zb.body}</p>
           <a href={providerPages.zb} rel="noreferrer">
-            {english.care.providers.zb.action}
+            {copy.care.providers.zb.action}
           </a>
-          <p>{english.care.providers.diaspora.body}</p>
+          <p>{copy.care.providers.diaspora.body}</p>
           <a href={providerPages.diaspora} rel="noreferrer">
-            {english.care.providers.diaspora.action}
+            {copy.care.providers.diaspora.action}
           </a>
-          <h2>{english.care.repatriation}</h2>
-          <p>{english.care.providers.doves.body}</p>
+          <h2>{copy.care.repatriation}</h2>
+          <p>{copy.care.providers.doves.body}</p>
           <a href={providerPages.doves} rel="noreferrer">
-            {english.care.providers.doves.action}
+            {copy.care.providers.doves.action}
           </a>
-          <p>{english.care.handoff}</p>
+          <p>{copy.care.handoff}</p>
         </section>
       )}
       {pathname === "/onesa" && (
         <section>
-          <a href="/travel/planner?example=victoria-falls-3-days">
-            Plan three days in Victoria Falls
+          <a href={href("/travel/planner?example=victoria-falls-3-days")}>
+            {copy.tech.tools.trip.cta}
           </a>{" "}
-          · <a href="/onesa-ai-chat">Ask Onesa about a product</a>
+          · <a href={href("/onesa-ai-chat")}>{copy.tech.tools.chat.cta}</a>
         </section>
       )}
       {guide && (
@@ -189,37 +196,37 @@ export function PublicPagePreview({
           <p>{guide.summary}</p>
           <p>{guide.start}</p>
           <p>{guide.checks}</p>
-          <a href="/regulations#due-diligence-checklist">
-            {english.investment.plan.cta}
+          <a href={href("/regulations#due-diligence-checklist")}>
+            {copy.investment.plan.cta}
           </a>
         </section>
       )}
       {["/business-guides", "/investment"].includes(pathname) && (
         <section>
           <ul>
-            {Object.entries(businessGuideTitles).map(([slug, title]) => (
+            {Object.keys(businessGuideTitles).map((slug) => (
               <li key={slug}>
-                <a href={`/business-guides/${slug}`}>{title}</a>
+                <a href={href(`/business-guides/${slug}`)}>{copy.investment.opportunities[slug as keyof typeof businessGuideTitles].title}</a>
               </li>
             ))}
           </ul>
-          <a href="/regulations#due-diligence-checklist">
-            {english.investment.plan.cta}
+          <a href={href("/regulations#due-diligence-checklist")}>
+            {copy.investment.plan.cta}
           </a>
           <p>
-            Check the costs, permissions and suppliers for your first project.
+            {copy.investment.plan.checklist_description}
           </p>
-          <a href="/ntir">Look up a business</a> ·{" "}
-          <a href="/investment/opportunities">Read project profiles</a>
+          <a href={href("/ntir")}>{copy.investment.ntir.title}</a> ·{" "}
+          <a href={href("/investment/opportunities")}>{copy.nav.active_projects}</a>
         </section>
       )}
       {(pathname === "/shop" || pathname === "/shop/products") && (
         <section>
-          <h2>Product catalogue</h2>
+          <h2>{copy.shop.products.title}</h2>
           <ul>
             {products.map((p) => (
               <li key={p.slug}>
-                <a href={`/shop/product/${p.slug}`}>{p.name}</a> —{" "}
+                <a href={href(`/shop/product/${p.slug}`)}>{p.name}</a> —{" "}
                 {p.description}
               </li>
             ))}
@@ -227,12 +234,12 @@ export function PublicPagePreview({
         </section>
       )}
       <footer>
-        <a href="/legal-notice">Operator and legal notice</a> ·{" "}
-        <a href="/delivery-and-returns">
-          Draft delivery, payment and returns procedures
+        <a href={href("/legal-notice")}>{copy.pilot.operator_title}</a> ·{" "}
+        <a href={href("/delivery-and-returns")}>
+          {copy.pilot.procedures_title}
         </a>{" "}
-        · <a href="/privacy-policy">Privacy</a> ·{" "}
-        <a href="/cookie-settings">Cookie preferences</a>
+        · <a href={href("/privacy-policy")}>{copy.privacy_policy}</a> ·{" "}
+        <a href={href("/cookie-settings")}>{copy.cookies.settings.title}</a>
       </footer>
     </main>
   );

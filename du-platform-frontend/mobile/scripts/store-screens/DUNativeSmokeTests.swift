@@ -10,10 +10,29 @@ final class DUNativeSmokeTests: XCTestCase {
     private func scrollTo(_ element: XCUIElement, in app: XCUIApplication, timeout: TimeInterval = 24) {
         let deadline = Date().addingTimeInterval(timeout)
         while !element.isHittable && Date() < deadline {
-            app.swipeUp()
+            let scroll = app.scrollViews.firstMatch
+            let surface = scroll.exists ? scroll : app
+            if element.exists && element.frame.maxY < app.frame.midY {
+                surface.swipeDown(velocity: .slow)
+            } else {
+                surface.swipeUp(velocity: .slow)
+            }
             if element.waitForExistence(timeout: 1), element.isHittable { return }
         }
-        XCTAssertTrue(element.isHittable, "Expected action did not become reachable")
+        XCTAssertTrue(element.isHittable, "Expected action did not become reachable: \(element.debugDescription)")
+    }
+
+    private func finishEntry(_ value: String, in field: XCUIElement, app: XCUIApplication) {
+        scrollTo(field, in: app)
+        field.tap()
+        for character in value { field.typeText(String(character)) }
+        XCTAssertEqual(field.value as? String, value)
+        let done = app.buttons.matching(NSPredicate(format: "label ==[c] %@", "done")).firstMatch
+        if done.waitForExistence(timeout: 2), done.isHittable {
+            done.tap()
+        } else {
+            field.typeText("\n")
+        }
     }
 
     private func openTravel(in app: XCUIApplication) {
@@ -114,9 +133,9 @@ final class DUNativeSmokeTests: XCTestCase {
         scrollTo(care, in: app); care.tap()
         let funeral = app.buttons["How can I cover funeral costs for a relative in Zimbabwe?"]
         XCTAssertTrue(funeral.waitForExistence(timeout: 20)); funeral.tap()
-        for (label, country) in [("Where do you live?", "Germany"), ("Where does the person you want to cover live?", "Zimbabwe")] {
+        for (label, code, country) in [("Where do you live?", "DE", "Germany"), ("Where does the person you want to cover live?", "ZW", "Zimbabwe")] {
             let field = app.textFields[label]
-            scrollTo(field, in: app); field.tap(); field.typeText(country)
+            finishEntry(code, in: field, app: app)
             let chooseCountry = app.buttons[country]
             scrollTo(chooseCountry, in: app); chooseCountry.tap()
         }
@@ -133,7 +152,7 @@ final class DUNativeSmokeTests: XCTestCase {
         scrollTo(stays, in: app); stays.tap()
         XCTAssertTrue(app.staticTexts["Choose the city or area where you want to stay."].waitForExistence(timeout: 20))
         let nationality = app.textFields["Guest nationality (two-letter country code)"]
-        scrollTo(nationality, in: app); nationality.tap(); nationality.typeText("DE")
+        finishEntry("DE", in: nationality, app: app)
         let party = app.buttons["Edit travellers and currency"]
         scrollTo(party, in: app); party.tap()
         let adult = app.buttons["Add an adult"]
@@ -141,8 +160,7 @@ final class DUNativeSmokeTests: XCTestCase {
         let child = app.buttons["Add a child"]
         scrollTo(child, in: app); child.tap()
         let age = app.textFields["Child 1 age (0–17)"]
-        scrollTo(age, in: app); age.tap(); age.typeText("6")
-        XCTAssertEqual(age.value as? String, "6")
+        finishEntry("6", in: age, app: app)
         let search = app.buttons["Search Pilot"]
         scrollTo(search, in: app); search.tap()
         let result = app.descendants(matching: .any).matching(NSPredicate(
