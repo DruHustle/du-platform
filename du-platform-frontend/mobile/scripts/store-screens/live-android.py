@@ -50,6 +50,24 @@ def find(label, scroll=False, timeout=40, prefix=False, field=False, actionable=
     raise RuntimeError(f'Could not reach {label!r} in the installed app')
 
 
+def read_outcome(label, prefix=False):
+    # After submitting, the form can shrink and place its receipt above the old button.
+    try:
+        return find(label, timeout=5, prefix=prefix)
+    except RuntimeError:
+        pass
+    document = screen.tree()
+    display = max((node for node in document.iter("node")
+                   if node.get("package") == screen.PACKAGE),
+                  key=lambda node: screen.area(node.attrib["bounds"]))
+    left, top, right, bottom = screen.rect(display.attrib["bounds"])
+    middle = str((left + right) // 2)
+    for _ in range(2):
+        screen.adb("shell", "input", "swipe", middle, str(top + (bottom-top)//4),
+                        middle, str(top + 3*(bottom-top)//4), "300")
+    return find(label, scroll=True, prefix=prefix)
+
+
 def product_capture(target):
     assistant_target = Path(target).with_name('Onesa.png')
     screen.adb('shell','am','start','-W','-a','android.intent.action.VIEW',
@@ -88,22 +106,28 @@ def flight():
 
 
 def sign_in():
-    screen.adb('shell','am','force-stop',screen.PACKAGE)
-    screen.adb('shell','am','start','-W','-n',screen.PACKAGE+'/.MainActivity')
-    screen.wait_for_label('Plan your next trip home')
-    screen.adb('shell', 'am', 'start', '-W', '-a', 'android.intent.action.VIEW',
-               '-d', 'diasporaunlocked://login', screen.PACKAGE)
+    open_home()
+    open_app_link('login')
     screen.wait_for_label('Welcome back')
-    def field(label):
-        for node in screen.tree().iter('node'):
-            if node.get('class')=='android.widget.EditText' and node.get('content-desc')==label: return node
-        raise RuntimeError('Labelled field missing: '+label)
-    find('Email address');email='qa-'+uuid4().hex[:12]+'@example.test';tap(field('Email address'));screen.adb('shell','input','text',email)
-    tap(field('Password'));screen.adb('shell','input','text','FixtureOnly123');screen.adb('shell','input','keyevent','KEYCODE_BACK')
+    email = 'qa-' + uuid4().hex[:12] + '@example.test'
+    type_in_field('Email address', email)
+    if find('Email address', field=True).get('text') != email:
+        raise RuntimeError('Sign-in form did not retain the complete synthetic address')
+    type_in_field('Password', 'FixtureOnly123!')
+    rejection = 'Invalid email or password.'
     for _ in range(2):
-        tap(find('Sign in',True)); find('Invalid email or password.',False,25)
-    if field('Email address').get('text')!=email: raise RuntimeError('Email lost after retry')
-    print('PASS native sign-in rejected synthetic identity twice and kept its email for retry')
+        tap(find('Sign in', scroll=True, actionable=True))
+        try:
+            read_outcome(rejection)
+        except RuntimeError as error:
+            # Include public status text only. Inputs can hold credentials.
+            visible = [node.get('text') for node in screen.tree().iter('node')
+                       if node.get('package') == screen.PACKAGE
+                       and node.get('class') == 'android.widget.TextView' and node.get('text')]
+            raise RuntimeError(f'Expected the credential rejection. Visible status: {visible}') from error
+    if find('Email address', field=True).get('text') != email:
+        raise RuntimeError('Email lost after retry')
+    print('PASS native sign-in rejected synthetic identity twice and kept its email for retry', flush=True)
 
 
 def recover_missing_reset_link():
