@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { startOnesa, consumeOnesa, type OnesaSettings, type OnesaResult } from "../onesaSignIn";
+import { useEffect, useState } from "react";
 import { authPageLink, returnPathFromSearch } from "@/lib/safeRedirect";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,25 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [touched, setTouched] = useState({ email: false, password: false });
+  const [onesa, setOnesa] = useState<OnesaSettings | null>(null);
+  const [pending, setPending] = useState<{token:string; next:string} | null>(null);
+  useEffect(() => {
+    void api.get<OnesaSettings>("/auth/onesa/config/web").then(r=>setOnesa(r.data)).catch(()=>{});
+    try {
+      const callback = consumeOnesa();
+      if (callback) {
+        setLoading(true);
+        void callback.promise.then(result=>{
+          if (result.linkRequired) setPending({token:result.accessToken,next:callback.next});
+          else {
+            saveAuthToken(result.accessToken);
+            primeCurrentUserBootstrap(result.user ?? null);
+            setLocation(callback.next);
+          }
+        }).catch(e=>setError(getApiErrorMessage(e,"Onesa sign-in could not be completed."))).finally(()=>setLoading(false));
+      }
+    } catch(e) {setError(e instanceof Error ? e.message : "Onesa sign-in could not be completed.");}
+  }, [setLocation]);
   const returningUser = hasLoggedInBefore();
 
   const glassInputStyle =
@@ -62,14 +82,15 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      const response = await api.post("/auth/login", {
+      const response = await api.post<OnesaResult>(pending ? "/auth/onesa/link" : "/auth/login", {
+        ...(pending ? {client:"web",accessToken:pending.token} : {}),
         ...formData,
         email: formData.email.trim(),
       });
       const accessToken = String(response?.data?.accessToken ?? "").trim();
       if (accessToken) saveAuthToken(accessToken);
       primeCurrentUserBootstrap(response?.data?.user ?? null);
-      setLocation(nextPath);
+      setLocation(pending?.next ?? nextPath);
     } catch (err: any) {
       setError(
         getApiErrorMessage(err, "Login failed. Please check your credentials.")
@@ -115,6 +136,11 @@ export default function Login() {
               </p>
             </div>
 
+            {onesa?.enabled && !pending && <Button type="button" className="w-full" disabled={loading} onClick={()=>{
+              setError(""); setLoading(true);
+              void startOnesa(onesa,nextPath).catch(e=>{setError(e.message);setLoading(false);});
+            }}>Sign in with Onesa</Button>}
+            {pending && <p role="status" className="text-sm text-white">To link this Onesa identity, confirm the email and password for your existing Diaspora Unlocked account.</p>}
             <form className="space-y-5" onSubmit={handleSubmit} noValidate>
               <div className="space-y-1.5">
                 <Label
@@ -237,7 +263,7 @@ export default function Login() {
                 ) : (
                   <>
                     <LoginIcon className="mr-2 h-4 w-4" />
-                    {t("auth.login") || "Sign In"}
+                    {pending ? "Link accounts and sign in" : t("auth.login") || "Sign In"}
                   </>
                 )}
               </Button>

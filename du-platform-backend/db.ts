@@ -1,3 +1,4 @@
+import { linkTableSQL } from "./modules/auth/onesaAccounts";
 import { databaseStartupMode, verifyDatabaseSchema } from "./shared/databaseStartup";
 import { initializeWeather } from "./modules/weather/cache";
 import { initializeTravel } from "./modules/travel/schema";
@@ -127,6 +128,8 @@ export async function initializeDatabase(): Promise<void> {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+    await db.execute(linkTableSQL);
 
     for (const column of [
       "email_verified_at TIMESTAMP NULL DEFAULT NULL",

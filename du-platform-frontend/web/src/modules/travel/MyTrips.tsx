@@ -1,3 +1,4 @@
+import { authPageLink } from "@/lib/safeRedirect";
 import { deleteSavedTravel, loadSavedTravel, saveTravel } from "./api";
 import { resolveCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
 import { useEffect, useState, type FormEvent } from "react";
@@ -388,7 +389,7 @@ export default function MyTrips() {
           </div>
         ) : !signedIn ? (
           <Button asChild>
-            <Link href="/login?next=%2Ftravel%2Fmy-trips">
+            <Link href={authPageLink("/login", typeof window === "undefined" ? "/travel/my-trips" : window.location.pathname + window.location.search + window.location.hash)}>
               {t("travel.sign-in")}
             </Link>
           </Button>

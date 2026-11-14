@@ -49,7 +49,7 @@ export async function verifyDatabaseSchema(pool: Pick<Pool, "getConnection">): P
   const connection = await pool.getConnection();
   try {
     await connection.query("START TRANSACTION READ ONLY");
-    for (const [table, columns] of Object.entries(requiredColumns)) {
+    for (const [table, columns] of Object.entries({...requiredColumns, ...(process.env.ONESA_IDENTITY_ENABLED === "true" ? {onesa_account_links:["stable_id","user_id","created_at"]} : {})})) {
       // All identifiers are source constants, never request data or environment values.
       const selection = columns.map(column => `\`${column}\``).join(", ");
       await connection.query(`SELECT ${selection} FROM \`${table}\` LIMIT 0`);

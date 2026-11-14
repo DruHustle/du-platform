@@ -1,3 +1,4 @@
+import { resolveOnesa } from "../onesaAccounts";
 import type express from "express";
 import {
   clearSessionCookie,
@@ -149,6 +150,14 @@ export class AuthController {
 
   refresh = async (req: express.Request, res: express.Response) => {
     try {
+      const cookieToken = resolveSessionToken(req);
+      if (cookieToken?.includes(".")) {
+        try {
+          const {user} = await resolveOnesa(cookieToken);
+          if (!user) throw new Error("Missing account link");
+          return res.json(ok({accessToken:cookieToken}));
+        } catch { return res.status(401).json(error("ONESA_UNAUTHORIZED","Please sign in with Onesa again.")); }
+      }
       const user = await resolveSessionUser(req);
       if (!user)
         return res

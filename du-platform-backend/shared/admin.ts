@@ -31,7 +31,7 @@ export async function requireAdminAuth(
     const email = String(user.email ?? "")
       .trim()
       .toLowerCase();
-    if (!isAdminEmail(email) || !user.email_verified_at) {
+    if (req.auth?.claims.federated || !isAdminEmail(email) || !user.email_verified_at) {
       return res
         .status(403)
         .json(error("AUTH_FORBIDDEN", "Admin access required."));
