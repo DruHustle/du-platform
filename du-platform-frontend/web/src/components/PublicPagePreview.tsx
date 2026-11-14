@@ -1,5 +1,8 @@
 import React from "react";
+import { travelGuides } from "../domain/travelGuides";
 import english from "../../public/locales/en/translation.json";
+import { providerPages } from "../modules/care/providers";
+import businessGuideTitles from "../domain/businessGuideTitles.json";
 import { resolveRouteSeo } from "../domain/routeSeo";
 type Product = {
   slug: string;
@@ -10,54 +13,40 @@ type Product = {
   currency: string;
   stock_qty: number;
 };
-const sections = [
-  {
-    title: "Zimbabwean products",
-    href: "/shop/products",
-    description:
-      "Browse food, drinks, crafts and supporter apparel. Register interest for a one-time availability alert — no order, reservation or payment. Confirm your email separately from the newsletter. Sales are not open yet.",
-  },
-  {
-    title: "Travel Southern Africa",
-    href: "/travel",
-    description:
-      "Search flights to, from and within Southern Africa and research stays. Read regional guides, explore Zimbabwean destinations and draft an itinerary with Onesa. Confirm final prices and conditions directly with providers; car hire uses a public search handoff.",
-  },
-  {
-    title: "Business and innovation",
-    href: "/investment",
-    description:
-      "Explore practical ideas in farming, mining, construction, energy and technology. Start with a small research brief, verify permissions and supplier information, and review project profiles and the business directory as research starting points. Listed profiles are not investment offers or endorsements.",
-  },
-  {
-    title: "Onesa and technology",
-    href: "/technology",
-    description:
-      "Use Onesa for general guidance and links to published catalogue information. Explore clearly labelled virtual and augmented reality demonstrations. Onesa cannot book a trip, take payments or confirm delivery.",
-  },
-];
 export function PublicPagePreview({
-  pathname,
-  products = [],
+  pathname, products = [], copy = english, language = "en", seo = resolveRouteSeo({ pathname }),
 }: {
   pathname: string;
   products?: Product[];
+  copy?: typeof english;
+  language?: string;
+  seo?: ReturnType<typeof resolveRouteSeo>;
 }) {
-  const seo = resolveRouteSeo({ pathname });
+  const sections = [
+    { href: "/shop", ...copy.home.tiles.shop },
+    { href: "/care", ...copy.home.tiles.care },
+    { href: "/onesa", ...copy.home.tiles.onesa },
+    { href: "/business-guides", ...copy.home.tiles.business },
+  ];
+  function href(path: string) {
+    if (language === "en") return path;
+    const url = new URL(path, "https://www.diasporaunlocked.com");
+    url.searchParams.set("lng", language);
+    return url.pathname + url.search + url.hash;
+  }
   const draftPolicy = ["/legal-notice", "/delivery-and-returns"].includes(
-    pathname
+    pathname,
   );
   if (seo.robots.startsWith("noindex") && !draftPolicy) return null;
-  const product = products.find(p => pathname === `/shop/product/${p.slug}`);
-  const selected =
-    pathname === "/"
-      ? sections
-      : sections.filter(
-          s =>
-            pathname.startsWith(s.href.split("/").slice(0, 2).join("/")) ||
-            (pathname.startsWith("/shop/product/") &&
-              s.href.startsWith("/shop"))
-        );
+  const guideSlug = pathname.split("/")[2];
+  const guide =
+    pathname.startsWith("/business-guides/") &&
+    Object.hasOwn(businessGuideTitles, guideSlug)
+      ? copy.investment.opportunities[
+          guideSlug as keyof typeof businessGuideTitles
+        ]
+      : undefined;
+  const product = products.find((p) => pathname === `/shop/product/${p.slug}`);
   return (
     <main
       className="public-preview"
@@ -71,12 +60,13 @@ export function PublicPagePreview({
       }}
     >
       <nav
-        aria-label="Main navigation"
+        aria-label={copy.nav.menu}
         style={{ display: "flex", flexWrap: "wrap", gap: 24 }}
       >
-        <a href="/">Home</a>
-        {sections.map(s => (
-          <a key={s.href} href={s.href}>
+        <a href={href("/")}>{copy.nav.home}</a>
+        <a href={href("/travel")}>{copy.nav.tourism}</a>
+        {sections.map((s) => (
+          <a key={s.href} href={href(s.href)}>
             {s.title}
           </a>
         ))}
@@ -97,50 +87,52 @@ export function PublicPagePreview({
             height="112"
             style={{ margin: "auto" }}
           />
-          <h1 className="seo-h1">{english.home.hero_title}</h1>
-          <p>{english.home.hero_subtitle}</p>
-          <p>{english.pilot.home_purpose}</p>
+          <h1>{copy.home.hero_title}</h1>
+          <p>{copy.home.hero_subtitle}</p>
+          <div>
+            <a href={href("/travel/flights")}>{copy.home.flights_action}</a> ·{" "}
+            <a href={href("/travel/stays")}>{copy.home.stays_action}</a>
+          </div>
         </header>
       ) : (
         <h1>{product?.name || seo.bodyHeading}</h1>
       )}
-      <p>{product?.description || seo.description}</p>
+      {pathname !== "/" && <p>{product?.description || seo.description}</p>}
       {draftPolicy && (
         <section>
-          <p role="note">{english.pilot.draft_notice}</p>
-          <h2>{english.pilot.operator_details_title}</h2>
+          <p role="note">{copy.pilot.draft_notice}</p>
+          <h2>{copy.pilot.operator_details_title}</h2>
           <address style={{ fontStyle: "normal" }}>
-            {english.pilot.operator_summary}
+            {copy.pilot.operator_summary}
           </address>
-          <p>{english.pilot.operator_missing}</p>
-          <h2>{english.pilot.delivery_title}</h2>
-          <p>{english.pilot.delivery_draft}</p>
-          <p>{english.pilot.payment_draft}</p>
-          <h2>{english.pilot.returns_title}</h2>
-          <p>{english.pilot.returns_draft}</p>
-          <p>{english.pilot.complaints}</p>
+          <p>{copy.pilot.operator_missing}</p>
+          <h2>{copy.pilot.delivery_title}</h2>
+          <p>{copy.pilot.delivery_draft}</p>
+          <p>{copy.pilot.payment_draft}</p>
+          <h2>{copy.pilot.returns_title}</h2>
+          <p>{copy.pilot.returns_draft}</p>
+          <p>{copy.pilot.complaints}</p>
         </section>
       )}
-      {pathname.startsWith("/travel") && (
+      {["/travel", "/travel/explore", "/travel/flights", "/travel/stays", "/travel/car-hire"].includes(pathname) && (
         <section>
-          <h2>{english.travel.guides}</h2>
-          <p>{english.travel.reviewed}</p>
-          {Object.entries(english.travel["guides-content"]).map(
-            ([id, guide]) => (
-              <article key={id}>
-                <h3>
-                  <a href={`/travel/explore#${id}`}>{guide.title}</a>
-                </h3>
+          <h2>{copy.travel.guides}</h2>
+          <p>{copy.travel.reviewed}</p>
+          {travelGuides
+            .filter(({ category }) => pathname === "/travel" || pathname === "/travel/explore" || pathname === `/travel/${category}`)
+            .map(({ id }) => {
+              const guide = copy.travel["guides-content"][id];
+              return <article key={id}>
+                <h3><a href={href(`/travel/explore#${id}`)}>{guide.title}</a></h3>
                 <p>{guide.body}</p>
-              </article>
-            )
-          )}
-          <p>{english.travel["coverage-note"]}</p>
-          <a href="/travel/flights">Flights</a>
+              </article>;
+            })}
+          <p>{copy.travel["coverage-note"]}</p>
+          <a href={href("/travel/flights")}>{copy.travel.flights}</a>
           {" · "}
-          <a href="/travel/stays">Stays</a>
+          <a href={href("/travel/stays")}>{copy.travel.stays}</a>
           {" · "}
-          <a href="/travel/car-hire">Car Hire</a>
+          <a href={href("/travel/car-hire")}>{copy.travel["car-hire"]}</a>
         </section>
       )}
       {product && (
@@ -154,30 +146,87 @@ export function PublicPagePreview({
           />
           <p>
             {(product.price_cents / 100).toFixed(2)} {product.currency} ·
-            indicative catalogue price
+            {" "}{copy.product_interest.indicative_price}
           </p>
-          <p>{english.pilot.readiness_pending_note}</p>
+
           <a
-            href={`/shop/product/${encodeURIComponent(product.slug)}#interest`}
+            href={href(`/shop/product/${encodeURIComponent(product.slug)}#interest`)}
           >
-            Register interest — no order or payment
+            {copy.product_interest.view_product}
           </a>
         </section>
       )}
-      {selected.map(s => (
-        <section key={s.href}>
-          <h2>{s.title}</h2>
-          <p>{s.description}</p>
-          <a href={s.href}>Explore {s.title.toLowerCase()}</a>
+      {pathname === "/" &&
+        sections.map((s) => (
+          <section key={s.href}>
+            <h2>{s.title}</h2>
+            <p>{s.description}</p>
+            <a href={href(s.href)}>{s.stats}</a>
+          </section>
+        ))}
+      {pathname === "/care" && (
+        <section>
+          <h2>{copy.care.funeral}</h2>
+          <p>{copy.care.providers.zb.body}</p>
+          <a href={providerPages.zb} rel="noreferrer">
+            {copy.care.providers.zb.action}
+          </a>
+          <p>{copy.care.providers.diaspora.body}</p>
+          <a href={providerPages.diaspora} rel="noreferrer">
+            {copy.care.providers.diaspora.action}
+          </a>
+          <h2>{copy.care.repatriation}</h2>
+          <p>{copy.care.providers.doves.body}</p>
+          <a href={providerPages.doves} rel="noreferrer">
+            {copy.care.providers.doves.action}
+          </a>
+          <p>{copy.care.handoff}</p>
         </section>
-      ))}
+      )}
+      {pathname === "/onesa" && (
+        <section>
+          <a href={href("/travel/planner?example=victoria-falls-3-days")}>
+            {copy.tech.tools.trip.cta}
+          </a>{" "}
+          · <a href={href("/onesa-ai-chat")}>{copy.tech.tools.chat.cta}</a>
+        </section>
+      )}
+      {guide && (
+        <section>
+          <p>{guide.summary}</p>
+          <p>{guide.start}</p>
+          <p>{guide.checks}</p>
+          <a href={href("/regulations#due-diligence-checklist")}>
+            {copy.investment.plan.cta}
+          </a>
+        </section>
+      )}
+      {["/business-guides", "/investment"].includes(pathname) && (
+        <section>
+          <ul>
+            {Object.keys(businessGuideTitles).map((slug) => (
+              <li key={slug}>
+                <a href={href(`/business-guides/${slug}`)}>{copy.investment.opportunities[slug as keyof typeof businessGuideTitles].title}</a>
+              </li>
+            ))}
+          </ul>
+          <a href={href("/regulations#due-diligence-checklist")}>
+            {copy.investment.plan.cta}
+          </a>
+          <p>
+            {copy.investment.plan.checklist_description}
+          </p>
+          <a href={href("/ntir")}>{copy.investment.ntir.title}</a> ·{" "}
+          <a href={href("/investment/opportunities")}>{copy.nav.active_projects}</a>
+        </section>
+      )}
       {(pathname === "/shop" || pathname === "/shop/products") && (
         <section>
-          <h2>Product catalogue</h2>
+          <h2>{copy.shop.products.title}</h2>
           <ul>
-            {products.map(p => (
+            {products.map((p) => (
               <li key={p.slug}>
-                <a href={`/shop/product/${p.slug}`}>{p.name}</a> —{" "}
+                <a href={href(`/shop/product/${p.slug}`)}>{p.name}</a> —{" "}
                 {p.description}
               </li>
             ))}
@@ -185,12 +234,12 @@ export function PublicPagePreview({
         </section>
       )}
       <footer>
-        <a href="/legal-notice">Operator and legal notice</a> ·{" "}
-        <a href="/delivery-and-returns">
-          Draft delivery, payment and returns procedures
+        <a href={href("/legal-notice")}>{copy.pilot.operator_title}</a> ·{" "}
+        <a href={href("/delivery-and-returns")}>
+          {copy.pilot.procedures_title}
         </a>{" "}
-        · <a href="/privacy-policy">Privacy</a> ·{" "}
-        <a href="/cookie-settings">Cookie preferences</a>
+        · <a href={href("/privacy-policy")}>{copy.privacy_policy}</a> ·{" "}
+        <a href={href("/cookie-settings")}>{copy.cookies.settings.title}</a>
       </footer>
     </main>
   );

@@ -46,6 +46,14 @@ const routeTitles = new Map([
   ["/travel/weather", "travel.weather"],
   ["/travel/explore", "travel.explore"],
   ["/travel/planner", "travel.onesa-planner"],
+  ["/care", "nav.care"],
+  ["/business-guides", "nav.business_guides"],
+  ...(["farming", "mining", "construction", "food", "solar"] as const).map(slug =>
+    [`/business-guides/${slug}`, `investment.opportunities.${slug}.title`] as const
+  ),
+  ["/investment", "nav.business_guides"],
+  ["/onesa", "nav.technology"],
+  ["/technology", "nav.technology"],
   ["/ntir", "investment.ntir.title"],
   ["/shop", "nav.shop"],
   ["/shop/products", "pilot.browse_products"],
@@ -75,6 +83,7 @@ export default function SearchResults() {
     Tourism: Plane,
     Investment: TrendingUp,
     Technology: Brain,
+    Onesa: Brain,
     NTIR: Globe,
     Compliance: FileText,
     Shop: ShoppingBag,
@@ -83,8 +92,10 @@ export default function SearchResults() {
   };
   const categoryLabels: Record<string, string> = {
     Tourism: tr("search.categories.tourism", "Travel"),
-    Investment: tr("search.categories.investment", "Investment"),
-    Technology: tr("search.categories.technology", "Technology"),
+    Investment: t("nav.business_guides"),
+    Technology: t("nav.technology"),
+    Onesa: t("nav.technology"),
+    Care: t("nav.care"),
     NTIR: tr("search.categories.ntir", "NTIR"),
     Shop: t("nav.shop"),
     Product: t("shop.product"),
@@ -215,7 +226,7 @@ export default function SearchResults() {
             <p className="py-12 text-white/80">
               {tr(
                 "search.prompt",
-                "Search for travel, investment, shopping, or Onesa AI."
+                "Search for flights, products, funeral cover or Onesa."
               )}
             </p>
           ) : results.length > 0 ? (

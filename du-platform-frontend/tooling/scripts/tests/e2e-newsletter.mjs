@@ -204,6 +204,17 @@ try {
     .getByRole("button", { name: "Confirm subscription", exact: true })
     .click();
   await page.getByText("Your email is confirmed.").waitFor();
+  const [[currentSubscriber]] = await pool.query(
+    "SELECT unsubscribe_token FROM newsletter_subscriptions WHERE email=?",
+    [email]
+  );
+  await page.goto(base + "/newsletter#action=unsubscribe&token=" + currentSubscriber.unsubscribe_token);
+  await page.getByRole("button", { name: "Unsubscribe", exact: true }).waitFor();
+  assert(!page.url().includes(currentSubscriber.unsubscribe_token));
+  const [[afterOpeningLink]] = await pool.query(
+    "SELECT status FROM newsletter_subscriptions WHERE email=?", [email]
+  );
+  assert.equal(afterOpeningLink.status, "subscribed");
   assert.equal(
     (
       await pool.query("SELECT COUNT(*) AS total FROM users WHERE email=?", [

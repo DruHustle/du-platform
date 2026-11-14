@@ -11,6 +11,7 @@ const engine = process.env.PILOT_BROWSER || "chromium",
   out = process.env.PILOT_LAYOUT_OUTPUT_DIR || "/tmp/du-pilot-layout-" + engine;
 await fs.mkdir(out, { recursive: true });
 const catalogue = {
+  source: "db",
   pricing: testPricing,
   readiness: readyShop(getPublicShopSeedProducts().map(p => p.id)),
   products: getPublicShopSeedProducts().map(p => ({ ...translatedFixture(p), stock_qty: 3 })),
@@ -101,8 +102,10 @@ const paths = [
   "/shop",
   "/shop/products",
   "/shop/product/sables-rugby-home-kit",
-  "/technology",
-  "/investment",
+  "/onesa",
+  "/care",
+  "/business-guides",
+  "/business-guides/farming",
   "/travel",
   "/travel/weather",
   "/travel/planner",
@@ -110,6 +113,67 @@ const paths = [
   "/privacy-policy",
   "/login?next=%2Fadmin",
 ];
+async function checkCareLookup(page, copy) {
+  const lookup = page.locator("#care-start");
+  const residence = name => lookup.getByRole("combobox", { name, exact: true });
+  const applicant = residence(copy.applicant);
+  const covered = residence(copy.covered);
+  const results = lookup.locator("article");
+  const writes = [];
+  const watchWrites = request => {
+    if (!["GET", "HEAD"].includes(request.method())) writes.push(request.url());
+  };
+  page.on("request", watchWrites);
+  const doves = "https://doves.co.zw/global-plan/";
+  const confirmProvider = async (key, url) => {
+    const provider = copy.providers[key];
+    const heading = page.getByRole("heading", { name: provider.title, exact: true });
+    const card = results.filter({ has: heading });
+    await card.getByText(copy.handoff, { exact: true }).waitFor();
+    const link = card.getByRole("link", { name: provider.action, exact: true });
+    assert.equal(await link.getAttribute("href"), url);
+    return link;
+  };
+  try {
+    await page.getByRole("link", { name: copy.funeral, exact: true }).click();
+    await applicant.selectOption("DE");
+    assert.equal(await results.count(), 0);
+    await covered.selectOption("ZW");
+    assert.equal(await results.count(), 2);
+    await confirmProvider("zb", "https://www.zb.co.zw/diaspora/cash-funeral-plan");
+    await confirmProvider("diaspora", "https://diasporainsurance.com/zimbabwe/");
+
+    await page.getByRole("link", { name: copy.repatriation, exact: true }).click();
+    await lookup.getByText(copy.no_match, { exact: true }).waitFor();
+    assert.equal(await results.count(), 0);
+    await covered.selectOption("ZA");
+    await applicant.selectOption("ZW");
+    await lookup.getByText(copy.no_match, { exact: true }).waitFor();
+    assert.equal(await results.count(), 0);
+    await applicant.selectOption("GB");
+    assert.equal(await results.count(), 2);
+    await confirmProvider("diaspora", "https://diasporainsurance.com/zimbabwe/");
+    const link = await confirmProvider("doves", doves);
+    // Keep the handoff local to the test and observe the URL requested by the browser.
+    await page.route(doves, route =>
+      route.fulfill({ contentType: "text/html", body: "<h1>Doves fixture</h1>" })
+    );
+    await link.click();
+    await page.getByRole("heading", { name: "Doves fixture" }).waitFor();
+    assert.equal(page.url(), doves);
+    assert.deepEqual(
+      writes,
+      [],
+      "Checking residence and opening a provider should create no enquiry or payable event"
+    );
+    await page.goBack();
+    await applicant.waitFor();
+  } finally {
+    page.off("request", watchWrites);
+    await page.unroute(doves);
+  }
+}
+
 try {
   for (const language of engine === "webkit"
     ? ["en"]
@@ -187,6 +251,8 @@ try {
         await page.locator("main h1").waitFor({ state: "attached" });
         await page.evaluate(() => document.fonts.ready);
         await page.waitForTimeout(100);
+        if (path === "/care" && (width === 390 || width === 1440))
+          await checkCareLookup(page, translations.care);
         if (path === "/shop/product/sables-rugby-home-kit") {
           const basketLabel = translations.shop.products.actions.checkout;
           assert.equal(typeof basketLabel, "string");

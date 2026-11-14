@@ -36,6 +36,7 @@ export function useAirportDirectory() {
 type AirportFieldProps = {
   label: string;
   testID: string;
+  stay?: boolean;
   airports: Airport[] | null;
   value: string;
   onChange: (value: string) => void;
@@ -45,6 +46,7 @@ type AirportFieldProps = {
 export function AirportField({
   label,
   testID,
+  stay = false,
   airports,
   value,
   onChange,
@@ -62,9 +64,9 @@ export function AirportField({
         value={value}
         onChangeText={onChange}
         testID={testID}
-        accessibilityLabel={`${label}, city or airport code`}
-        accessibilityHint="Type a city name to see matching airports, or enter the three-letter airport code."
-        placeholder="City or airport code"
+        accessibilityLabel={stay ? `${label}, city or area` : `${label}, city or airport code`}
+        accessibilityHint={stay ? "Enter a city name and choose the area where you want to stay." : "Type a city name to see matching airports, or enter the three-letter airport code."}
+        placeholder={stay ? "City or area" : "City or airport code"}
         autoCapitalize="words"
         autoCorrect={false}
         maxLength={200}
@@ -97,7 +99,7 @@ export function AirportField({
         </Pressable>
       ))}
       {focused && airports && value.trim() && !selected && !matches.length ? (
-        <Copy>No matching airport. Try another city or airport code.</Copy>
+        <Copy>{stay ? "No matching area. Try another city." : "No matching airport. Try another city or airport code."}</Copy>
       ) : null}
     </View>
   );

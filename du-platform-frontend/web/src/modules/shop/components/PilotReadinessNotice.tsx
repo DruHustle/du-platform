@@ -4,11 +4,14 @@ import { useShopCatalog } from "../lib/useShopCatalog";
 
 export default function PilotReadinessNotice({
   operator = false,
+  showPolicyLinks = true,
 }: {
   operator?: boolean;
+  showPolicyLinks?: boolean;
 }) {
   const { t } = useTranslation();
-  const { readiness: status } = useShopCatalog();
+  const { readiness: status, source, status: catalogStatus } = useShopCatalog();
+  const open = catalogStatus === "ready" && source === "db" && status?.commercialReady && status.mode === "pilot" && status.enforcement === "enforced";
   return (
     <aside
       role="note"
@@ -16,25 +19,29 @@ export default function PilotReadinessNotice({
     >
       <strong className="block text-amber-200">
         {t(
-          status?.commercialReady
+          open
             ? "pilot.readiness_limited"
             : "pilot.readiness_prelaunch"
         )}
       </strong>
       <p className="my-2">
         {t(
-          status?.commercialReady
+          open
             ? "pilot.readiness_pilot_note"
             : "pilot.readiness_pending_note"
         )}
       </p>
-      <Link href="/legal-notice" className="underline">
-        {t("pilot.operator_title")}
-      </Link>
-      {" · "}
-      <Link href="/delivery-and-returns" className="underline">
-        {t("pilot.procedures_title")}
-      </Link>
+      {showPolicyLinks && (
+        <>
+          <Link href="/legal-notice" className="underline">
+            {t("pilot.operator_title")}
+          </Link>
+          {" · "}
+          <Link href="/delivery-and-returns" className="underline">
+            {t("pilot.procedures_title")}
+          </Link>
+        </>
+      )}
       {operator && (
         <div className="mt-3 border-t border-white/15 pt-3">
           <p>

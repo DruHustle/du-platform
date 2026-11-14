@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { businessIdeas } from "../businessIdeas";
 import ImpactStories from "../components/ImpactStories";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -9,52 +11,14 @@ import {
   ArrowRight,
   Building,
   ChevronDown,
-  Gem,
   Globe,
-  Leaf,
-  Package,
   Search,
   Shield,
   Sun,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
-const businessIdeas = [
-  {
-    key: "mining",
-    icon: Gem,
-    image: "/images/pages/investment/minerals_mining.png",
-    source: "https://www.chamines.co.zw/home/MiningAffairs",
-  },
-  {
-    key: "farming",
-    icon: Leaf,
-    image: "/images/pages/investment/horticulture.jpg",
-    source:
-      "https://tradezimbabwe.com/gokwe-chilli-farmers-target-export-markets/",
-  },
-  {
-    key: "construction",
-    icon: Building,
-    image: "/images/pages/investment/harare-construction.webp",
-    source: "https://www.hararecity.co.zw/services/about/building-permits",
-  },
-  {
-    key: "food",
-    icon: Package,
-    image: "/images/pages/shop/food_dried_mango_1.jpg",
-    source:
-      "https://tradezimbabwe.com/afcfta-opens-new-export-opportunities-for-msmes/",
-  },
-  {
-    key: "solar",
-    icon: Sun,
-    image: "/images/pages/investment/zimbabwe-solar-installation.webp",
-    source:
-      "https://www.get-invest.eu/about/country-and-regional-windows/zimbabwe/",
-  },
-];
 const researchPaths = [
   { key: "projects", icon: Building, href: "/investment/opportunities" },
   { key: "directory", icon: Search, href: "/ntir" },
@@ -73,15 +37,28 @@ const actionClass =
 
 export default function Investment() {
   const { t } = useTranslation();
+  const [location] = useLocation();
+  useEffect(() => {
+    function revealBookmark() {
+      const key = window.location.hash.slice(1) || new URLSearchParams(window.location.search).get("guide");
+      if (!key || !businessIdeas.some(idea => idea.key === key)) return;
+      const tile = document.getElementById(key);
+      const details = tile?.querySelector("details");
+      if (details) details.open = true;
+      tile?.scrollIntoView({ block: "start", inline: "nearest", behavior: "instant" });
+    }
+    revealBookmark();
+    window.addEventListener("hashchange", revealBookmark);
+    return () => window.removeEventListener("hashchange", revealBookmark);
+  }, [location]);
   return (
     <Layout>
       <div className="investment-landing">
         <DiscoveryHero
-          eyebrow={t("investment.landing.eyebrow")}
+          eyebrow="Zimbabwe"
           title={t("investment.landing.title")}
-          highlight={t("investment.landing.highlight")}
+          highlight=""
           description={t("investment.landing.description")}
-          principle={t("investment.landing.principle")}
           image="/images/pages/investment/horticulture.jpg"
           imageAlt={t("investment.opportunities.farming.image_alt")}
           caption={t("investment.landing.image_caption")}
@@ -112,6 +89,7 @@ export default function Investment() {
               return (
                 <DiscoveryTile
                   key={item.key}
+                  id={item.key}
                   title={title}
                   icon={item.icon}
                   image={item.image}
@@ -128,6 +106,9 @@ export default function Investment() {
                     </a>
                   }
                 >
+                  <Link href={`/business-guides/${item.key}`} className="font-bold underline">
+                    {t("investment.open_guide", { title })}
+                  </Link>
                   <p className="business-idea-intro">
                     {t(`investment.opportunities.${item.key}.summary`)}
                   </p>

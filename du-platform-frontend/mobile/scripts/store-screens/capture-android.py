@@ -29,6 +29,7 @@ def node_for(document, label):
 def wait_for_label(label):
     deadline = time.monotonic() + 65
     document = ElementTree.Element('hierarchy')
+    launcher_retries = 0
     while time.monotonic() < deadline:
         try:
             document = tree()
@@ -38,9 +39,29 @@ def wait_for_label(label):
         node = node_for(document, label)
         if node is not None:
             return node
+        if launcher_retries < 2 and close_unresponsive_launcher(document):
+            launcher_retries += 1
+            # The system dialog interrupts startup even when the app itself is healthy.
+            # Restore its existing task and recheck the original accessibility label.
+            adb('shell', 'am', 'start', '-W', '-n', PACKAGE + '/.MainActivity')
+            deadline = time.monotonic() + 65
         time.sleep(1)
     visible = [(n.get('package'), n.get('text'), n.get('content-desc')) for n in document.iter('node') if n.get('text') or n.get('content-desc')]
     raise RuntimeError(f'{label!r} was not visible. Public screen labels: {visible[:35]}')
+
+
+def close_unresponsive_launcher(document):
+    system_nodes = [node for node in document.iter('node') if node.get('package') == 'android']
+    if not any(node.get('text', '').replace('’', "'") == "Pixel Launcher isn't responding"
+               for node in system_nodes):
+        return False
+    close = next((node for node in system_nodes if node.get('text') == 'Close app'
+                  and node.get('clickable') == 'true' and node.get('enabled') == 'true'), None)
+    if close is None:
+        return False
+    x1, y1, x2, y2 = rect(close.attrib['bounds'])
+    adb('shell', 'input', 'tap', str((x1+x2)//2), str((y1+y2)//2))
+    return True
 
 
 def capture(output):
@@ -66,15 +87,15 @@ def main():
     adb('shell', 'input', 'keyevent', 'KEYCODE_WAKEUP')
     adb('shell', 'wm', 'dismiss-keyguard')
     adb('install', '-r', sys.argv[2]); adb('shell', 'am', 'start', '-W', '-n', PACKAGE + '/.MainActivity')
-    wait_for_label('Explore what connects us')
+    wait_for_label('Plan your next trip home')
     capture(output / 'Home.png')
     for attempt in range(4):
         current = tree()
-        flights = node_for(current, 'Find flights')
+        flights = node_for(current, 'Search flights')
         if flights is not None:
             break
         if attempt == 3:
-            raise RuntimeError('Find flights was unreachable after scrolling the Home screen.')
+            raise RuntimeError('Search flights was unreachable after scrolling the Home screen.')
         # Use the current display bounds; tablet profiles may start in landscape.
         display = max((n for n in current.iter('node') if n.get('package') == PACKAGE),
                       key=lambda n: area(n.attrib['bounds']))
@@ -82,7 +103,7 @@ def main():
         adb('shell', 'input', 'swipe', str((x1+x2)//2), str(y1+3*(y2-y1)//4), str((x1+x2)//2), str(y1+(y2-y1)//3), '450')
     x1, y1, x2, y2 = rect(flights.attrib['bounds'])
     adb('shell', 'input', 'tap', str((x1 + x2) // 2), str((y1 + y2) // 2))
-    wait_for_label('Stays'); wait_for_label('Enter a city name or a three-letter airport code.')
+    wait_for_label('Stays'); wait_for_label('Choose your departure and destination airports.')
     capture(output / 'Travel.png')
 
 

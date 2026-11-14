@@ -20,16 +20,16 @@ import DiscoverySection from "@/components/discovery/DiscoverySection";
 
 const tools = [
   {
+    key: "trip",
+    icon: MapPin,
+    image: "/images/pages/tourism/victoria_falls.webp",
+    href: "/travel/planner?example=victoria-falls-3-days",
+  },
+  {
     key: "chat",
     icon: Brain,
     image: "/images/pages/technology/ai_innovation.webp",
     href: "/onesa-ai-chat",
-  },
-  {
-    key: "trip",
-    icon: MapPin,
-    image: "/images/pages/tourism/victoria_falls.webp",
-    href: "/travel/planner",
   },
   {
     key: "vr",
@@ -77,16 +77,15 @@ export default function Technology() {
         <DiscoveryHero
           eyebrow={t("tech.landing.eyebrow")}
           title={t("tech.landing.title")}
-          highlight={t("tech.landing.highlight")}
+          highlight=""
           description={t("tech.landing.description")}
-          principle={t("tech.landing.principle")}
           image="/images/pages/technology/ai_innovation.webp"
           imageAlt={t("tech.landing.image_alt")}
           caption={t("tech.landing.caption")}
         >
           <Button asChild className={actionClass}>
-            <Link href="/onesa-ai-chat">
-              {t("tech.chat_with_onesa")}
+            <Link href="/travel/planner?example=victoria-falls-3-days">
+              {t("tech.tools.trip.cta")}
               <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
             </Link>
           </Button>
@@ -95,7 +94,7 @@ export default function Technology() {
             variant="outline"
             className="h-auto min-h-11 max-w-full whitespace-normal border-slate-600 bg-transparent text-white hover:bg-slate-800 hover:text-white"
           >
-            <a href="#onesa-intro">{t("tech.landing.tools_cta")}</a>
+            <Link href="/onesa-ai-chat">{t("tech.chat_with_onesa")}</Link>
           </Button>
         </DiscoveryHero>
 
@@ -170,6 +169,13 @@ export default function Technology() {
                 icon={idea.icon}
                 image={idea.image}
                 imageAlt={t("tech.ideas." + idea.key + ".image_alt")}
+                footer={
+                  <Button asChild className={actionClass}>
+                    <Link href={"/onesa-ai-chat?example=" + idea.key}>
+                      {t("tech.ideas.open_question")}
+                    </Link>
+                  </Button>
+                }
               >
                 <p>{t("tech.ideas." + idea.key + ".description")}</p>
                 <dl className="technology-prompt">
@@ -182,7 +188,7 @@ export default function Technology() {
           <div className="discovery-plan-action">
             <p>{t("tech.ideas.next")}</p>
             <Button asChild className={actionClass}>
-              <Link href="/investment#investment-innovation-opportunities">
+              <Link href="/business-guides#investment-innovation-opportunities">
                 {t("tech.ideas.cta")}
                 <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
               </Link>

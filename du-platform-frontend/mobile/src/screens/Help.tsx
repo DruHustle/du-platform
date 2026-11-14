@@ -6,6 +6,7 @@ import * as Crypto from "expo-crypto";
 import { ApiError, request, requestOnesaReply, type ChatMessage } from "../api";
 import { onesaProductLinks } from "../onesaProductLinks";
 import { shopDestination, isSitePath } from "../shopDiscovery";
+import { businessGuideLink } from "../links";
 import { readSearchResponse, type SearchResponse } from "../searchResults";
 import { readContactAttempt, sendContactAttempt, type ContactAttempt } from "../contact";
 import { PENDING_CONTACT_KEY } from "../session";
@@ -78,7 +79,8 @@ export function AssistantScreen() {
     }
   }
   return <Screen>
-    <Heading>Onesa assistant</Heading>
+    <Heading>Onesa</Heading>
+    <Action title="Plan three days in Victoria Falls" secondary onPress={() => navigation.navigate("External", {path: "/travel/planner?example=victoria-falls-3-days", title: "Three days in Victoria Falls"})} />
     <Copy>Ask about Diaspora Unlocked, products, travel and business information. Onesa cannot book travel or accept payments.</Copy>
     <Card>
       <Heading>Sharing this chat</Heading>
@@ -181,7 +183,7 @@ export function ContactScreen({ route }: { route: { params?: { reportReply?: str
     {Platform.OS === "ios" && editingMessage && <Action title="Done editing" onPress={Keyboard.dismiss} />}
     <Screen>
     <Heading>Contact and help</Heading>
-    <Copy>Send a message to the Diaspora Unlocked team. Please do not include passwords or payment details.</Copy>
+    <Copy>Send a question to the Diaspora Unlocked team. A reference will appear here when we receive it. Use the same message to retry if your connection drops. Leave out passwords and payment details.</Copy>
     {typeof selectedReply === "string" && selectedReply.length > 0 && selectedReply !== includedReply && <Card>
       <Heading>Report an Onesa reply</Heading>
       <Copy>Review the selected reply and edit or remove any details before sending it to the team.</Copy>
@@ -258,7 +260,9 @@ export function SearchScreen() {
       navigation.navigate("Main", { screen: "Shop", params: shop.params });
     } else if (shop) {
       navigation.navigate(shop.screen, shop.params);
-    } else if (href === "/onesa-ai-chat") {
+    } else if (href === "/care") {
+      navigation.navigate("Care");
+    } else if (["/onesa-ai-chat", "/onesa", "/technology"].includes(href)) {
       navigation.navigate("Main", { screen: "Assistant" });
     } else if (href === "/travel" || href === "/travel/flights" || href === "/travel/stays") {
       navigation.navigate("Main", { screen: "Travel", params: { section: href.split("/")[2] } });
@@ -277,7 +281,7 @@ export function SearchScreen() {
     {response && !response.results.length && !response.partial && !busy && !error && <Copy>No results found. Try another search.</Copy>}
     {response?.results.map((item, i) => <Card key={`${item.href}-${i}`}>
       <Heading>{item.title}</Heading>
-      <Copy>{item.category === "Tourism" ? "Travel" : item.category}{item.summary ? ` · ${item.summary}` : ""}</Copy>
+      <Copy>{item.category === "Tourism" ? "Travel" : item.category === "Investment" ? "Business guides" : item.category === "Technology" ? "Onesa" : item.category}{item.summary ? ` · ${item.summary}` : ""}</Copy>
       <Action title={`Open ${item.title}`} onPress={() => openResult(item)}/>
     </Card>)}
   </Screen>;
@@ -285,6 +289,15 @@ export function SearchScreen() {
 export function ExternalScreen({route}: {route: {params: {path: string; title: string}}}) {
   const [error, setError] = useState("");
   const { path, title } = route.params;
+  const guide = businessGuideLink(path);
+  const displayTitle = guide?.title || title;
+  const planner = path.startsWith("/travel/planner");
+  const action = planner ? "Open trip planner" : guide ? "Open " + guide.title.toLowerCase() : "Open website";
+  let explanation = "This section opens on the Diaspora Unlocked website. You may need to sign in there.";
+  if (planner) explanation = "Continue in your browser to choose dates, estimate costs and generate your itinerary.";
+  else if (guide?.title === "Farming and food production guide")
+    explanation = "Continue to the farming guide on Diaspora Unlocked to research costs, suppliers and markets for your project in Zimbabwe.";
+  else if (guide) explanation = "Continue in your browser to read " + guide.title.toLowerCase() + " on Diaspora Unlocked.";
 
   async function openWebsite(destination: string) {
     if (!isSitePath(destination)) return;
@@ -297,10 +310,10 @@ export function ExternalScreen({route}: {route: {params: {path: string; title: s
   }
 
   return <Screen>
-    <Heading>{title}</Heading>
-    <Copy>This section opens on the Diaspora Unlocked website. You may need to sign in there.</Copy>
+    <Heading>{displayTitle}</Heading>
+    <Copy>{explanation}</Copy>
     {!!error && <Message error message={error}/>}
-    <Action title="Open website" disabled={!isSitePath(path)} onPress={() => void openWebsite(path)} />
-    {path === "/investment" && <Action secondary title="Search the business directory" onPress={() => void openWebsite("/ntir")} />}
+    <Action title={action} disabled={!isSitePath(path)} onPress={() => void openWebsite(path)} />
+    {(path === "/investment" || path === "/business-guides") && <Action secondary title="Search the business directory" onPress={() => void openWebsite("/ntir")} />}
   </Screen>;
 }

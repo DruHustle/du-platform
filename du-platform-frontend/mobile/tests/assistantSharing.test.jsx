@@ -1,6 +1,7 @@
 import React from "react";
 import { act, create } from "react-test-renderer";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { CareScreen } from "../src/screens/Care";
 import { AssistantScreen, ContactScreen, ExternalScreen } from "../src/screens/Help";
 
 const fakes = vi.hoisted(() => ({
@@ -82,23 +83,60 @@ describe.each(["ios", "android"])("Onesa on %s", platform => {
     expect(fakes.request.mock.calls[0][1].body.message).toBe(draft);
   });
 
+  it("checks both residences before offering public Care provider handoffs", async () => {
+    await render(<CareScreen />);
+    await press("How can I cover funeral costs for a relative in Zimbabwe?");
+    const chooseCountry = async (label, country) => {
+      await enter(label, country);
+      await press(country);
+    };
+    const applicant = "Where do you live?";
+    const covered = "Where does the person you want to cover live?";
+    await chooseCountry(applicant, "Germany");
+    expect(buttons("Read the cash funeral plan at ZB")).toHaveLength(0);
+    await chooseCountry(covered, "Zimbabwe");
+    await press("Read the cash funeral plan at ZB");
+    await press("Check funeral cash cover at Diaspora Insurance");
+    await press("How can I arrange cover to bring a loved one home from abroad?");
+    expect(buttons("Check the Global Plan at Doves")).toHaveLength(0);
+    await chooseCountry(covered, "Germany");
+    fakes.browser.mockRejectedValueOnce(new Error("Browser unavailable"));
+    await press("Check the Global Plan at Doves");
+    expect(screen.root.findAllByType("Text").some(n => String(n.props.children).includes("select the provider again"))).toBe(true);
+    await press("Check the Global Plan at Doves");
+    await chooseCountry(applicant, "Zimbabwe");
+    expect(buttons("Check the Global Plan at Doves")).toHaveLength(0);
+    expect(fakes.browser.mock.calls.map(([url]) => url)).toEqual([
+      "https://www.zb.co.zw/diaspora/cash-funeral-plan",
+      "https://diasporainsurance.com/zimbabwe/",
+      "https://doves.co.zw/global-plan/", "https://doves.co.zw/global-plan/",
+    ]);
+    expect(fakes.request).not.toHaveBeenCalled();
+  });
+
   it("opens the directory directly from Investment, retries the same URL and preserves the main website action", async () => {
     fakes.browser.mockRejectedValueOnce(new Error("No browser")).mockResolvedValue({type: "opened"});
     await render(<ExternalScreen route={{params: {path: "/investment", title: "Investment"}}} />);
     await press("Search the business directory");
     expect(screen.root.findAllByType("Text").some(t => t.props.children === "Could not open the browser.")).toBe(true);
     await press("Search the business directory");
-    await press("Open website");
+    await press("Open business guides");
     expect(fakes.browser.mock.calls.map(([url]) => url)).toEqual([
       "https://www.diasporaunlocked.com/ntir", "https://www.diasporaunlocked.com/ntir",
       "https://www.diasporaunlocked.com/investment",
     ]);
+    const bookmark = "/business-guides/farming?lng=sn#guide";
+    await act(async () => screen.update(<ExternalScreen route={{params:{path:bookmark, title:"Business guides"}}} />));
+    await press("Open farming and food production guide");
+    expect(fakes.browser).toHaveBeenLastCalledWith("https://www.diasporaunlocked.com" + bookmark);
     await act(async () => screen.update(<ExternalScreen route={{params:{path:"/travel/weather", title:"Weather"}}} />));
     expect(buttons("Search the business directory")).toHaveLength(0);
   });
 
   it("requires explicit permission, preserves drafts and can report only the selected reply", async () => {
     await render(<AssistantScreen />);
+    await press("Plan three days in Victoria Falls");
+    expect(fakes.navigate).toHaveBeenCalledWith("External", {path: "/travel/planner?example=victoria-falls-3-days", title: "Three days in Victoria Falls"});
     const copy = screen.root.findAllByType("Text").map(t => t.props.children).filter(t => typeof t === "string").join(" ");
     for (const provider of ["Google Gemini", "Groq", "Anthropic", "Cerebras"]) expect(copy).toContain(provider);
     await enter("Your message", "private draft");

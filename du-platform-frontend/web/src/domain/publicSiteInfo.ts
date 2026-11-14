@@ -10,7 +10,7 @@ export function allowedOnesaHref(raw: string): string | null {
       "/shop",
       "/shop/products", "/travel", "/travel/weather", "/travel/planner",
       "/travel/augmented-experience", "/travel/virtual-experience",
-      "/investment", "/investment/opportunities", "/ntir", "/technology",
+      "/care", "/business-guides", "/investment", "/investment/opportunities", "/ntir", "/onesa", "/technology",
       ...travelCanonicalPaths,
     ];
     // Travel criteria belong in the explicit draft, never an AI-generated URL.

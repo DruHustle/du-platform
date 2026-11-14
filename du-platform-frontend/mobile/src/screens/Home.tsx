@@ -14,60 +14,77 @@ export function HomeScreen() {
         <View style={styles.overlay}>
           <Text style={styles.eyebrow}>DIASPORA UNLOCKED</Text>
           <Text accessibilityRole="header" style={styles.title}>
-            Rooted in Zimbabwe. Connected across Southern Africa.
+            Plan your next trip home
           </Text>
         </View>
       </ImageBackground>
-      <Heading>Explore what connects us</Heading>
+      <Copy>
+        Look for flights to Zimbabwe and across Southern Africa, or find a place
+        to stay near family.
+      </Copy>
+      <Action
+        title="Search flights"
+        onPress={() => navigation.navigate("Travel", { section: "flights" })}
+      />
+      <Action
+        title="Find a stay"
+        secondary
+        onPress={() => navigation.navigate("Travel", { section: "stays" })}
+      />
+      <Card>
+        <Heading>Shop</Heading>
+        <Copy>
+          Browse Zimbabwean food and crafts. Open a product to check
+          availability and email alert options.
+        </Copy>
+        <Action
+          title="Browse Zimbabwean products"
+          onPress={() => navigation.navigate("Shop")}
+        />
+      </Card>
+      <Card>
+        <Heading>Care</Heading>
+        <Copy>
+          Find providers to ask about funeral costs in Zimbabwe or bringing a
+          loved one home from abroad.
+        </Copy>
+        <Action
+          title="Find funeral cover providers"
+          onPress={() => navigation.navigate("Care")}
+        />
+      </Card>
+      <Card>
+        <Heading>Onesa</Heading>
+        <Copy>
+          Draft an itinerary or ask a question about a Zimbabwean product.
+        </Copy>
+        <Action
+          title="Open Onesa"
+          onPress={() => navigation.navigate("Assistant")}
+        />
+      </Card>
+      <Card>
+        <Heading>Business guides</Heading>
+        <Copy>
+          Research a project in Zimbabwe, check the costs and look up
+          businesses.
+        </Copy>
+        <Action
+          title="Read business guides"
+          secondary
+          onPress={() =>
+            navigation.navigate("External", {
+              path: "/business-guides",
+              title: "Business guides",
+            })
+          }
+        />
+      </Card>
       <Action
         title="Search Diaspora Unlocked"
         secondary
         onPress={() => navigation.navigate("Search")}
       />
-      <Card>
-        <Heading>Plan a visit</Heading>
-        <Copy>
-          Compare flight options and look for a place to stay near your
-          destination.
-        </Copy>
-        <Action
-          title="Find flights"
-          onPress={() => navigation.navigate("Travel", { section: "flights" })}
-        />
-        <Action
-          title="Find a stay"
-          secondary
-          onPress={() => navigation.navigate("Travel", { section: "stays" })}
-        />
-      </Card>
-      <Card>
-        <Heading>Shop from home</Heading>
-        <Copy>
-          Browse Zimbabwean food, crafts and sportswear. Check product details
-          and request an availability update.
-        </Copy>
-        <Action
-          title="Browse products"
-          onPress={() => navigation.navigate("Shop")}
-        />
-      </Card>
-      <Card>
-        <Heading>Explore business opportunities</Heading>
-        <Copy>
-          Find projects and investment research on the Diaspora Unlocked
-          website.
-        </Copy>
-        <Action
-          title="Browse investment research"
-          secondary
-          onPress={() =>
-            navigation.navigate("External", {
-              path: "/investment",
-              title: "Investment",
-            })
-          }
-        />
-      </Card>
       <Action
         title="Contact us"
         secondary

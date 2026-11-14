@@ -9,6 +9,12 @@
   "framework": null,
   "cleanUrls": false,
   "redirects": [
+    { "source": "/page-locales/:locale(de|sn|nd)/index.html", "destination": "/?lng=:locale", "permanent": true },
+    { "source": "/page-locales/en/index.html", "destination": "/", "permanent": true },
+    { "source": "/page-locales/:locale(de|sn|nd)/:path([^/].*).html", "destination": "/:path?lng=:locale", "permanent": true },
+    { "source": "/technology", "destination": "/onesa", "permanent": true },
+    { "source": "/technology/", "destination": "/onesa", "permanent": true },
+    { "source": "/technology.html", "destination": "/onesa", "permanent": true },
     {
       "source": "/coming-soon",
       "destination": "/onesa-ai-chat",
@@ -141,8 +147,27 @@
       "destination": "https://du-platform-api.onrender.com/api/:path*"
     },
     {
+      "source": "/",
+      "has": [{ "type": "query", "key": "lng", "value": "(?<locale>de|sn|nd)" }],
+      "destination": "/page-locales/:locale/index.html"
+    },
+    {
+      "source": "/",
+      "destination": "/page-locales/en/index.html"
+    },
+    {
+      "source": "/:path([^/.][^.]*)",
+      "has": [{ "type": "query", "key": "lng", "value": "(?<locale>de|sn|nd)" }],
+      "destination": "/page-locales/:locale/:path.html"
+    },
+    {
       "source": "/:path([^/.][^.]*)",
       "destination": "/:path.html"
+    },
+    {
+      "source": "/shop/product/:slug",
+      "has": [{ "type": "query", "key": "lng", "value": "(?<locale>de|sn|nd)" }],
+      "destination": "/page-locales/:locale/shop/products.html"
     },
     {
       "source": "/shop/product/:slug",

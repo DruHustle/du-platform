@@ -2,6 +2,7 @@ import type { AppRouteDefinition } from "./core/routing";
 import { adminRoutes } from "./admin/routes";
 import { aiRoutes } from "./ai/routes";
 import { authRoutes } from "./auth/routes";
+import { careRoutes } from "./care/routes";
 import { coreRoutes } from "./core/routes";
 import { homeRoutes } from "./home/routes";
 import { investmentRoutes } from "./investment/routes";
@@ -14,6 +15,7 @@ import { tourismRoutes } from "./tourism/routes";
 export const appRoutes: AppRouteDefinition[] = [
   ...homeRoutes,
   ...tourismRoutes,
+  ...careRoutes,
   ...investmentRoutes,
   ...technologyRoutes,
   ...shopRoutes,

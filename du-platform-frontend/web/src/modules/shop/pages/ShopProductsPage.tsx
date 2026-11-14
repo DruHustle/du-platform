@@ -122,7 +122,9 @@ export default function ShopProducts() {
   const [confirmingPayment, setConfirmingPayment] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
   const [order, setOrder] = useState<PlacedOrder | null>(readOrderReceipt);
-  const mobileView = params.get("cart") === "1" ? "checkout" : "products";
+  const ordering = catalogStatus === "ready" && catalogSource === "db" && allProducts.some(product => canRequestProduct(readiness, product));
+  const showBasket = ordering || cartItemCount > 0 || Boolean(order);
+  const mobileView = showBasket && params.get("cart") === "1" ? "checkout" : "products";
   const checkoutScrollRef = useCheckoutPanelHeight(mobileView);
   const updateFilters = (changes: Partial<CatalogFilters>, replace = false) => {
     const next = catalogQuery({ ...filters, ...changes }, language, mobileView === "checkout");
@@ -272,7 +274,7 @@ export default function ShopProducts() {
     cartRows.length !== cart.length ||
     cartRows.some(row => row.item.quantity > row.product.stock_qty);
   const canCheckout =
-    catalogStatus === "ready" &&
+    ordering &&
     cart.length > 0 &&
     !invalidBasket &&
     cartRows.every(row => canRequestProduct(readiness, row.product));
@@ -500,10 +502,7 @@ export default function ShopProducts() {
                     })}
                   </h1>
                   <p className="text-sm text-white/75 mt-3 max-w-2xl">
-                    {t("shop.products.subtitle", {
-                      defaultValue:
-                        "Build your basket and send an order request. Before you pay, the team confirms stock, DHL delivery to your destination and final costs.",
-                    })}
+                    {t(ordering ? "shop.products.subtitle" : "product_interest.prelaunch")}
                   </p>
                   <DeliveryCoverage />
                 </div>
@@ -523,7 +522,7 @@ export default function ShopProducts() {
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div
-                  className={`lg:col-span-8 space-y-6${mobileView === "checkout" ? " hidden lg:block" : ""}`}
+                  className={`${showBasket ? "lg:col-span-8" : "lg:col-span-12"} space-y-6${mobileView === "checkout" ? " hidden lg:block" : ""}`}
                 >
                   <div className="space-y-3 rounded-2xl border border-white/15 bg-white/[0.03] p-4">
                     <label htmlFor="shop-product-search" className="sr-only">
@@ -570,7 +569,7 @@ export default function ShopProducts() {
                       </label>
                     </div>
                     <div className="flex flex-wrap items-center justify-between gap-x-3">
-                      <label className="inline-flex min-h-11 items-center gap-2 text-sm text-white">
+                      {(ordering || availableOnly) && <label className="inline-flex min-h-11 items-center gap-2 text-sm text-white">
                         <input
                           type="checkbox"
                           checked={availableOnly}
@@ -578,7 +577,7 @@ export default function ShopProducts() {
                           className="size-4 accent-zim-gold"
                         />
                         {t("pilot.available_now")}
-                      </label>
+                      </label>}
                       {hasFilters && (
                         <button type="button" onClick={clearFilters} className="min-h-11 text-sm font-medium text-zim-gold underline underline-offset-4">
                           {t("shop.products.clear_filters")}
@@ -624,7 +623,7 @@ export default function ShopProducts() {
                           cart.find(item => item.productId === product.id)
                             ?.quantity || 0
                         }
-                        available={catalogStatus === "ready"}
+                        available={catalogStatus === "ready" && catalogSource === "db"}
                         onAdd={() => addToCart(product)}
                         onRemove={() => removeOne(product.id)}
                         description={description}
@@ -634,7 +633,7 @@ export default function ShopProducts() {
                   </div>
                 </div>
 
-                <div
+                {showBasket && <div
                   id="shop-cart-checkout"
                   className={`lg:col-span-4 lg:sticky lg:top-24 lg:self-start lg:h-fit scroll-mt-28${mobileView === "products" ? " hidden lg:block" : ""}`}
                 >
@@ -1328,13 +1327,13 @@ export default function ShopProducts() {
                       ) : null}
                     </div>
                   </form>
-                </div>
+                </div>}
               </div>
             </div>
           </div>
         </div>
       </section>
-      {mobileView === "products" && (
+      {showBasket && mobileView === "products" && (
         <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
           <div
             data-mobile-basket-summary

@@ -10,16 +10,35 @@ final class DUNativeSmokeTests: XCTestCase {
     private func scrollTo(_ element: XCUIElement, in app: XCUIApplication, timeout: TimeInterval = 24) {
         let deadline = Date().addingTimeInterval(timeout)
         while !element.isHittable && Date() < deadline {
-            app.swipeUp()
+            let scroll = app.scrollViews.firstMatch
+            let surface = scroll.exists ? scroll : app
+            if element.exists && element.frame.maxY < app.frame.midY {
+                surface.swipeDown(velocity: .slow)
+            } else {
+                surface.swipeUp(velocity: .slow)
+            }
             if element.waitForExistence(timeout: 1), element.isHittable { return }
         }
-        XCTAssertTrue(element.isHittable, "Expected action did not become reachable")
+        XCTAssertTrue(element.isHittable, "Expected action did not become reachable: \(element.debugDescription)")
+    }
+
+    private func finishEntry(_ value: String, in field: XCUIElement, app: XCUIApplication) {
+        scrollTo(field, in: app)
+        field.tap()
+        for character in value { field.typeText(String(character)) }
+        XCTAssertEqual(field.value as? String, value)
+        let done = app.buttons.matching(NSPredicate(format: "label ==[c] %@", "done")).firstMatch
+        if done.waitForExistence(timeout: 2), done.isHittable {
+            done.tap()
+        } else {
+            field.typeText("\n")
+        }
     }
 
     private func openTravel(in app: XCUIApplication) {
         app.launch()
-        XCTAssertTrue(app.staticTexts["Explore what connects us"].waitForExistence(timeout: 60))
-        let flights = app.buttons["Find flights"]
+        XCTAssertTrue(app.staticTexts["Plan your next trip home"].waitForExistence(timeout: 60))
+        let flights = app.buttons["Search flights"]
         scrollTo(flights, in: app)
         flights.tap()
         XCTAssertTrue(app.buttons["Stays"].waitForExistence(timeout: 20))
@@ -28,21 +47,21 @@ final class DUNativeSmokeTests: XCTestCase {
     func testOpenTravelFromHome() {
         let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
         app.launch()
-        XCTAssertTrue(app.staticTexts["Explore what connects us"].waitForExistence(timeout: 60))
+        XCTAssertTrue(app.staticTexts["Plan your next trip home"].waitForExistence(timeout: 60))
         attach("Home")
-        let flights = app.buttons["Find flights"]
+        let flights = app.buttons["Search flights"]
         scrollTo(flights, in: app)
         flights.tap()
         XCTAssertTrue(app.buttons["Stays"].waitForExistence(timeout: 20))
-        XCTAssertTrue(app.staticTexts["Enter a city name or a three-letter airport code."].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Choose your departure and destination airports."].waitForExistence(timeout: 10))
         attach("Travel")
     }
 
     func testOpenProductFromHome() {
         let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
         app.launch()
-        let browse = app.buttons["Browse products"]
-        XCTAssertTrue(app.staticTexts["Explore what connects us"].waitForExistence(timeout: 60))
+        let browse = app.buttons["Browse Zimbabwean products"]
+        XCTAssertTrue(app.staticTexts["Plan your next trip home"].waitForExistence(timeout: 60))
         scrollTo(browse, in: app); browse.tap()
         XCTAssertTrue(app.textFields["Search products"].waitForExistence(timeout: 20))
         let product = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "View details for ")).firstMatch
@@ -59,7 +78,7 @@ final class DUNativeSmokeTests: XCTestCase {
     func testDirectFlightHandoff() {
         let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
         openTravel(in: app)
-        let search = app.buttons["Search providers"]
+        let search = app.buttons["Search Kiwi.com"]
         scrollTo(search, in: app)
         search.tap()
         let check = app.buttons.matching(NSPredicate(format: "label == %@", "Check current provider details")).firstMatch
@@ -104,6 +123,62 @@ final class DUNativeSmokeTests: XCTestCase {
         XCTAssertEqual(email.value as? String, address)
         scrollTo(signIn, in: app); signIn.tap()
         XCTAssertTrue(rejection.waitForExistence(timeout: 20))
+    }
+
+    func testCareLookupForFamilyInZimbabwe() {
+        let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
+        app.launch()
+        let care = app.buttons["Find funeral cover providers"]
+        XCTAssertTrue(app.staticTexts["Plan your next trip home"].waitForExistence(timeout: 60))
+        scrollTo(care, in: app); care.tap()
+        let funeral = app.buttons["How can I cover funeral costs for a relative in Zimbabwe?"]
+        XCTAssertTrue(funeral.waitForExistence(timeout: 20)); funeral.tap()
+        for (label, code, country) in [("Where do you live?", "DE", "Germany"), ("Where does the person you want to cover live?", "ZW", "Zimbabwe")] {
+            let field = app.textFields[label]
+            finishEntry(code, in: field, app: app)
+            let chooseCountry = app.buttons[country]
+            scrollTo(chooseCountry, in: app); chooseCountry.tap()
+        }
+        let provider = app.buttons["Read the cash funeral plan at ZB"]
+        scrollTo(provider, in: app)
+        XCTAssertTrue(provider.isEnabled)
+    }
+
+    func testSearchForFamilyStay() {
+        let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
+        app.launch()
+        XCTAssertTrue(app.staticTexts["Plan your next trip home"].waitForExistence(timeout: 60))
+        let stays = app.buttons["Find a stay"]
+        scrollTo(stays, in: app); stays.tap()
+        XCTAssertTrue(app.staticTexts["Choose the city or area where you want to stay."].waitForExistence(timeout: 20))
+        let nationality = app.textFields["Guest nationality (two-letter country code)"]
+        finishEntry("DE", in: nationality, app: app)
+        let party = app.buttons["Edit travellers and currency"]
+        scrollTo(party, in: app); party.tap()
+        let adult = app.buttons["Add an adult"]
+        scrollTo(adult, in: app); adult.tap()
+        let child = app.buttons["Add a child"]
+        scrollTo(child, in: app); child.tap()
+        let age = app.textFields["Child 1 age (0–17)"]
+        finishEntry("6", in: age, app: app)
+        let search = app.buttons["Search Pilot"]
+        scrollTo(search, in: app); search.tap()
+        let result = app.descendants(matching: .any).matching(NSPredicate(
+            format: "label == %@ OR label == %@", "Check current provider details", "No options were returned for this search. Try different dates or locations."
+        )).firstMatch
+        scrollTo(result, in: app, timeout: 60)
+    }
+
+    func testPlannerExampleAndBusinessGuideBookmark() {
+        let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
+        app.launch()
+        app.open(URL(string: "diasporaunlocked://onesa")!)
+        let example = app.buttons["Plan three days in Victoria Falls"]
+        XCTAssertTrue(example.waitForExistence(timeout: 25)); example.tap()
+        XCTAssertTrue(app.buttons["Open trip planner"].waitForExistence(timeout: 20))
+        app.open(URL(string: "diasporaunlocked://business-guides/farming")!)
+        XCTAssertTrue(app.buttons["Open farming and food production guide"].waitForExistence(timeout: 20))
+        XCTAssertTrue(app.staticTexts["Farming and food production guide"].exists)
     }
 
     private func attach(_ name: String) {

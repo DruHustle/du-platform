@@ -10,6 +10,8 @@ test('only public release destinations for the selected platform become download
   expect(publicDownloadUrl('android', android)).toBe(android);
   expect(publicDownloadUrl('ios', apple)).toBe(apple);
   expect(publicDownloadUrl('ios', beta)).toBe(beta);
+  expect(downloadStatus(apple)).toBe('apple');
+  expect(downloadStatus(beta)).toBe('testflight');
   for (const url of [apple.replace('apps.apple.com', 'example.com'), 'javascript:alert(1)',
     'https://example.com/app.apk', apple.replace('https:', 'http:'), apple + '?redirect=example.com',
     apple.replace('apps.apple.com', 'name:pass@apps.apple.com'), beta + '/extra']) {

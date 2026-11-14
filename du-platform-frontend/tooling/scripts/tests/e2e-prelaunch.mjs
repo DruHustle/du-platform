@@ -220,7 +220,7 @@ try {
             expected
           );
           await page.reload();
-          await cart.waitFor();
+          await cart.waitFor({ state: expected.length ? "visible" : "hidden" });
           assert.deepEqual(
             await page.evaluate(() =>
               JSON.parse(localStorage.getItem("shop_cart_v1"))
@@ -238,7 +238,7 @@ try {
               localStorage.setItem("shop_cart_v1", "corrupt");
             });
             await page.reload();
-            await cart.waitFor();
+            await cart.waitFor({ state: "hidden" });
             await page.evaluate(id => {
               const value = JSON.stringify([{ productId: id, quantity: 3 }]);
               localStorage.setItem("shop_cart_v1", value);
@@ -337,13 +337,13 @@ try {
     assert.equal(sends, 2);
     await page.goto(confirm);
     await page
-      .getByRole("button", { name: "Confirm product interest", exact: true })
+      .getByRole("button", { name: "Confirm my alert", exact: true })
       .click();
     await page.getByRole("status").waitFor();
     assert(!page.url().includes("token="));
     await page.goto(confirm);
     await page
-      .getByRole("button", { name: "Confirm product interest", exact: true })
+      .getByRole("button", { name: "Confirm my alert", exact: true })
       .click();
     await page.getByRole("alert").waitFor();
     await page.goto(cancel);

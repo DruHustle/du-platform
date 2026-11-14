@@ -1,104 +1,58 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
-import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import InstantImage from "@/components/InstantImage";
 import WaterfallBackdrop from "./WaterfallBackdrop";
 
 export default function MainPageHero() {
   const { t } = useTranslation();
-  const prefersReducedMotion = useReducedMotion();
-
   return (
-    <div id="main-page-hero-wrapper" className="flex flex-col w-full">
-      {/* SECTION 1: CINEMATIC HERO */}
-      <section className="relative min-h-[max(40rem,100svh)] py-28 w-full flex items-center justify-center overflow-hidden bg-slate-950">
+    <div id="main-page-hero-wrapper">
+      <section className="relative flex min-h-[min(48rem,92svh)] items-center justify-center overflow-hidden bg-slate-950 px-5 pb-16 pt-28 text-center text-white">
         <WaterfallBackdrop />
-
         <div
-          className="absolute inset-0 z-10 bg-slate-950/35"
+          className="absolute inset-0 bg-gradient-to-b from-slate-950/30 via-slate-950/60 to-slate-950/85"
           aria-hidden="true"
         />
-
-        <div className="relative z-20 container mx-auto translate-y-15 px-6 flex flex-col items-center justify-center text-center md:translate-y-18">
-          {/* Place the brand mark at the former heading position. */}
-          <motion.div
-            id="home-hero-logo"
-            initial={false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2 }}
-            className="mb-0"
-          >
-            <div className="relative inline-flex h-20 w-20 items-center justify-center md:h-28 md:w-28">
-              <span className="pointer-events-none absolute inset-0 rounded-[1.75rem] border border-white/25 bg-slate-950/30 backdrop-blur-md shadow-[0_12px_30px_rgba(0,0,0,0.35)]" />
-              <InstantImage
-                src="/images/brand/diaspora_unlocked_336.webp"
-                alt={t("brand", { defaultValue: "Diaspora Unlocked" })}
-                priority
-                wrapperClassName="relative overflow-visible bg-transparent"
-                placeholderClassName="bg-transparent animate-none"
-                className="relative md:h-24 md:scale-[1.05] object-contain drop-shadow-2xl"
-              />
-            </div>
-          </motion.div>
-
-          <h1 className="sr-only">{t("home.hero_title")}</h1>
-
-          {/* Subtitle */}
-          <motion.p
-            initial={false}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.7, ease: "easeOut" }}
-            className="mt-6 text-lg md:text-xl font-bold text-white max-w-2xl text-center drop-shadow-md"
-          >
+        <div className="relative z-20 mx-auto flex max-w-3xl flex-col items-center">
+          <div id="home-hero-logo" className="mb-5">
+            <InstantImage
+              src="/images/brand/diaspora_unlocked_336.webp"
+              alt={t("brand")}
+              priority
+              wrapperClassName="h-16 w-16 rounded-2xl border border-white/25 bg-slate-950/35 md:h-20 md:w-20"
+              placeholderClassName="bg-transparent"
+              className="h-full w-full object-contain"
+            />
+          </div>
+          <h1 className="text-balance text-4xl font-bold leading-tight drop-shadow-md md:text-6xl">
+            {t("home.hero_title")}
+          </h1>
+          <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-white md:text-xl">
             {t("home.hero_subtitle")}
-          </motion.p>
-
-          <p className="mt-3 max-w-xl text-sm leading-6 text-white/90">
-            {t("pilot.home_purpose")}
           </p>
-          {/* Scroll Indicator */}
-          <motion.div
-            initial={false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.8, duration: 1, type: "spring" }}
-            className="mt-12 md:mt-16"
-          >
-            <button
-              type="button"
-              className="flex min-h-11 flex-col items-center gap-2 rounded cursor-pointer border-0 bg-transparent text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zim-gold"
-              onClick={() =>
-                document.getElementById("explore-platform")?.scrollIntoView({
-                  behavior: prefersReducedMotion ? "instant" : "smooth",
-                  block: "start",
-                })
-              }
+          <div className="mt-7 flex w-full flex-wrap justify-center gap-3">
+            <Button
+              asChild
+              className="min-h-12 bg-zim-gold px-6 font-bold text-slate-950 hover:bg-yellow-300"
             >
-              <span className="text-[10px] uppercase tracking-[0.5em] font-black text-white drop-shadow-md">
-                {t("home.explore_now")}
-              </span>
-              <motion.span
-                aria-hidden="true"
-                className="inline-flex"
-                animate={prefersReducedMotion ? undefined : { y: [0, 12, 0] }}
-                transition={
-                  prefersReducedMotion
-                    ? undefined
-                    : { duration: 2, repeat: Infinity, ease: "easeInOut" }
-                }
-              >
-                <ChevronDown
-                  size={28}
-                  strokeWidth={1.5}
-                  className="text-white"
-                />
-              </motion.span>
-            </button>
-          </motion.div>
+              <Link href="/travel/flights">{t("home.flights_action")}</Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="min-h-12 border-white bg-slate-950/65 px-6 font-bold text-white hover:bg-slate-800 hover:text-white"
+            >
+              <Link href="/travel/stays">{t("home.stays_action")}</Link>
+            </Button>
+          </div>
+          <a
+            className="mt-4 inline-flex min-h-11 items-center text-sm font-medium text-white underline underline-offset-4"
+            href="#explore-platform"
+          >
+            {t("home.explore_now")}
+          </a>
         </div>
-
-        {/* REFINED INNER VIGNETTE: Reduced from 0.8 to 0.4 for less "muddy" edges */}
-        <div className="absolute inset-0 pointer-events-none z-10 shadow-[inset_0_0_20vw_rgba(0,0,0,0.4)]" />
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-slate-950 to-transparent z-10" />
       </section>
     </div>
   );

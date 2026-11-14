@@ -94,7 +94,7 @@ it("answers stock, price, ingredients and allergens for the exact product withou
     details
   );
   expect(reply).toContain("4.85 EUR");
-  expect(reply).toContain("Register interest");
+  expect(reply).toContain("Email me when available");
   expect(reply).toContain("currently unavailable");
   expect(reply).toContain("Ingredients: Fixture water");
   expect(reply).toContain("Allergens: Fixture milk");

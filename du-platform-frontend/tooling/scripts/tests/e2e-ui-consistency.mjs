@@ -60,8 +60,10 @@ const paths = [
   "/shop/product/sables-rugby-home-kit",
   "/shop/interest",
   "/shop/order-status",
-  "/technology",
-  "/investment",
+  "/onesa",
+  "/care",
+  "/business-guides",
+  "/business-guides/farming",
   "/investment/opportunities",
   "/investment/projects/masuwe",
   "/investment/projects/unknown",
@@ -144,6 +146,7 @@ try {
       };
       if (u.pathname === "/api/shop/products")
         json = {
+          source: "db",
           products,
           pricing: testPricing,
           readiness: {
@@ -436,7 +439,7 @@ try {
 
     await goto("/shop");
     await page
-      .getByRole("button", { name: "Register interest", exact: true })
+      .getByRole("button", { name: "Email me when available", exact: true })
       .first()
       .click();
     await page.getByRole("dialog").waitFor();

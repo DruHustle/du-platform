@@ -99,7 +99,7 @@ function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<
     const from = airportCode(origin, directory.airports);
     const to = airportCode(destination, directory.airports);
     if (category === "flights" && !from) throw new Error("Choose a departure airport or enter its three-letter code.");
-    if (!to) throw new Error("Choose a destination airport or enter its three-letter code.");
+    if (!to) throw new Error(category === "stays" ? "Choose the city or area where you want to stay." : "Choose a destination airport or enter its three-letter code.");
     if (category === "flights" && from === to) throw new Error("Choose different departure and destination airports.");
     return {origin: from, destination: to, tripType: category === "flights" ? tripType : "return", departure: departure.trim(), returnDate: returnDate.trim(),
       ...party, pickup: "HRE", dropoff: "HRE", pickupTime: "10:00", dropoffTime: "10:00"};
@@ -262,7 +262,7 @@ function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<
       }
     }
   }
-  return <Screen><Heading>Travel</Heading><Copy>Research journeys to, from and within Southern Africa. Prices and availability can change; the provider handles any booking.</Copy>{link.website && <Card><Copy>This Travel page is available on the website.</Copy><Action title="Open requested Travel page" secondary onPress={()=>void WebBrowser.openBrowserAsync(`https://www.diasporaunlocked.com${link.website}`).catch(()=>setError("Could not open the browser."))}/></Card>}<Card><Heading>Find options</Heading><View style={{flexDirection: "row", flexWrap: "wrap", gap: 8}}>
+  return <Screen><Heading>Travel</Heading><Copy>{category === "flights" ? "Compare flights to Zimbabwe and across Southern Africa. Include checked baggage and the journey from the airport in your budget." : "Find a family stay. Compare the cost for all nights, rooms and children before choosing a property."}</Copy>{link.website && <Card><Copy>This Travel page is available on the website.</Copy><Action title={`Open ${route?.params?.section?.replaceAll("-", " ") || "Travel"} on the website`} secondary onPress={()=>void WebBrowser.openBrowserAsync(`https://www.diasporaunlocked.com${link.website}`).catch(()=>setError("Could not open the browser."))}/></Card>}<Card><Heading>Find options</Heading><View style={{flexDirection: "row", flexWrap: "wrap", gap: 8}}>
       {(["flights", "stays"] as const).map(option => {
         const label = option === "flights" ? "Flights" : "Stays";
         return <View key={option} style={{flexGrow: 1, flexBasis: 100}}>
@@ -285,24 +285,24 @@ function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<
         </View>
       ))}
     </View>}
-    <Copy>Enter a city name or a three-letter airport code.</Copy>
-    {directory.unavailable && <><Copy>City lookup is unavailable. You can still enter a three-letter airport code.</Copy>
+    <Copy>{category === "flights" ? "Choose your departure and destination airports." : "Choose the city or area where you want to stay."}</Copy>
+    {directory.unavailable && <><Copy>{category === "flights" ? "City lookup is unavailable. You can still enter a three-letter airport code." : "The area list could not load. Try the lookup again."}</Copy>
       <Action secondary title="Retry city lookup" onPress={directory.retry}/></>}
     {category === "flights" && <AirportField label="Flying from" testID="From airport code (e.g. FRA)"
       airports={directory.airports} value={origin} disabled={busy} onChange={value => { clearResults(); setOrigin(value); }}/>}
-    <AirportField label={category === "flights" ? "Flying to" : "Stay near"} testID="Destination airport code (e.g. HRE)"
+    <AirportField stay={category === "stays"} label={category === "flights" ? "Flying to" : "Stay near"} testID="Destination airport code (e.g. HRE)"
       airports={directory.airports} value={destination} disabled={busy} onChange={value => { clearResults(); setDestination(value); }}/>
     <Field label={category==="flights"?"Departure date (YYYY-MM-DD)":"Check-in date (YYYY-MM-DD)"} value={departure}
       editable={!busy} onChangeText={value => { clearResults(); setDeparture(value); }} maxLength={10}/>
     {(category === "stays" || tripType === "return") &&
       <Field label={category==="flights"?"Return date (YYYY-MM-DD)":"Check-out date (YYYY-MM-DD)"} value={returnDate}
         editable={!busy} onChangeText={value => { clearResults(); setReturnDate(value); }} maxLength={10}/>}
-    {category === "stays" && <Field label="Guest nationality (two-letter country code)" value={nationality} maxLength={2} autoCapitalize="characters" autoCorrect={false} editable={!busy} onChangeText={value => {
+    {category === "stays" && <Field label="Guest nationality (two-letter country code)" value={nationality} returnKeyType="done" maxLength={2} autoCapitalize="characters" autoCorrect={false} editable={!busy} onChangeText={value => {
     setNationality(value.toUpperCase()); clearResults();
   }} />}
     <TravelPartyFields party={party} category={category} disabled={busy}
       onChange={value => { clearResults(); setParty(value); }}/>
-    <Action title={busy?"Please wait…":"Search providers"} disabled={busy} onPress={()=>void search()}/>{!!error&&<Message error message={error}/>}{!!feedback&&<Message message={feedback}/>}</Card>
+    <Action title={busy ? "Searching…" : category === "flights" ? "Search Kiwi.com" : "Search Pilot"} disabled={busy} onPress={()=>void search()}/>{!!error&&<Message error message={error}/>}{!!feedback&&<Message message={feedback}/>}</Card>
   {quotes && !quotes.length && <Copy>No options were returned for this search. Try different dates or locations.</Copy>}
   {quotes?.map(quote => {
     const selected = checked?.identity === quote.identity ? checked : null;
@@ -322,13 +322,13 @@ function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<
         <Copy>{selected.provider} handles checkout, payment and booking support. Confirm your itinerary and final total there.</Copy>
         {referralAvailable && <>
           <Copy>Awin can use cookies to attribute your booking. Diaspora Unlocked may earn a commission if you choose the referral link. You can also continue directly to Kiwi.com.</Copy>
-          <Action title="Allow referral tracking and continue" disabled={busy} onPress={() => void openProvider(selected, true)} />
+          <Action title="Continue to Kiwi.com with referral tracking" disabled={busy} onPress={() => void openProvider(selected, true)} />
         </>}
         <Action title={`Continue to ${selected.provider}`} disabled={busy} secondary onPress={() => void openProvider(selected)} />
       </>}
     </Card>;
   })}
-  <Card><Heading>Saved searches</Heading>{session.user?<><Field label="Name this search" value={tripName} onChangeText={setTripName} maxLength={100}/><Action title="Save this search" disabled={busy||!tripName.trim()} onPress={()=>void save()}/>{savedLoading&&<Loading/>}{!!savedError&&<><Message error message={savedError}/><Action title="Retry saved searches" secondary onPress={()=>void loadSaved()}/></>}{saved&&!saved.length&&!savedError&&<Copy>No saved searches yet.</Copy>}{saved?.map(item=>{
+  <Card><Heading>Saved searches</Heading><Copy>Save your dates and travellers to search again later. Prices can change. Make reservations with the provider.</Copy>{session.user?<><Field label="Name this search" value={tripName} onChangeText={setTripName} maxLength={100}/><Action title="Save this search" disabled={busy||!tripName.trim()} onPress={()=>void save()}/>{savedLoading&&<Loading/>}{!!savedError&&<><Message error message={savedError}/><Action title="Retry saved searches" secondary onPress={()=>void loadSaved()}/></>}{saved&&!saved.length&&!savedError&&<Copy>No saved searches yet.</Copy>}{saved?.map(item=>{
     const selected = nativeSavedSearch(item);
     let summary = "View the full itinerary in My Trips on the website using the same account.";
     if (selected) {
@@ -358,5 +358,11 @@ function TravelForm({route, session}: {route?: TravelRoute; session: ReturnType<
       <Action title="Keep saved item" secondary disabled={busy} onPress={()=>setConfirmDelete(null)}/>
     </> : <Action title={item.kind === "trip" ? "Delete saved trip" : "Delete saved search"}
       secondary disabled={busy} onPress={()=>setConfirmDelete(item.id)}/>}</Card>;})}</>:<Action title="Sign in to save this search" onPress={() => navigation.navigate("Account", { next: `/travel/${category}`, entry: "login" })}/>}</Card>
-  <Card><Heading>More Travel</Heading><Copy>Explore destinations and immersive experiences on the website. If a device cannot run an immersive preview, the destination guide remains available.</Copy><Action title="Open destination guide in browser" secondary onPress={()=>void WebBrowser.openBrowserAsync("https://www.diasporaunlocked.com/travel").catch(()=>setError("Could not open the browser."))}/></Card></Screen>;
+  <Card><Heading>Plan the rest of your trip</Heading>
+    {([
+      ["Car hire", "/travel/car-hire", "Check the deposit and ask the rental company about written border permission."],
+      ["Weather", "/travel/weather", "See the forecast for your destination."],
+      ["My Trips", "/travel/my-trips", "Review your saved choices and add your own budget estimates."],
+    ] as const).map(([title, path, description]) => <View key={path}><Copy>{description}</Copy><Action title={`Open ${title} on the website`} secondary onPress={() => void WebBrowser.openBrowserAsync(`https://www.diasporaunlocked.com${path}`).catch(() => setError("The browser could not open. Try again."))} /></View>)}
+    </Card></Screen>;
 }

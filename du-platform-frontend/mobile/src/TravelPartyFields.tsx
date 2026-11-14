@@ -37,7 +37,7 @@ export function TravelPartyFields({ party, category, disabled, onChange }: {
       {party.childAges.map((age, index) => <View key={index} style={styles.row}>
         <View style={styles.grow}>
           <Field label={`Child ${index + 1} age (0–17)`} value={age < 0 ? "" : String(age)}
-            editable={!disabled} keyboardType="number-pad" maxLength={2}
+            editable={!disabled} keyboardType="number-pad" returnKeyType="done" maxLength={2}
             onChangeText={text => {
               if (!/^\d{0,2}$/.test(text)) return;
               const ages = [...party.childAges];

@@ -1,5 +1,8 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
+  localizeRouteSeo,
+  openGraphLocale,
   PUBLIC_SITE_ORIGIN,
   resolveRouteSeo,
   resolveCanonicalUrl,
@@ -13,7 +16,7 @@ type RouteSeoProps = {
 function upsertMetaTag(
   attribute: "name" | "property",
   key: string,
-  content: string
+  content: string,
 ) {
   const selector = `meta[${attribute}="${key}"]`;
   let element = document.head.querySelector(selector) as HTMLMetaElement | null;
@@ -27,7 +30,7 @@ function upsertMetaTag(
 
 function upsertLinkTag(rel: string, href: string) {
   let element = document.head.querySelector(
-    `link[rel="${rel}"]`
+    `link[rel="${rel}"]`,
   ) as HTMLLinkElement | null;
   if (!element) {
     element = document.createElement("link");
@@ -38,41 +41,41 @@ function upsertLinkTag(rel: string, href: string) {
 }
 
 export default function RouteSeo({ pathname, search }: RouteSeoProps) {
+  const { t, i18n } = useTranslation();
   useEffect(() => {
     if (typeof document === "undefined" || typeof window === "undefined")
       return;
 
     const seo = resolveRouteSeo({ pathname, search });
+    const language = i18n.resolvedLanguage || "en";
+    const { title, description } = localizeRouteSeo(seo, language, key => t(key));
     const siteUrl =
       String(
         import.meta.env.VITE_SITE_URL ||
           (import.meta.env.PROD
             ? PUBLIC_SITE_ORIGIN
             : window.location.origin) ||
-          ""
+          "",
       )
         .trim()
         .replace(/\/+$/, "") || window.location.origin;
     const canonicalUrl = resolveCanonicalUrl(siteUrl, seo.canonicalPath);
 
-    document.title = seo.title;
-    upsertMetaTag("name", "description", seo.description);
+    document.title = title;
+    upsertMetaTag("name", "description", description);
     upsertMetaTag("name", "robots", seo.robots);
-    upsertMetaTag("property", "og:title", seo.socialTitle ?? seo.title);
+    upsertMetaTag("property", "og:title", title);
+    upsertMetaTag("property", "og:description", description);
+    upsertMetaTag("property", "og:url", canonicalUrl);
     upsertMetaTag(
       "property",
-      "og:description",
-      seo.socialDescription ?? seo.description
+      "og:locale",
+      openGraphLocale(language),
     );
-    upsertMetaTag("property", "og:url", canonicalUrl);
-    upsertMetaTag("name", "twitter:title", seo.socialTitle ?? seo.title);
-    upsertMetaTag(
-      "name",
-      "twitter:description",
-      seo.socialDescription ?? seo.description
-    );
+    upsertMetaTag("name", "twitter:title", title);
+    upsertMetaTag("name", "twitter:description", description);
     upsertLinkTag("canonical", canonicalUrl);
-  }, [pathname, search]);
+  }, [pathname, search, i18n.resolvedLanguage, t]);
 
   return null;
 }

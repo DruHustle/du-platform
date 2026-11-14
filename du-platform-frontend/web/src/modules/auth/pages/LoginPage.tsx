@@ -43,12 +43,12 @@ export default function Login() {
 
   const emailError =
     touched.email && !formData.email
-      ? "Email is required."
+      ? t("auth.email_required")
       : touched.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-        ? "Please enter a valid email address."
+        ? t("auth.email_invalid")
         : "";
   const passwordError =
-    touched.password && !formData.password ? "Password is required." : "";
+    touched.password && !formData.password ? t("auth.password_required") : "";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +72,7 @@ export default function Login() {
       setLocation(nextPath);
     } catch (err: any) {
       setError(
-        getApiErrorMessage(err, "Login failed. Please check your credentials.")
+        getApiErrorMessage(err, t("auth.login_failed"))
       );
     } finally {
       setLoading(false);
@@ -189,7 +189,7 @@ export default function Login() {
                     type="button"
                     onClick={() => setShowPassword(prev => !prev)}
                     aria-label={
-                      showPassword ? "Hide password" : "Show password"
+                      t(showPassword ? "auth.reset.hide_password" : "auth.reset.show_password")
                     }
                     className="absolute right-1 top-1/2 min-h-11 min-w-11 flex items-center justify-center -translate-y-1/2 text-white/70 hover:text-white transition-colors"
                   >
@@ -232,7 +232,7 @@ export default function Login() {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing In...
+                    {t("auth.signing_in")}
                   </>
                 ) : (
                   <>

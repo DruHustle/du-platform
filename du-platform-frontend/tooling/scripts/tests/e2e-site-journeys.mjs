@@ -19,6 +19,7 @@ const browser = await chromium.launch({
     : {}),
 });
 const context = await browser.newContext({
+  locale: "en-US",
   viewport: { width: 375, height: 900 },
   reducedMotion: "reduce",
 });
@@ -456,7 +457,7 @@ try {
   await page.goto(`${baseUrl}/login?next=%2Fshop%2Fproducts`);
   await page.locator("#LoginPage-email").fill("invalid-email");
   await page.locator("#LoginPage-password").fill(password);
-  await page.getByRole("button", { name: /^login$/i }).click();
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await page
     .getByRole("alert")
     .filter({ hasText: /valid email address/i })
@@ -477,7 +478,7 @@ try {
       }),
     })
   );
-  await page.getByRole("button", { name: /^login$/i }).click();
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await page
     .getByRole("alert")
     .filter({ hasText: /invalid email or password/i })
@@ -494,13 +495,14 @@ try {
   await page.route("**/api/shop/products", route =>
     route.fulfill({
       json: {
+        source: "db",
         products,
         pricing: testPricing,
         readiness: readyShop(products.map(product => product.id)),
       },
     })
   );
-  await page.getByRole("button", { name: /^login$/i }).click();
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await page.waitForURL("**/shop/products");
   const productName = "Sables Rugby Home Kit";
   const card = page.locator('[data-shop-product-card="sables-rugby-home-kit"]');
@@ -557,8 +559,8 @@ try {
     .waitFor();
   await page.keyboard.press("Escape");
   await page.getByRole("dialog").waitFor({ state: "hidden" });
-  await page.getByRole("button", { name: "Our Vision", exact: true }).click();
-  await page.getByRole("dialog", { name: "Our Vision" }).waitFor();
+  await page.getByRole("button", { name: "Who we are", exact: true }).click();
+  await page.getByRole("dialog", { name: "Who we are" }).waitFor();
   await page.keyboard.press("Escape");
   pass("desktop search and footer information dialogs work with the keyboard");
 

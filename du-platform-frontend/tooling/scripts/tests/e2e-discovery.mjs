@@ -87,8 +87,8 @@ try {
     });
     for (const path of [
       "/",
-      "/technology",
-      "/investment",
+      "/onesa",
+      "/business-guides",
       "/travel",
       "/investment/opportunities",
       "/regulations",
@@ -97,7 +97,7 @@ try {
       await page.locator(".swipe-rail").first().waitFor();
       if (path === "/") {
         assert.equal(await page.locator("#home-hero-logo img").count(), 1);
-        assert.equal(await page.locator("main h1.sr-only").count(), 1);
+        assert.equal(await page.getByRole("heading", { name: "Plan your next trip home", level: 1 }).count(), 1);
         assert.equal(
           await page
             .getByRole("button", {
@@ -114,7 +114,7 @@ try {
           await cards
             .locator("a")
             .evaluateAll(links => links.map(link => link.getAttribute("href"))),
-          ["/shop", "/technology", "/investment", "/travel"]
+          ["/shop", "/care", "/onesa", "/business-guides"]
         );
         assert(
           await cards
@@ -127,7 +127,7 @@ try {
           "Home card copy must remain readable"
         );
         await page
-          .getByRole("button", { name: "Explore the platform", exact: true })
+          .getByRole("link", { name: "Shop, Care and Onesa", exact: true })
           .click();
         await page.waitForFunction(() => {
           const top = document
@@ -136,7 +136,7 @@ try {
           return top >= 50 && top <= 90;
         });
       }
-      if (path === "/technology") {
+      if (path === "/onesa") {
         const tools = page.locator("#onesa-intro");
         assert.equal(await tools.locator("article").count(), 4);
         assert.deepEqual(
@@ -144,8 +144,8 @@ try {
             .locator("article a")
             .evaluateAll(links => links.map(link => link.getAttribute("href"))),
           [
+            "/travel/planner?example=victoria-falls-3-days",
             "/onesa-ai-chat",
-            "/travel/planner",
             "/travel/virtual-experience",
             "/travel/augmented-experience",
           ]
@@ -161,15 +161,15 @@ try {
         assert((await about.getAttribute("open")) !== null);
         assert.match(await about.textContent(), /Onesa.*platform/);
         await page.keyboard.press("Space");
-        await page
-          .getByRole("link", { name: "Explore the tools", exact: true })
-          .click();
-        await page.waitForFunction(() => {
-          const top = document
-            .getElementById("onesa-intro")
-            .getBoundingClientRect().top;
-          return top >= 50 && top <= 90;
-        });
+        const example = page.locator("#hero").getByRole("link", { name: "Plan three days in Victoria Falls" });
+        await example.focus();
+        await example.press("Enter");
+        await page.waitForURL("**/travel/planner?example=victoria-falls-3-days");
+        await page.locator('main input[type="date"]').last().waitFor();
+        const dates = await page.locator('main input[type="date"]').evaluateAll(fields => fields.map(input => input.valueAsNumber));
+        assert.equal((dates[1] - dates[0]) / 86400000 + 1, 3);
+        assert.equal(await page.locator('main select:has(option[value="hwange_national_park"])').inputValue(), "victoria_falls");
+        await page.goBack();
       }
       if (path === "/travel") {
         await page
@@ -199,7 +199,7 @@ try {
           0
         );
       }
-      if (path === "/investment") {
+      if (path === "/business-guides") {
         assert.equal(
           await page
             .getByRole("heading", {
@@ -318,7 +318,7 @@ try {
       const rails = page.locator(".swipe-rail");
       for (const rail of await rails.all()) {
         const viewport = rail.locator(".swipe-rail-viewport");
-        if (["/", "/technology", "/investment", "/travel"].includes(path)) {
+        if (["/", "/onesa", "/business-guides", "/travel"].includes(path)) {
           const bounds = await viewport.boundingBox();
           const screenWidth = await page.evaluate(
             () => document.documentElement.clientWidth
@@ -399,7 +399,7 @@ try {
         const hit = await next.boundingBox();
         assert(hit.width >= 44 && hit.height >= 44);
       }
-      if (path === "/investment") {
+      if (path === "/business-guides") {
         const ideas = page.locator("#investment-innovation-opportunities");
         for (const card of await ideas.locator("article").all()) {
           const summary = card.locator("summary");
@@ -429,14 +429,14 @@ try {
       await page.screenshot({
         path: `${output}/${path === "/" ? "home" : path.slice(1).replaceAll("/", "_")}-${width}.png`,
       });
-      if (path === "/technology") {
+      if (path === "/onesa") {
         for (const [href, selector] of [
           ["/onesa-ai-chat", "main textarea"],
-          ["/travel/planner", "main form"],
+          ["/travel/planner?example=victoria-falls-3-days", "main form"],
           ["/travel/virtual-experience", "#vr-destination"],
           ["/travel/augmented-experience", "#aug-place"],
         ]) {
-          await page.goto(base + "/technology");
+          await page.goto(base + "/onesa");
           await page.locator(`#onesa-intro a[href="${href}"]`).click();
           await page.waitForURL(base + href);
           await page.locator(selector).first().waitFor();
@@ -444,11 +444,11 @@ try {
         record({
           width,
           scenario:
-            "Technology opens Onesa chat, trip planning, VR demos and the AR guide",
+            "Onesa opens chat, trip planning, VR demos and the AR guide",
         });
       }
     }
-    for (const href of ["/shop", "/technology", "/investment", "/travel"]) {
+    for (const href of ["/shop", "/care", "/onesa", "/business-guides"]) {
       await page.goto(base + "/");
       await page.locator(`#explore-platform a[href="${href}"]`).click();
       await page.waitForURL(base + href);
@@ -587,7 +587,13 @@ try {
       scenario:
         "project filtering resets position; empty recovery and detail navigation work",
     });
-    await page.goto(base + "/investment");
+    await page.goto(base + "/investment#farming");
+    await page.waitForFunction(() => document.querySelector("#farming details")?.open);
+    await page.locator('#farming a[href="/business-guides/farming"]').click();
+    await page.waitForURL("**/business-guides/farming");
+    await page.getByRole("heading", { name: "Farming & food production", exact: true }).waitFor();
+    record({ width, scenario: "Bookmarked farming guide opens the correct article" });
+    await page.goto(base + "/business-guides");
     await page
       .locator("#collective-model")
       .getByRole("link", {
@@ -691,7 +697,7 @@ try {
         "four matching companion tiles; static transcript removed; fourth tile opens virtual previews",
     });
     for (const language of ["de", "sn", "nd"]) {
-      await page.goto(`${base}/investment?lng=${language}`);
+      await page.goto(`${base}/business-guides?lng=${language}`);
       await page.waitForFunction(
         expected => document.documentElement.lang === expected,
         language
@@ -723,7 +729,7 @@ try {
         width,
         scenario: `${language}: five ideas, keyboard details and translated checklist fit`,
       });
-      await page.goto(`${base}/technology?lng=${language}`);
+      await page.goto(`${base}/onesa?lng=${language}`);
       await page.waitForFunction(
         expected => document.documentElement.lang === expected,
         language
@@ -737,11 +743,11 @@ try {
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth + 1
         ),
-        `${language}/${width}: Technology page overflow`
+        `${language}/${width}: Onesa page overflow`
       );
       record({
         width,
-        scenario: `${language}: translated Technology tools and ideas fit`,
+        scenario: `${language}: translated Onesa tools and ideas fit`,
       });
       for (const route of ["/", "/travel"]) {
         await page.goto(`${base}${route}?lng=${language}`);
@@ -826,11 +832,24 @@ try {
             ?.getAttribute("data-waterfall-state") === "playing"
       );
       assert.equal(await motionControls.count(), 0);
-      const sky = { x: 8, y: 160, width: 80, height: 80 };
-      const water = { x: 20, y: 740, width: 80, height: 80 };
+      // Project sample points from the photograph into its responsive object-cover crop.
+      const { x, y, width: imageWidth, height: imageHeight } = await background.boundingBox();
+      const [naturalWidth, naturalHeight] = await background.evaluate(image => [
+        image.naturalWidth,
+        image.naturalHeight,
+      ]);
+      const scale = Math.max(imageWidth / naturalWidth, imageHeight / naturalHeight);
+      const sample = (horizontal, vertical) => ({
+        x: Math.round(x + imageWidth / 2 + (horizontal - 0.5) * naturalWidth * scale - 20),
+        y: Math.round(y + imageHeight / 2 + (vertical - 0.5) * naturalHeight * scale - 20),
+        width: 40,
+        height: 40,
+      });
+      const sky = sample(0.4, 0.24);
+      const water = sample(0.4, 0.86);
       const skyBefore = await page.screenshot({ clip: sky });
       const waterBefore = await page.screenshot({ clip: water });
-      const cliff = { x: width - 80, y: 720, width: 60, height: 80 };
+      const cliff = sample(0.93, 0.78);
       const cliffBefore =
         width === 1440 ? await page.screenshot({ clip: cliff }) : null;
       await page.clock.runFor(700);
@@ -872,7 +891,10 @@ try {
       await page.screenshot({ path: `${output}/home-waterfall-${width}.png` });
     }
     assert.equal(await motionControls.count(), 0);
-    assert.equal(await hero.getByRole("button").count(), 1);
+    assert.deepEqual(
+      await hero.getByRole("link").evaluateAll(links => links.map(link => link.getAttribute("href"))),
+      ["/travel/flights", "/travel/stays", "#explore-platform"]
+    );
     await page.clock.fastForward(18000);
     assert.equal(
       await state.getAttribute("data-waterfall-state"),

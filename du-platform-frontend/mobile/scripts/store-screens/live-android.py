@@ -28,7 +28,7 @@ def swipe_content(doc):
                    x, str(y1 + (y2-y1)//3), '370')
 
 
-def find(label, scroll=False, timeout=40, prefix=False):
+def find(label, scroll=False, timeout=40, prefix=False, field=False, actionable=False):
     until = time.monotonic() + timeout
     while time.monotonic() < until:
         try:
@@ -36,11 +36,12 @@ def find(label, scroll=False, timeout=40, prefix=False):
         except (ElementTree.ParseError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
             time.sleep(1)
             continue
-        if prefix:
-            node = next((n for n in doc.iter('node') if n.get('package') == screen.PACKAGE
-                        and any(n.get(k,'').startswith(label) for k in ('content-desc','text'))), None)
-        else:
-            node = screen.node_for(doc,label)
+        node = next((n for n in doc.iter('node')
+                     if n.get('package') == screen.PACKAGE
+                     and (not field or n.get('class') == 'android.widget.EditText')
+                     and (not actionable or n.get('clickable') == 'true' and n.get('class') != 'android.widget.EditText')
+                     and any(n.get(k, '').startswith(label) if prefix else n.get(k) == label
+                             for k in ('content-desc', 'text'))), None)
         if node is not None:
             return node
         if scroll:
@@ -49,16 +50,34 @@ def find(label, scroll=False, timeout=40, prefix=False):
     raise RuntimeError(f'Could not reach {label!r} in the installed app')
 
 
+def read_outcome(label, prefix=False):
+    # After submitting, the form can shrink and place its receipt above the old button.
+    try:
+        return find(label, timeout=5, prefix=prefix)
+    except RuntimeError:
+        pass
+    document = screen.tree()
+    display = max((node for node in document.iter("node")
+                   if node.get("package") == screen.PACKAGE),
+                  key=lambda node: screen.area(node.attrib["bounds"]))
+    left, top, right, bottom = screen.rect(display.attrib["bounds"])
+    middle = str((left + right) // 2)
+    for _ in range(2):
+        screen.adb("shell", "input", "swipe", middle, str(top + (bottom-top)//4),
+                        middle, str(top + 3*(bottom-top)//4), "300")
+    return find(label, scroll=True, prefix=prefix)
+
+
 def product_capture(target):
     assistant_target = Path(target).with_name('Onesa.png')
     screen.adb('shell','am','start','-W','-a','android.intent.action.VIEW',
                '-d', 'diasporaunlocked://onesa-ai-chat', screen.PACKAGE)
-    screen.wait_for_label('Onesa assistant')
+    screen.wait_for_label('Plan three days in Victoria Falls')
     screen.capture(assistant_target)
     screen.adb('shell', 'am', 'force-stop', screen.PACKAGE)
     screen.adb('shell', 'am', 'start', '-W', '-n', screen.PACKAGE+'/.MainActivity')
-    screen.wait_for_label('Explore what connects us')
-    tap(find('Browse products', True))
+    screen.wait_for_label('Plan your next trip home')
+    tap(find('Browse Zimbabwean products', True))
     find('Search products')
     product = find('View details for ', scroll=True, prefix=True)
     name = product.get('content-desc', '').removeprefix('View details for ')
@@ -72,7 +91,7 @@ def product_capture(target):
 
 
 def flight():
-    tap(find('Search providers',True)); tap(find('Check current provider details',True,55)); tap(find('Continue to Kiwi.com',True,45))
+    tap(find('Search Kiwi.com',True)); tap(find('Check current provider details',True,55)); tap(find('Continue to Kiwi.com',True,45))
     deadline=time.monotonic()+20
     while time.monotonic()<deadline:
         state=screen.adb('shell','dumpsys','activity','activities').decode()
@@ -87,22 +106,28 @@ def flight():
 
 
 def sign_in():
-    screen.adb('shell','am','force-stop',screen.PACKAGE)
-    screen.adb('shell','am','start','-W','-n',screen.PACKAGE+'/.MainActivity')
-    screen.wait_for_label('Explore what connects us')
-    screen.adb('shell', 'am', 'start', '-W', '-a', 'android.intent.action.VIEW',
-               '-d', 'diasporaunlocked://login', screen.PACKAGE)
+    open_home()
+    open_app_link('login')
     screen.wait_for_label('Welcome back')
-    def field(label):
-        for node in screen.tree().iter('node'):
-            if node.get('class')=='android.widget.EditText' and node.get('content-desc')==label: return node
-        raise RuntimeError('Labelled field missing: '+label)
-    find('Email address');email='qa-'+uuid4().hex[:12]+'@example.test';tap(field('Email address'));screen.adb('shell','input','text',email)
-    tap(field('Password'));screen.adb('shell','input','text','FixtureOnly123');screen.adb('shell','input','keyevent','KEYCODE_BACK')
+    email = 'qa-' + uuid4().hex[:12] + '@example.test'
+    type_in_field('Email address', email)
+    if find('Email address', field=True).get('text') != email:
+        raise RuntimeError('Sign-in form did not retain the complete synthetic address')
+    type_in_field('Password', 'FixtureOnly123!')
+    rejection = 'Invalid email or password.'
     for _ in range(2):
-        tap(find('Sign in',True)); find('Invalid email or password.',False,25)
-    if field('Email address').get('text')!=email: raise RuntimeError('Email lost after retry')
-    print('PASS native sign-in rejected synthetic identity twice and kept its email for retry')
+        tap(find('Sign in', scroll=True, actionable=True))
+        try:
+            read_outcome(rejection)
+        except RuntimeError as error:
+            # Include public status text only. Inputs can hold credentials.
+            visible = [node.get('text') for node in screen.tree().iter('node')
+                       if node.get('package') == screen.PACKAGE
+                       and node.get('class') == 'android.widget.TextView' and node.get('text')]
+            raise RuntimeError(f'Expected the credential rejection. Visible status: {visible}') from error
+    if find('Email address', field=True).get('text') != email:
+        raise RuntimeError('Email lost after retry')
+    print('PASS native sign-in rejected synthetic identity twice and kept its email for retry', flush=True)
 
 
 def recover_missing_reset_link():
@@ -114,12 +139,81 @@ def recover_missing_reset_link():
     print('PASS Android missing reset link opens the email recovery form')
 
 
+
+def open_home():
+    screen.adb('shell', 'am', 'force-stop', screen.PACKAGE)
+    screen.adb('shell', 'am', 'start', '-W', '-n', screen.PACKAGE + '/.MainActivity')
+    screen.wait_for_label('Plan your next trip home')
+
+
+def open_app_link(path):
+    screen.adb('shell', 'am', 'start', '-W', '-a', 'android.intent.action.VIEW',
+               '-d', 'diasporaunlocked://' + path, screen.PACKAGE)
+
+
+def type_in_field(label, value):
+    node = find(label, scroll=True, field=True)
+    tap(node)
+    screen.adb('shell', 'input', 'text', value)
+    # Exit the software keyboard only when the input method actually opened it.
+    if 'mInputShown=true' in screen.adb('shell', 'dumpsys', 'input_method').decode():
+        screen.adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
+
+
+def care_lookup():
+    open_home()
+    tap(find('Find funeral cover providers', scroll=True))
+    tap(find('How can I cover funeral costs for a relative in Zimbabwe?', scroll=True))
+    for label, country in [('Where do you live?', 'Germany'),
+                           ('Where does the person you want to cover live?', 'Zimbabwe')]:
+        type_in_field(label, country)
+        tap(find(country, scroll=True, actionable=True))
+    find('Read the cash funeral plan at ZB', scroll=True)
+    print('PASS installed Android family funeral cover lookup for a German resident and a relative in Zimbabwe')
+
+
+def family_stay():
+    open_home()
+    tap(find('Find a stay', scroll=True))
+    find('Choose the city or area where you want to stay.')
+    type_in_field('Guest nationality (two-letter country code)', 'DE')
+    tap(find('Edit travellers and currency', scroll=True))
+    tap(find('Add an adult', scroll=True))
+    tap(find('Add a child', scroll=True))
+    type_in_field('Child 1 age (0–17)', '6')
+    tap(find('Search Pilot', scroll=True))
+    until = time.monotonic() + 60
+    while time.monotonic() < until:
+        doc = screen.tree()
+        if screen.node_for(doc, 'Check current provider details') is not None:
+            print('PASS installed Android Pilot family search returned a stay')
+            return
+        if screen.node_for(doc, 'No options were returned for this search. Try different dates or locations.') is not None:
+            print('PASS installed Android Pilot family search returned no options')
+            return
+        swipe_content(doc)
+        time.sleep(1)
+    raise RuntimeError('No family stay results or valid empty search outcome')
+
+
+def planner_and_guide():
+    open_app_link('onesa')
+    tap(find('Plan three days in Victoria Falls', scroll=True))
+    find('Open trip planner')
+    open_app_link('business-guides/farming')
+    find('Farming and food production guide')
+    find('Open farming and food production guide')
+    print('PASS installed Android Onesa itinerary and farming bookmark reached their website handoff screens')
+
+
 if __name__=='__main__':
     if len(sys.argv) == 3 and sys.argv[1] == 'product':
         product_capture(sys.argv[2])
         sys.exit(0)
     failures=[]
-    for name,work in [('Direct flight handoff',flight),('Sign-in retry',sign_in),('Missing reset link',recover_missing_reset_link)]:
+    for name,work in [('Direct flight handoff',flight),('Sign-in retry',sign_in),('Missing reset link',recover_missing_reset_link),
+                      ('Care provider lookup',care_lookup),('Family stay search',family_stay),
+                      ('Planner and business guide',planner_and_guide)]:
         try: work()
         except Exception as error: failures.append(name);print(f'{name} not verified: {error}',flush=True)
     if failures: raise SystemExit('Live Android checks did not pass: '+', '.join(failures))

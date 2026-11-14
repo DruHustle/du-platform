@@ -16,6 +16,10 @@ describe("search service route index", () => {
     ["register interest", "/shop/products"],
     ["juice", "/shop/products?category=food&segment=beverages"],
     ["groceries", "/shop/products?category=food"],
+    ["funeral", "/care"],
+    ["mariro", "/care"],
+    ["technology", "/onesa"],
+    ["investment", "/business-guides"],
     ["assistant", "/onesa-ai-chat"],
     ["cheap flights", "/travel/flights"],
     ["cheap flights to Harare", "/travel/flights"],
@@ -47,7 +51,6 @@ describe("search service route index", () => {
     const service = new SearchService(repository as any);
 
     for (const query of [
-      "care",
       "trade",
       "impact",
       "remittances",
@@ -58,7 +61,7 @@ describe("search service route index", () => {
       expect(result.results).not.toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            href: expect.stringMatching(/^\/(care|trade|impact|remittances)$/),
+            href: expect.stringMatching(/^\/(trade|impact|remittances)$/),
           }),
         ])
       );

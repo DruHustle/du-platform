@@ -29,7 +29,7 @@ export class ProductInterestService extends NewsletterService {
     await this.transaction(async c => {
       // Fresh, authoritative publication check, independent of the public catalogue cache.
       const [products] = await c.query<RowDataPacket[]>(
-        "SELECT id,slug,name FROM shop_products WHERE slug=? AND is_active=1",
+        "SELECT id,slug,name FROM shop_products WHERE slug=? AND is_active=1 LOCK IN SHARE MODE",
         [input.productSlug]
       );
       const product = products[0];

@@ -12,8 +12,9 @@ import {
   SHOP_CATEGORY_CONFIG,
   type ShopSegmentKey,
 } from "@/lib/shopCategories";
+import { readOrderReceipt } from "../lib/checkoutSession";
 import { useShopCart } from "../lib/useShopCart";
-import { useShopCatalog } from "../lib/useShopCatalog";
+import { canRequestProduct, useShopCatalog } from "../lib/useShopCatalog";
 import ShopCurrencySelect from "../components/ShopCurrencySelect";
 import ProductCard from "../components/ProductCard";
 import CatalogNotice from "../components/CatalogNotice";
@@ -33,16 +34,19 @@ export default function Shop() {
   const { t } = useTranslation();
   const tx = (key: string, fallback: string) =>
     t(key, { defaultValue: fallback });
-  const { products, status, source, pricing, refresh } = useShopCatalog();
+  const { products, status, source, pricing, refresh, readiness } = useShopCatalog();
   const { cart, add, removeOne, itemCount } = useShopCart();
 
+  const receipt = readOrderReceipt();
+  const ordering = status === "ready" && source === "db" && products.some(product => canRequestProduct(readiness, product));
   return (
     <Layout>
       <div className="shop-landing">
         <DiscoveryHero
           eyebrow={t("shop.landing.eyebrow")}
           title={t("shop.landing.title")}
-          highlight={t("shop.landing.highlight")}
+          highlight=""
+          description={t(ordering ? "shop.products.subtitle" : "product_interest.prelaunch")}
           image="/images/pages/shop/crafts_binga_baskets_01.jpg"
           imageAlt={t("pilot.shop_hero_alt")}
           caption={t("shop.landing.caption")}
@@ -67,13 +71,13 @@ export default function Shop() {
         <DiscoverySection
           id="collections"
           title={t("shop.collections_title")}
-          action={
+          action={(ordering || itemCount > 0 || receipt) &&
             <Link
               href="/shop/products?category=all&cart=1"
               className="shop-cart-link"
             >
               <ShoppingBag aria-hidden="true" className="h-4 w-4" />
-              {t("shop.products.cart.short_title")}
+              {t(receipt && !itemCount ? "shop.products.order.view_request" : ordering ? "shop.products.cart.short_title" : "product_interest.saved_basket")}
               <span className="shop-cart-count" aria-live="polite">
                 {itemCount}
               </span>
@@ -111,7 +115,7 @@ export default function Shop() {
                   key={category.key}
                   product={product}
                   quantity={quantity}
-                  available={status === "ready"}
+                  available={status === "ready" && source === "db"}
                   onAdd={() => add(product.id, product.stock_qty)}
                   onRemove={() => removeOne(product.id)}
                   category={tx(

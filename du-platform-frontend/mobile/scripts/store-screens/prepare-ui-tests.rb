@@ -8,7 +8,7 @@ abort 'Missing DiasporaUnlocked application' unless app
 test = project.new_target(:ui_test_bundle, 'DUNativeSmokeUITests', :ios, '16.4')
 test.add_dependency(app)
 source = project.main_group.new_group('StoreScreens', File.expand_path(__dir__))
-test.source_build_phase.add_file_reference(source.new_file('DUNativeSmokeTests.swift'))
+test.source_build_phase.add_file_reference(source.new_file(ARGV.fetch(1, 'DUNativeSmokeTests.swift')))
 test.build_configurations.each do |configuration|
   configuration.build_settings.merge!(
     'PRODUCT_BUNDLE_IDENTIFIER' => 'com.diasporaunlocked.app.smoketests',
