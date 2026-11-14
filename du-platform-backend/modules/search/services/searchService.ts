@@ -43,7 +43,7 @@ const ROUTE_INDEX = [
   {
     title: "Onesa AI",
     href: "/onesa-ai-chat",
-    category: "Technology",
+    category: "Onesa",
     tags: ["chat", "assistant", "help"],
   },
   {
@@ -101,16 +101,22 @@ const ROUTE_INDEX = [
       "Hlela uhambo lweZimbabwe loOnesa"],
   },
   {
-    title: "Investment",
-    href: "/investment",
-    category: "Investment",
-    tags: ["money", "capital", "projects", "masuwe", "sez"],
+    title: "Care",
+    href: "/care",
+    category: "Care",
+    tags: ["insurance", "funeral", "repatriation", "Zimbabwe", "life cover", "Versicherung", "Bestattung", "Rückführung", "mariro", "umngcwabo"],
   },
   {
-    title: "Technology",
-    href: "/technology",
-    category: "Technology",
-    tags: ["ai", "onesa", "innovation", "tech"],
+    title: "Business guides",
+    href: "/business-guides",
+    category: "Investment",
+    tags: ["investment", "business", "guides", "checklist", "money", "capital", "projects", "masuwe", "sez"],
+  },
+  {
+    title: "Onesa",
+    href: "/onesa",
+    category: "Onesa",
+    tags: ["ai", "onesa", "innovation", "technology", "tech", "Technologie", "ubuchwepheshe", "ruzivo"],
   },
   {
     title: "NTIR Database",

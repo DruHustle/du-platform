@@ -494,6 +494,7 @@ try {
   await page.route("**/api/shop/products", route =>
     route.fulfill({
       json: {
+        source: "db",
         products,
         pricing: testPricing,
         readiness: readyShop(products.map(product => product.id)),
@@ -557,8 +558,8 @@ try {
     .waitFor();
   await page.keyboard.press("Escape");
   await page.getByRole("dialog").waitFor({ state: "hidden" });
-  await page.getByRole("button", { name: "Our Vision", exact: true }).click();
-  await page.getByRole("dialog", { name: "Our Vision" }).waitFor();
+  await page.getByRole("button", { name: "Who we are", exact: true }).click();
+  await page.getByRole("dialog", { name: "Who we are" }).waitFor();
   await page.keyboard.press("Escape");
   pass("desktop search and footer information dialogs work with the keyboard");
 

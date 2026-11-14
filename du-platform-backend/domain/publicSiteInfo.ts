@@ -3,7 +3,7 @@ export const PUBLIC_SITE_ACTIONS = [
     title: "Shop catalogue",
     href: "/shop/products",
     summary:
-      "Published products and indicative prices; send an assisted order request. No payment is taken here.",
+      "Browse Zimbabwean products. Each product page shows whether orders or availability alerts are open.",
   },
   {
     title: "Travel Southern Africa",
@@ -36,8 +36,13 @@ export const PUBLIC_SITE_ACTIONS = [
       "Clearly labelled 360-degree demos, including headset support where available.",
   },
   {
-    title: "Business ideas",
-    href: "/investment",
+    title: "Care",
+    href: "/care",
+    summary: "Find official provider information about funeral costs in Zimbabwe and repatriation from abroad.",
+  },
+  {
+    title: "Business guides",
+    href: "/business-guides",
     summary: "Informational research ideas, not investment offers.",
   },
   {
@@ -53,8 +58,8 @@ export const PUBLIC_SITE_ACTIONS = [
       "Research entries, not statutory registration or independent certification.",
   },
   {
-    title: "Technology and Onesa",
-    href: "/technology",
+    title: "Onesa",
+    href: "/onesa",
     summary: "Practical tools and the Onesa AI companion.",
   },
 ];

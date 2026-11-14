@@ -47,7 +47,7 @@ export default function ProductCard({
       }
       className="shop-product-card"
     >
-      <button
+      {eligible && <button
         type="button"
         disabled={!canAdd}
         onClick={onAdd}
@@ -56,7 +56,7 @@ export default function ProductCard({
           defaultValue: "Add {{name}} to cart",
         })}
         className="shop-card-add-target"
-      />
+      />}
       <div className="shop-product-image">
         <InstantImage
           src={product.image_url}
@@ -69,7 +69,7 @@ export default function ProductCard({
             event.currentTarget.src = "/images/brand/diaspora_unlocked.png";
           }}
         />
-        {available && product.stock_qty === 0 && (
+        {readiness?.commercialReady && available && product.stock_qty === 0 && (
           <span className="shop-stock-label">
             {t("shop.products.stock.out", { defaultValue: "Out of Stock" })}
           </span>

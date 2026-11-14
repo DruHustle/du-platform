@@ -1,5 +1,7 @@
 import React from "react";
 import english from "../../public/locales/en/translation.json";
+import { providerPages } from "../modules/care/providers";
+import businessGuideTitles from "../domain/businessGuideTitles.json";
 import { resolveRouteSeo } from "../domain/routeSeo";
 type Product = {
   slug: string;
@@ -11,30 +13,10 @@ type Product = {
   stock_qty: number;
 };
 const sections = [
-  {
-    title: "Zimbabwean products",
-    href: "/shop/products",
-    description:
-      "Browse food, drinks, crafts and supporter apparel. Register interest for a one-time availability alert — no order, reservation or payment. Confirm your email separately from the newsletter. Sales are not open yet.",
-  },
-  {
-    title: "Travel Southern Africa",
-    href: "/travel",
-    description:
-      "Search flights to, from and within Southern Africa and research stays. Read regional guides, explore Zimbabwean destinations and draft an itinerary with Onesa. Confirm final prices and conditions directly with providers; car hire uses a public search handoff.",
-  },
-  {
-    title: "Business and innovation",
-    href: "/investment",
-    description:
-      "Explore practical ideas in farming, mining, construction, energy and technology. Start with a small research brief, verify permissions and supplier information, and review project profiles and the business directory as research starting points. Listed profiles are not investment offers or endorsements.",
-  },
-  {
-    title: "Onesa and technology",
-    href: "/technology",
-    description:
-      "Use Onesa for general guidance and links to published catalogue information. Explore clearly labelled virtual and augmented reality demonstrations. Onesa cannot book a trip, take payments or confirm delivery.",
-  },
+  { href: "/shop", ...english.home.tiles.shop },
+  { href: "/care", ...english.home.tiles.care },
+  { href: "/onesa", ...english.home.tiles.onesa },
+  { href: "/business-guides", ...english.home.tiles.business },
 ];
 export function PublicPagePreview({
   pathname,
@@ -48,16 +30,10 @@ export function PublicPagePreview({
     pathname
   );
   if (seo.robots.startsWith("noindex") && !draftPolicy) return null;
+  const guideSlug = pathname.split("/")[2];
+  const guide = pathname.startsWith("/business-guides/") && Object.hasOwn(businessGuideTitles, guideSlug)
+    ? english.investment.opportunities[guideSlug as keyof typeof businessGuideTitles] : undefined;
   const product = products.find(p => pathname === `/shop/product/${p.slug}`);
-  const selected =
-    pathname === "/"
-      ? sections
-      : sections.filter(
-          s =>
-            pathname.startsWith(s.href.split("/").slice(0, 2).join("/")) ||
-            (pathname.startsWith("/shop/product/") &&
-              s.href.startsWith("/shop"))
-        );
   return (
     <main
       className="public-preview"
@@ -75,6 +51,7 @@ export function PublicPagePreview({
         style={{ display: "flex", flexWrap: "wrap", gap: 24 }}
       >
         <a href="/">Home</a>
+        <a href="/travel">Travel</a>
         {sections.map(s => (
           <a key={s.href} href={s.href}>
             {s.title}
@@ -97,14 +74,17 @@ export function PublicPagePreview({
             height="112"
             style={{ margin: "auto" }}
           />
-          <h1 className="seo-h1">{english.home.hero_title}</h1>
+          <h1>{english.home.hero_title}</h1>
           <p>{english.home.hero_subtitle}</p>
-          <p>{english.pilot.home_purpose}</p>
+          <div>
+            <a href="/travel/flights">{english.home.flights_action}</a> ·{" "}
+            <a href="/travel/stays">{english.home.stays_action}</a>
+          </div>
         </header>
       ) : (
         <h1>{product?.name || seo.bodyHeading}</h1>
       )}
-      <p>{product?.description || seo.description}</p>
+      {pathname !== "/" && <p>{product?.description || seo.description}</p>}
       {draftPolicy && (
         <section>
           <p role="note">{english.pilot.draft_notice}</p>
@@ -156,21 +136,47 @@ export function PublicPagePreview({
             {(product.price_cents / 100).toFixed(2)} {product.currency} ·
             indicative catalogue price
           </p>
-          <p>{english.pilot.readiness_pending_note}</p>
+
           <a
             href={`/shop/product/${encodeURIComponent(product.slug)}#interest`}
           >
-            Register interest — no order or payment
+            Check availability and email alert options
           </a>
         </section>
       )}
-      {selected.map(s => (
+      {pathname === "/" && sections.map(s => (
         <section key={s.href}>
           <h2>{s.title}</h2>
           <p>{s.description}</p>
-          <a href={s.href}>Explore {s.title.toLowerCase()}</a>
+          <a href={s.href}>{s.stats}</a>
         </section>
       ))}
+      {pathname === "/care" && <section>
+        <h2>{english.care.funeral}</h2>
+        <p>{english.care.providers.zb.body}</p>
+        <a href={providerPages.zb} rel="noreferrer">{english.care.providers.zb.action}</a>
+        <p>{english.care.providers.diaspora.body}</p>
+        <a href={providerPages.diaspora} rel="noreferrer">{english.care.providers.diaspora.action}</a>
+        <h2>{english.care.repatriation}</h2>
+        <p>{english.care.providers.doves.body}</p>
+        <a href={providerPages.doves} rel="noreferrer">{english.care.providers.doves.action}</a>
+        <p>{english.care.handoff}</p>
+      </section>}
+      {pathname === "/onesa" && <section>
+        <a href="/travel/planner?example=victoria-falls-3-days">Plan three days in Victoria Falls</a> ·{" "}
+        <a href="/onesa-ai-chat">Ask Onesa about a product</a>
+      </section>}
+      {guide && <section>
+        <p>{guide.summary}</p><p>{guide.start}</p><p>{guide.checks}</p>
+        <a href="/regulations#due-diligence-checklist">{english.investment.plan.cta}</a>
+      </section>}
+      {["/business-guides", "/investment"].includes(pathname) && <section>
+        <ul>{Object.entries(businessGuideTitles).map(([slug, title]) =>
+          <li key={slug}><a href={`/business-guides/${slug}`}>{title}</a></li>)}</ul>
+        <a href="/regulations#due-diligence-checklist">{english.investment.plan.cta}</a>
+        <p>Check the costs, permissions and suppliers for your first project.</p>
+        <a href="/ntir">Look up a business</a> · <a href="/investment/opportunities">Read project profiles</a>
+      </section>}
       {(pathname === "/shop" || pathname === "/shop/products") && (
         <section>
           <h2>Product catalogue</h2>

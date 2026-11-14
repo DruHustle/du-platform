@@ -144,6 +144,7 @@ try {
       };
       if (u.pathname === "/api/shop/products")
         json = {
+          source: "db",
           products,
           pricing: testPricing,
           readiness: {
@@ -436,7 +437,7 @@ try {
 
     await goto("/shop");
     await page
-      .getByRole("button", { name: "Register interest", exact: true })
+      .getByRole("button", { name: "Email me when available", exact: true })
       .first()
       .click();
     await page.getByRole("dialog").waitFor();

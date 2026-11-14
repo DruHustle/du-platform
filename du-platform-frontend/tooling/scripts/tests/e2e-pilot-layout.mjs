@@ -11,6 +11,7 @@ const engine = process.env.PILOT_BROWSER || "chromium",
   out = process.env.PILOT_LAYOUT_OUTPUT_DIR || "/tmp/du-pilot-layout-" + engine;
 await fs.mkdir(out, { recursive: true });
 const catalogue = {
+  source: "db",
   pricing: testPricing,
   readiness: readyShop(getPublicShopSeedProducts().map(p => p.id)),
   products: getPublicShopSeedProducts().map(p => ({ ...translatedFixture(p), stock_qty: 3 })),

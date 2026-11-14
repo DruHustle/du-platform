@@ -132,18 +132,16 @@ try {
         .count(),
       0
     );
-    assert.equal(
-      await homeHero.getByRole("button").count(),
-      1,
-      "Only the Explore control belongs in the Home hero"
-    );
+    for (const [label, path] of [["Search flights", "/travel/flights"], ["Find a stay", "/travel/stays"]]) {
+      assert.equal(await homeHero.getByRole("link", { name: label, exact: true }).getAttribute("href"), path);
+    }
     assert.equal(
       await homeHero.locator('img[aria-hidden="true"]').getAttribute("src"),
       "/images/pages/tourism/victoria_falls.webp"
     );
-    // A moving decorative arrow must not move the mouse/keyboard hit target.
-    const explore = homeHero.getByRole("button", {
-      name: "Explore the platform",
+    // The task section is reachable with a pointer or keyboard.
+    const explore = homeHero.getByRole("link", {
+      name: "Shop, Care and Onesa",
       exact: true,
     });
     await explore.click();
@@ -172,8 +170,8 @@ try {
 
     for (const path of [
       "/shop",
-      "/technology",
-      "/investment",
+      "/onesa",
+      "/care",
       "/travel",
       "/",
     ]) {
@@ -237,7 +235,7 @@ try {
           () => document.documentElement.scrollWidth <= innerWidth + 1
         )
       );
-      if (path !== "/") {
+      if (path !== "/" && path !== "/care") {
         const hero = page.locator(".discovery-hero-media img");
         await hero.evaluate(image => image.decode());
         assert.equal(
@@ -280,13 +278,13 @@ try {
     assert.equal(await page.locator("main").count(), 1);
     await page.screenshot({ path: `${output}/pending-${width}.png` });
     // A second click wins even while the first destination is still loading.
-    await navLink("/technology").click();
-    await activeLink("/technology").waitFor();
+    await navLink("/onesa").click();
+    await activeLink("/onesa").waitFor();
     releasePrivacy();
     holdPrivacy = null;
     await page.waitForTimeout(100);
-    assert.equal(new URL(page.url()).pathname, "/technology");
-    await activeLink("/technology").waitFor();
+    assert.equal(new URL(page.url()).pathname, "/onesa");
+    await activeLink("/onesa").waitFor();
     record({
       width,
       scenario: "slow lazy destination remains interactive; latest click wins",
@@ -300,7 +298,7 @@ try {
       .getByRole("heading", { name: "Privacy Policy", exact: true })
       .waitFor();
     await page.goBack();
-    await activeLink("/technology").waitFor();
+    await activeLink("/onesa").waitFor();
     await page.goForward();
     await page
       .getByRole("heading", { name: "Privacy Policy", exact: true })

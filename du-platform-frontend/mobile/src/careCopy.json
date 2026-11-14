@@ -1,0 +1,33 @@
+{
+  "title": "Funeral cover for family at home and abroad",
+  "intro": "Find providers that pay a cash benefit for funeral costs or arrange a return to Zimbabwe. Start with the help your family needs.",
+  "image": "A family gathering in Zimbabwe",
+  "funeral": "How can I cover funeral costs for a relative in Zimbabwe?",
+  "repatriation": "How can I arrange cover to bring a loved one home from abroad?",
+  "lookup": "Find provider information",
+  "lookup_help": "Choose your goal and both countries of residence to see relevant provider pages. Your choices stay on this device. Ask the provider to confirm eligibility, waiting periods and exclusions before applying.",
+  "goal": "What do you want to arrange?",
+  "choose_goal": "Choose a goal",
+  "applicant": "Where do you live?",
+  "covered": "Where does the person you want to cover live?",
+  "choose_country": "Choose a country",
+  "no_match": "We have no verified provider listing for this combination. Check the two countries and your goal, or ask an insurer serving the country where you live.",
+  "handoff": "This link opens the provider’s website. The provider handles advice, applications, premiums and claims. Diaspora Unlocked earns no fee for this link.",
+  "providers": {
+    "zb": {
+      "title": "ZB · Cash funeral benefit",
+      "body": "ZB describes a cash payment to meet funeral costs for eligible family members in Zimbabwe. Ask which relatives you can include and who receives the payment.",
+      "action": "Read the cash funeral plan at ZB"
+    },
+    "diaspora": {
+      "title": "Diaspora Insurance · Funeral cash plan",
+      "body": "The family can use a cash benefit to pay for a funeral or transport to Zimbabwe and choose who makes the arrangements. Ask about nationality and residence for everyone you want to cover.",
+      "action": "Check funeral cash cover at Diaspora Insurance"
+    },
+    "doves": {
+      "title": "Doves · Arranged repatriation",
+      "body": "The Global Plan describes support for returning a loved one to Zimbabwe, including documents and funeral arrangements. Ask Doves which services it arranges from the country where your loved one lives.",
+      "action": "Check the Global Plan at Doves"
+    }
+  }
+}

@@ -55,12 +55,12 @@ for (const pathname of paths) {
       ? "/images/pages/tourism/victoria_falls.webp"
       : pathname === "/shop"
         ? "/images/pages/shop/crafts_binga_baskets_01.jpg"
-        : pathname === "/technology"
+        : pathname === "/onesa"
           ? "/images/pages/technology/ai_innovation.webp"
-          : pathname === "/investment"
+          : pathname === "/business-guides"
             ? "/images/pages/investment/horticulture.jpg"
-            : products.find(p => pathname === `/shop/product/${p.slug}`)
-                ?.image_url;
+            : pathname === "/care" ? "/images/pages/care/family-gathering.webp"
+              : products.find(p => pathname === `/shop/product/${p.slug}`)?.image_url;
   const routeTemplate = template.replace(
     /<link[^>]*rel="preload"[^>]*as="image"[^>]*>/g,
     hero

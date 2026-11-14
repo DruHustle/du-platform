@@ -22,7 +22,7 @@ export default function CatalogNotice({
         {status === "ready"
           ? source === "memory"
             ? t("shop.availability.demo", { defaultValue: "Sample catalogue data for demonstration; availability is not live." })
-            : t("shop.availability.pricing_unavailable", { defaultValue: "Some price estimates are unavailable. The server will calculate your request total." })
+            : t("shop.availability.pricing_unavailable", { defaultValue: "Some catalogue prices are unavailable. Try again for updated prices." })
           : status === "loading"
           ? t("shop.availability.checking", {
               defaultValue: "Checking product availability…",

@@ -119,6 +119,7 @@ try {
               if (p === "/api/shop/products")
                 return route.fulfill({
                   json: {
+                    source: "db",
                     products,
                     pricing: testPricing,
                     readiness: state.startsWith("prelaunch")
@@ -239,7 +240,7 @@ try {
           const p = new URL(route.request().url()).pathname;
           if (p === "/api/shop/products")
             return route.fulfill({
-              json: { products: [jersey, other], readiness: prelaunch, pricing: testPricing },
+              json: { source: "db", products: [jersey, other], readiness: prelaunch, pricing: testPricing },
             });
           if (p.endsWith("/details")) {
             if (mode === "slow") {

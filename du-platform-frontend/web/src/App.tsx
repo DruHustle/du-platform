@@ -11,7 +11,6 @@ import { appRoutes } from "@/modules/routes";
 import { loadPreferredAppLanguage } from "@/i18n";
 import { Route, Switch } from "wouter";
 import { lazy, Suspense, useEffect } from "react";
-import { ThemeProvider } from "./contexts/ThemeContext";
 
 const shouldEnableVercelAnalytics =
   import.meta.env.PROD &&
@@ -77,22 +76,20 @@ function App() {
   return (
     <ErrorBoundary>
       <MotionConfig reducedMotion="user">
-        <ThemeProvider>
-          <Toaster />
-          <CookieConsent />
-          <NavigationRouter>
-            <Router />
-            <OnesaFloatingAssistant />
-          </NavigationRouter>
-          {VercelAnalytics && consent === "accepted" ? (
-            <Suspense fallback={null}>
-              <VercelAnalytics beforeSend={filterOptionalTelemetry} />
-              {VercelSpeedInsights ? (
-                <VercelSpeedInsights beforeSend={filterOptionalTelemetry} />
-              ) : null}
-            </Suspense>
-          ) : null}
-        </ThemeProvider>
+        <Toaster />
+        <CookieConsent />
+        <NavigationRouter>
+          <Router />
+          <OnesaFloatingAssistant />
+        </NavigationRouter>
+        {VercelAnalytics && consent === "accepted" ? (
+          <Suspense fallback={null}>
+            <VercelAnalytics beforeSend={filterOptionalTelemetry} />
+            {VercelSpeedInsights ? (
+              <VercelSpeedInsights beforeSend={filterOptionalTelemetry} />
+            ) : null}
+          </Suspense>
+        ) : null}
       </MotionConfig>
     </ErrorBoundary>
   );

@@ -274,11 +274,11 @@ export default function ProjectDetails() {
       <section className="document-section min-h-screen bg-slate-950">
         <div className="container mx-auto max-w-5xl space-y-8">
           <Link
-            href="/investment"
+            href="/business-guides"
             className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />{" "}
-            {tr("investment.project_details.back", "Back to Investment")}
+            {tr("investment.project_details.back", "Back to business guides")}
           </Link>
 
           {!project ? (

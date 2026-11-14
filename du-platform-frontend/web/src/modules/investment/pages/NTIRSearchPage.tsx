@@ -196,12 +196,12 @@ export default function NTIRSearchPage() {
         <div className="container mx-auto max-w-5xl space-y-8">
           <div className="text-white">
             <Link
-              href="/investment"
+              href="/business-guides"
               className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold mb-4"
             >
               <ArrowLeft className="h-3.5 w-3.5 mr-2" />
               {t("investment.ntir.back", {
-                defaultValue: "Back to Investment",
+                defaultValue: "Back to business guides",
               })}
             </Link>
             <h1 className="page-title">

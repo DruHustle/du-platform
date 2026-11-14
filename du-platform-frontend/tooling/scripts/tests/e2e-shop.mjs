@@ -94,7 +94,7 @@ const setup = async (width, options = {}) => {
         failCatalog
           ? { status: 503, json: { message: "Unavailable" } }
           : {
-              json: { products, ...(options.legacyPricing ? {} : { pricing: testPricing }), readiness: readyShop(products.map(p => p.id)) },
+              json: { source: "db", products, ...(options.legacyPricing ? {} : { pricing: testPricing }), readiness: readyShop(products.map(p => p.id)) },
             }
       );
     }
@@ -425,14 +425,14 @@ try {
       0
     );
     await card("shona-stone-sculpture")
-      .getByRole("button", { name: "Register interest", exact: true })
+      .getByRole("button", { name: "Email me when available", exact: true })
       .click();
     const dialog = page.getByRole("dialog");
     await dialog.waitFor();
     await page.keyboard.press("Escape");
     await dialog.waitFor({ state: "hidden" });
     await card("shona-stone-sculpture")
-      .getByRole("button", { name: "Register interest", exact: true })
+      .getByRole("button", { name: "Email me when available", exact: true })
       .click();
     await dialog
       .getByRole("button", {

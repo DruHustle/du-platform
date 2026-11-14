@@ -1,7 +1,6 @@
 import { customerLanguage } from "@/domain/customerLanguage";
 import ContactEnquiry from "./ContactEnquiry";
 import AppDownloads from "./AppDownloads";
-import ThemeSwitcher from "./ThemeSwitcher";
 import { Link, useLocation, useSearch } from "wouter";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -32,8 +31,7 @@ import {
   LogOut,
   House,
   ShoppingBag,
-  Landmark,
-  Compass,
+  HeartHandshake,
   Brain,
   ChevronRight,
 } from "lucide-react";
@@ -120,7 +118,7 @@ export function getDesktopUtilityIconsClass(useEdgePosition: boolean): string {
 }
 
 export default function Layout({ children }: LayoutProps) {
-  type AboutSectionId = "vision" | "mission" | "values" | "who" | "what";
+  type AboutSectionId = "who" | "what";
   const { t, i18n } = useTranslation();
   const tr = (key: string, fallback: string) =>
     t(key, { defaultValue: fallback });
@@ -227,42 +225,13 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const navigation = [
-    { name: tr("nav.home", "Home"), href: "/", icon: House },
-    { name: tr("nav.shop", "Shop"), href: "/shop", icon: ShoppingBag },
-    {
-      name: tr("nav.technology", "Technology"),
-      href: "/technology",
-      icon: Brain,
-    },
-    {
-      name: tr("nav.investment", "Investment"),
-      href: "/investment",
-      matchPaths: ["/investment", "/ntir"],
-      icon: Landmark,
-    },
-    { name: tr("nav.tourism", "Travel"), href: "/travel", icon: MapPin },
+    { name: t("nav.home"), href: "/", icon: House },
+    { name: t("nav.tourism"), href: "/travel", icon: MapPin },
+    { name: t("nav.shop"), href: "/shop", icon: ShoppingBag },
+    { name: t("nav.care"), href: "/care", icon: HeartHandshake },
+    { name: t("nav.technology"), href: "/onesa", icon: Brain },
   ];
-  const mobileTopNavigation = [
-    { name: tr("nav.home", "Home"), href: "/", icon: House },
-    { name: tr("nav.shop", "Shop"), href: "/shop", icon: ShoppingBag },
-    {
-      name: tr("nav.technology", "Technology"),
-      href: "/technology",
-      icon: Brain,
-    },
-    {
-      name: tr("nav.tourism", "Travel"),
-      href: "/travel",
-      matchPaths: ["/travel"],
-      icon: Compass,
-    },
-    {
-      name: tr("nav.investment", "Invest"),
-      href: "/investment",
-      matchPaths: ["/investment", "/ntir"],
-      icon: Landmark,
-    },
-  ];
+  const mobileTopNavigation = navigation;
   const languages = [
     { name: "English", flag: "🇬🇧", code: "en" },
     { name: "chiShona", flag: "🇿🇼", code: "sn" },
@@ -290,10 +259,10 @@ export default function Layout({ children }: LayoutProps) {
     isCompactNavViewport && isHomePage && !mobileMenuOpen && !scrolled;
   const hasHeroSection =
     isHomePage ||
-    location === "/investment" ||
+    location === "/business-guides" ||
     location.startsWith("/travel") ||
     location === "/shop" ||
-    location === "/technology";
+    location === "/onesa";
   const useDesktopTransparentNav =
     !isCompactNavViewport && hasHeroSection && !scrolled;
   const mainTopPaddingClass = isCompactNavViewport
@@ -335,7 +304,7 @@ export default function Layout({ children }: LayoutProps) {
         message: data?.deliveryPending
           ? tr(
               "footer.newsletter.delivery_pending",
-              "Subscription request saved. Email delivery is temporarily unavailable. If no confirmation arrives, try subscribing again later."
+              "Email delivery is delayed. Try subscribing again later if your confirmation link does not arrive."
             )
           : tr(
               "footer.newsletter.confirmation_sent",
@@ -479,30 +448,6 @@ export default function Layout({ children }: LayoutProps) {
     content: string;
   }> = [
     {
-      id: "vision",
-      label: t("footer.about.vision_label", { defaultValue: "Our Vision" }),
-      content: t("footer.about.vision_content", {
-        defaultValue:
-          "Make it easier for Zimbabweans and the wider Southern African diaspora to stay connected to home, wherever they live.",
-      }),
-    },
-    {
-      id: "mission",
-      label: t("footer.about.mission_label", { defaultValue: "Our Mission" }),
-      content: t("footer.about.mission_content", {
-        defaultValue:
-          "Bring Zimbabwean products, regional travel research and practical business and AI guidance into one place for the Southern African diaspora.",
-      }),
-    },
-    {
-      id: "values",
-      label: t("footer.about.values_label", { defaultValue: "Our Values" }),
-      content: t("footer.about.values_content", {
-        defaultValue:
-          "Clear information, useful guidance and honest explanations of what is available.",
-      }),
-    },
-    {
       id: "who",
       label: t("footer.about.who_label", { defaultValue: "Who we are" }),
       content: t("footer.about.who_content", {
@@ -515,7 +460,7 @@ export default function Layout({ children }: LayoutProps) {
       label: t("footer.about.what_label", { defaultValue: "What we do" }),
       content: t("footer.about.what_content", {
         defaultValue:
-          "Build a basket and request an order, research a business idea, draft a trip plan or ask Onesa a question. Explore the sections to choose your next step.",
+          "Search for flights and stays, browse Zimbabwean products, find a cover provider or draft an itinerary with Onesa.",
       }),
     },
   ];
@@ -535,7 +480,7 @@ export default function Layout({ children }: LayoutProps) {
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:rounded-full focus:bg-zim-gold focus:px-5 focus:py-2.5 focus:text-[11px] focus:font-black focus:uppercase focus:tracking-widest focus:text-zim-black focus:shadow-xl"
       >
-        Skip to main content
+        {t("nav.skip_to_content")}
       </a>
 
       {/* --- INTEGRATED GLASS CEILING --- */}
@@ -785,7 +730,7 @@ export default function Layout({ children }: LayoutProps) {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-yellow-400 outline-none transition-all"
-              aria-label="Search"
+              aria-label={t("search.submit")}
               autoFocus
             />
             <Button type="submit" className="mt-3 bg-zim-gold text-zim-black">
@@ -1092,6 +1037,7 @@ export default function Layout({ children }: LayoutProps) {
               </h3>
               <ul className="space-y-2 text-xs">
                 {navigation
+                  .concat({ name: t("nav.business_guides"), href: "/business-guides", icon: Brain })
                   .filter(link => link.href !== "/")
                   .map(link => (
                     <li key={link.href} className="leading-tight">
@@ -1258,9 +1204,6 @@ export default function Layout({ children }: LayoutProps) {
             </Link>
             <Link href="/cookie-settings">{t("cookies.consent.settings")}</Link>
           </nav>
-          <div className="mb-6">
-            <ThemeSwitcher />
-          </div>
           {/* Bottom Bar: Maintain horizontal flex on desktop, vertical on mobile */}
           <div className="border-t border-white/10 pt-8 flex flex-col flex-wrap md:flex-row justify-between items-center gap-6 text-[10px]">
             <p className="text-slate-400 text-xs font-medium">

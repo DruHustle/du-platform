@@ -9,6 +9,9 @@
   "framework": null,
   "cleanUrls": false,
   "redirects": [
+    { "source": "/technology", "destination": "/onesa", "permanent": true },
+    { "source": "/technology/", "destination": "/onesa", "permanent": true },
+    { "source": "/technology.html", "destination": "/onesa", "permanent": true },
     {
       "source": "/coming-soon",
       "destination": "/onesa-ai-chat",

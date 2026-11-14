@@ -1,4 +1,5 @@
 import { createTripPlanPdf } from "../lib/tripPlanPdf";
+import { useSearch } from "wouter";
 import TravelNav from "../../travel/TravelNav";
 import "../../travel/travel.css";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
@@ -48,6 +49,8 @@ function formatDateForInput(date: Date): string {
 
 export default function BookTripPage() {
   const { t, i18n } = useTranslation();
+  const example = new URLSearchParams(useSearch()).get("example");
+  const defaultDays = example === "victoria-falls-3-days" ? 3 : 8;
   const departureOptions: DepartureOption[] = [
     {
       value: "berlin",
@@ -251,16 +254,16 @@ export default function BookTripPage() {
     formatDateForInput(new Date())
   );
   const [endDate, setEndDate] = useState(() => {
-    const nextWeek = new Date();
-    nextWeek.setDate(nextWeek.getDate() + 7);
-    return formatDateForInput(nextWeek);
+    const lastDay = new Date();
+    lastDay.setDate(lastDay.getDate() + defaultDays - 1);
+    return formatDateForInput(lastDay);
   });
   const [multiCityInput, setMultiCityInput] = useState(
     "Victoria Falls, Hwange"
   );
   const [budget, setBudget] = useState("medium");
   const [comfort, setComfort] = useState("standard");
-  const [days] = useState(7);
+  const days = example === "victoria-falls-3-days" ? 3 : 7;
   const [adultPassengers, setAdultPassengers] = useState("1");
   const [infantPassengers, setInfantPassengers] = useState("");
   const [interests, setInterests] = useState<Interest[]>([

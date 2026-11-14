@@ -38,6 +38,11 @@
               "scheme": "https",
               "host": "www.diasporaunlocked.com",
               "pathPrefix": "/shop"
+            },
+            {
+              "scheme": "https",
+              "host": "www.diasporaunlocked.com",
+              "path": "/care"
             }
           ],
           "category": [

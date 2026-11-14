@@ -57,7 +57,7 @@ export function deliveryCoverage(catalog: Catalog): string | undefined {
   const codes = commercialReady && mode === "pilot" && enforcement === "enforced" && Array.isArray(destinationCountries)
     ? destinationCountries.filter(code => /^[A-Z]{2}$/.test(code))
     : [];
-  if (!codes.length) return "Delivery is currently unavailable to all destinations.";
+  if (!codes.length) return "Delivery is planned from Germany to EU countries. No delivery destinations are open yet.";
   const names = typeof Intl.DisplayNames === "function" ? new Intl.DisplayNames("en", { type: "region" }) : undefined;
   return `Approved delivery destinations: ${codes.map(code => names?.of(code) || code).join(", ")}.`;
 }
