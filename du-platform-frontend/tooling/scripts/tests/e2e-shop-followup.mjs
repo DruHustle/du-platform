@@ -205,6 +205,11 @@ try {
                 ),
                 saved.filter(i => i.productId !== jersey.id)
               );
+              if (state === "prelaunch-zero") {
+                await cart.waitFor({ state: "detached" });
+                await page.locator("[data-shop-product-card]").first().waitFor();
+                assert.equal(await page.locator("[data-mobile-basket-summary]").count(), 0);
+              }
             }
             assert(
               await page.evaluate(
@@ -213,7 +218,7 @@ try {
             );
             assert(
               !/shop\.products\.|product_interest\./.test(
-                await cart.innerText()
+                await page.locator("main").innerText()
               )
             );
             assert.deepEqual(errors, []);

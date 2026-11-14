@@ -119,6 +119,9 @@ jobs:
       - name: Frontend tests
         run: pnpm --dir du-platform-frontend/tooling test:frontend
 
+      - name: Native visitor journeys and message recovery
+        run: npm --prefix du-platform-frontend/mobile test
+
       - name: Onesa provider HTTP regression tests
         run: pnpm --dir du-platform-frontend/tooling test:e2e:onesa:runtime
 
@@ -228,6 +231,7 @@ jobs:
         run: pnpm --dir du-platform-frontend/tooling test:e2e:shop:integrated
         env:
           SHOP_BROWSER_CHANNEL: chromium
+          SHOP_TEST_DATABASE_URL: mysql://root:newsletter-ci-test-only@127.0.0.1:3306/du_newsletter_test
 
       - name: Shop MySQL transaction regressions
         run: node --import ./du-platform-frontend/tooling/node_modules/tsx/dist/loader.mjs du-platform-frontend/tooling/scripts/tests/shop-database.mjs

@@ -44,7 +44,7 @@ try {
         body: "<h1>Public search resource fixture</h1>",
       })
     );
-    await context.route("https://kiwi.com/**", r =>
+    await context.route(/^https:\/\/(kiwi\.com|pilotplans\.com)\//, r =>
       r.fulfill({
         contentType: "text/html",
         body: "<h1>Synthetic supplier handoff</h1>",
@@ -173,7 +173,7 @@ try {
                 reviewAfter: new Date(Date.now() + 300000).toISOString(),
               },
               changed: true,
-              referralAvailable: approvedPlacement,
+              referralAvailable: approvedPlacement && quote.provider === "Kiwi.com",
             },
           },
         });
@@ -577,11 +577,22 @@ try {
         await page
           .getByRole("heading", { name: "Synthetic stay option", exact: true })
           .waitFor();
-        await page
-          .getByText("Supplier-reported amount. Whether this is per night", {
-            exact: false,
-          })
-          .waitFor();
+        const stayCard = page.locator(".travel-supplier-card").filter({ hasText: "Synthetic stay option" });
+        const priceBasis = stayCard.getByText("Supplier-reported amount. Whether this is per night, per room or the complete stay is not confirmed. It is excluded from trip totals.", { exact: true });
+        await priceBasis.waitFor();
+        const pilot = stayCard.getByRole("link", { name: "Continue to Pilot ↗", exact: true });
+        assert.equal(await pilot.count(), 0, "Revalidate the stay before offering a provider handoff");
+        await stayCard.getByRole("button", { name: "Check current price", exact: true }).click();
+        await stayCard.getByText("The supplier amount has changed.", { exact: false }).waitFor();
+        await priceBasis.waitFor();
+        await stayCard.getByText("Pilot handles checkout, payment and booking support.", { exact: false }).waitFor();
+        const referralsBeforePilot = referralRequests;
+        const [pilotPage] = await Promise.all([context.waitForEvent("page"), pilot.click()]);
+        await pilotPage.waitForLoadState();
+        assert.equal(pilotPage.url(), "https://pilotplans.com/stays/synthetic");
+        await pilotPage.close();
+        assert.equal(referralRequests, referralsBeforePilot);
+        checks.push(`${width}: family stay revalidates with an unknown full-stay price and opens the named Pilot offer directly`);
         await page
           .getByRole("button", { name: "Add option to trip", exact: true })
           .click();

@@ -1,73 +1,71 @@
 import { createShopApprovalFixture } from "./shop-readiness-fixture.mjs";
 import assert from "node:assert/strict";
+import { randomBytes } from "node:crypto";
 import express from "express";
+import mysql from "mysql2/promise";
 import { chromium } from "playwright";
 import { resolve } from "node:path";
 import { mkdir } from "node:fs/promises";
 
-// Isolated process: no .env, database, email credentials or production writes.
-// Exercise the real HTTP router, validators, service, repository and email path.
-for (const key of Object.keys(process.env)) {
-  if (
-    /^(DATABASE_URL|MYSQL_|AIVEN_|RESEND_API_KEY|ADMIN_EMAILS|FROM_EMAIL)/.test(
-      key
-    )
-  )
-    delete process.env[key];
-}
-process.env.NODE_ENV = "test";
-process.env.ALLOW_MEMORY_FALLBACK = "true";
-process.env.RESET_EMAIL_PROVIDER = "resend";
-process.env.ADMIN_EMAILS = "merchant@example.test";
-process.env.FROM_EMAIL = "shop@example.test";
-const { db } = await import(
-  "../../../../du-platform-backend/shared/databaseRuntime.ts"
+// Checkout requires a database-backed catalogue. Isolate its orders from the
+// other CI suites and leave the email worker stopped for this browser test.
+const input = process.env.SHOP_TEST_DATABASE_URL;
+assert(
+  input && ["localhost", "127.0.0.1"].includes(new URL(input).hostname) &&
+    new URL(input).pathname.endsWith("_test"),
+  "Disposable localhost *_test database required"
 );
-assert.equal(
-  db,
-  null,
-  "Integrated browser tests must never connect to a database"
-);
-const { createShopModuleRouter } = await import(
-  "../../../../du-platform-backend/modules/shop/routes/index.ts"
-);
-const { shopSeedProducts } = await import(
-  "../../../../du-platform-backend/shared/persistence/shopStore.ts"
-);
-const product = shopSeedProducts.find(
-  item => item.slug === "sables-rugby-home-kit"
-);
-assert(product);
-product.stock_qty = 3;
-const approval = await createShopApprovalFixture([product.id]);
-Object.assign(process.env, approval.env);
-const app = express();
-app.use(express.json());
-app.use("/api/shop", createShopModuleRouter());
-app.use(express.static(resolve("du-platform-frontend/web/dist")));
-app.get("*", (_req, res) => res.sendFile(resolve("du-platform-frontend/web/dist/index.html")));
-const server = await new Promise(done => {
-  const listening = app.listen(0, "127.0.0.1", () => done(listening));
-});
-const base = "http://127.0.0.1:" + server.address().port;
-const output =
-  process.env.SHOP_INTEGRATED_OUTPUT_DIR || "/tmp/du-shop-integrated";
-await mkdir(output, { recursive: true });
-const browser = await chromium.launch({
-  channel:
-    process.env.SHOP_BROWSER_CHANNEL === "chromium"
-      ? undefined
-      : process.env.SHOP_BROWSER_CHANNEL || "chrome",
-  headless: true,
-});
-const emailLogs = [];
-const originalLog = console.log;
-console.log = (...args) => {
-  if (String(args[0]).startsWith("[email:dry-run]"))
-    emailLogs.push(String(args[0]));
-  else originalLog(...args);
-};
+const databaseUrl = new URL(input);
+const database = `du_integrated_shop_${randomBytes(8).toString("hex")}_test`;
+const bootstrap = mysql.createPool(input);
+await bootstrap.query(`CREATE DATABASE ${database}`);
+databaseUrl.pathname = "/" + database;
+let db, browser, approval, server;
 try {
+  for (const key of Object.keys(process.env)) {
+    if (
+      /^(DATABASE_URL|MYSQL_|AIVEN_|RESEND_API_KEY|ADMIN_EMAILS|FROM_EMAIL)/.test(
+        key
+      )
+    )
+      delete process.env[key];
+  }
+  process.env.NODE_ENV = "test";
+  process.env.DATABASE_URL = databaseUrl.href;
+  process.env.ALLOW_MEMORY_FALLBACK = "false";
+  process.env.JWT_SECRET = "synthetic-shop-integration-fixture-only";
+  process.env.ADMIN_EMAILS = "merchant@example.test";
+  process.env.FROM_EMAIL = "shop@example.test";
+  ({ db } = await import("../../../../du-platform-backend/shared/databaseRuntime.ts"));
+  const { initializeDatabase } = await import("../../../../du-platform-backend/db.ts");
+  await initializeDatabase();
+  const { createShopModuleRouter } = await import(
+    "../../../../du-platform-backend/modules/shop/routes/index.ts"
+  );
+  const [[product]] = await db.query("SELECT id, price_cents FROM shop_products WHERE slug='sables-rugby-home-kit'");
+  assert(product);
+  await db.execute("UPDATE shop_products SET stock_qty=3, is_active=1 WHERE id=?", [product.id]);
+  approval = await createShopApprovalFixture([product.id]);
+  Object.assign(process.env, approval.env);
+  const app = express();
+  app.use(express.json());
+  app.use("/api/shop", createShopModuleRouter());
+  app.use(express.static(resolve("du-platform-frontend/web/dist")));
+  app.get("*", (_req, res) => res.sendFile(resolve("du-platform-frontend/web/dist/index.html")));
+  server = await new Promise(done => {
+    const listening = app.listen(0, "127.0.0.1", () => done(listening));
+  });
+  const base = "http://127.0.0.1:" + server.address().port;
+  const output =
+    process.env.SHOP_INTEGRATED_OUTPUT_DIR || "/tmp/du-shop-integrated";
+  await mkdir(output, { recursive: true });
+  browser = await chromium.launch({
+    channel:
+      process.env.SHOP_BROWSER_CHANNEL === "chromium"
+        ? undefined
+        : process.env.SHOP_BROWSER_CHANNEL || "chrome",
+    headless: true,
+  });
   const context = await browser.newContext({
     viewport: { width: 1440, height: 900 },
     reducedMotion: "reduce",
@@ -112,8 +110,8 @@ try {
   await page
     .getByLabel("Email Address", { exact: true })
     .fill("customer@example.test");
-  await page.getByLabel("Country", { exact: true }).fill("Zimbabwe");
-  await page.getByLabel("City", { exact: true }).fill("Harare");
+  await page.getByLabel("Country", { exact: true }).fill("Germany");
+  await page.getByLabel("City", { exact: true }).fill("Berlin");
   await page
     .getByLabel("Shipping Address", { exact: true })
     .fill("Local test address");
@@ -138,7 +136,7 @@ try {
   assert.equal(order.items[0].quantity, 1);
   assert.equal(order.items[0].productId, product.id);
   assert.equal(
-    product.stock_qty,
+    (await db.query("SELECT stock_qty FROM shop_products WHERE id=?", [product.id]))[0][0].stock_qty,
     3,
     "An unpaid request must not consume stock"
   );
@@ -148,22 +146,20 @@ try {
     ),
     []
   );
-  assert.equal(
-    emailLogs.length,
-    0,
-    "The memory fixture must not bypass the durable database outbox"
-  );
 
   const replay = await context.request.post(base + "/api/shop/orders", {
     data: submitted,
   });
   assert.equal(replay.status(), 201);
   assert.equal((await replay.json()).data.order.orderRef, order.orderRef);
-  assert.equal(
-    emailLogs.length,
-    0,
-    "Retrying must not send synchronous receipt emails"
+  const [notifications] = await db.query(
+    "SELECT n.event_key, n.status FROM shop_order_notifications n JOIN shop_orders o ON n.order_id=o.id WHERE o.order_ref=? ORDER BY n.event_key",
+    [order.orderRef]
   );
+  assert.deepEqual(notifications.map(row => [row.event_key, row.status]), [
+    ["request_received", "pending"],
+    ["request_received:operator", "pending"],
+  ], "A browser retry must leave exactly one queued notification for each recipient");
   const unauthorised = await context.request.get(
     base + "/api/shop/orders/" + order.orderRef
   );
@@ -185,12 +181,20 @@ try {
   );
   await page.screenshot({ path: output + "/receipt.png" });
   assert.deepEqual(errors, []);
-  originalLog(
-    "PASS real shop HTTP workflow: catalogue, shared cart, request validation, server pricing, saved receipt, deferred notifications (durable worker covered by disposable MySQL tests), idempotent retry and protected order retrieval"
+  console.log(
+    "PASS real shop HTTP workflow: database catalogue, shared cart, request validation, server pricing, saved receipt, deferred notifications, idempotent retry and protected order retrieval"
   );
 } finally {
-  console.log = originalLog;
-  await browser.close();
-  await approval.close();
-  await new Promise(done => server.close(done));
+  try {
+    await browser?.close();
+    if (server) await new Promise(done => server.close(done));
+    await approval?.close();
+    await db?.end();
+  } finally {
+    try {
+      await bootstrap.query(`DROP DATABASE ${database}`);
+    } finally {
+      await bootstrap.end();
+    }
+  }
 }
