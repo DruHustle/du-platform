@@ -66,15 +66,15 @@ def main():
     adb('shell', 'input', 'keyevent', 'KEYCODE_WAKEUP')
     adb('shell', 'wm', 'dismiss-keyguard')
     adb('install', '-r', sys.argv[2]); adb('shell', 'am', 'start', '-W', '-n', PACKAGE + '/.MainActivity')
-    wait_for_label('Explore what connects us')
+    wait_for_label('Plan your next trip home')
     capture(output / 'Home.png')
     for attempt in range(4):
         current = tree()
-        flights = node_for(current, 'Find flights')
+        flights = node_for(current, 'Search flights')
         if flights is not None:
             break
         if attempt == 3:
-            raise RuntimeError('Find flights was unreachable after scrolling the Home screen.')
+            raise RuntimeError('Search flights was unreachable after scrolling the Home screen.')
         # Use the current display bounds; tablet profiles may start in landscape.
         display = max((n for n in current.iter('node') if n.get('package') == PACKAGE),
                       key=lambda n: area(n.attrib['bounds']))
@@ -82,7 +82,7 @@ def main():
         adb('shell', 'input', 'swipe', str((x1+x2)//2), str(y1+3*(y2-y1)//4), str((x1+x2)//2), str(y1+(y2-y1)//3), '450')
     x1, y1, x2, y2 = rect(flights.attrib['bounds'])
     adb('shell', 'input', 'tap', str((x1 + x2) // 2), str((y1 + y2) // 2))
-    wait_for_label('Stays'); wait_for_label('Enter a city name or a three-letter airport code.')
+    wait_for_label('Stays'); wait_for_label('Choose your departure and destination airports.')
     capture(output / 'Travel.png')
 
 

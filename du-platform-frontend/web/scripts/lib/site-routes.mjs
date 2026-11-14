@@ -38,6 +38,9 @@ export function readSiteRoutes(root = webRoot) {
         );
         for (const id of Object.keys(projects))
           paths.add(`/investment/projects/${id}`);
+      } else if (route === "/business-guides/:guide") {
+        const guides = JSON.parse(fs.readFileSync(path.join(root, "src/domain/businessGuideTitles.json"), "utf8"));
+        for (const slug of Object.keys(guides)) paths.add(`/business-guides/${slug}`);
       } else if (route === "/shop/product/:slug") {
         const index = path.join(root, "dist/catalogue-index.json");
         if (fs.existsSync(index))
@@ -63,7 +66,10 @@ export function readSiteRoutes(root = webRoot) {
 export function createSitemap(siteUrl, root = webRoot) {
   const routes = readSiteRoutes(root)
     .paths.filter(
-      route => resolveRouteSeo({ pathname: route }).robots === "index,follow"
+      route => {
+        const seo = resolveRouteSeo({ pathname: route });
+        return seo.robots === "index,follow" && seo.canonicalPath === route;
+      }
     )
     .sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
   const urls = routes.map(route =>

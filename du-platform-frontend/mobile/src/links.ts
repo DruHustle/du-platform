@@ -16,3 +16,11 @@ export function travelLink(section?: string): { category?: "flights" | "stays"; 
   const webSections = ["car-hire", "explore", "my-trips", "planner", "virtual-experience", "augmented-experience", "weather"];
   return { website: webSections.includes(section) ? `/travel/${section}` : "/travel" };
 }
+
+
+// The business directory, individual guides, and project profiles are web journeys.
+// Retain the query and fragment so an old bookmark still opens the selected record.
+export function businessGuideLink(path: string) {
+  if (!/^\/(?:business-guides|investment|ntir|regulations)(?:[/?#]|$)/.test(path)) return;
+  return { path, title: "Business guides" };
+}

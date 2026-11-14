@@ -99,6 +99,8 @@ describe.each(["ios", "android"])("Onesa on %s", platform => {
 
   it("requires explicit permission, preserves drafts and can report only the selected reply", async () => {
     await render(<AssistantScreen />);
+    await press("Plan three days in Victoria Falls");
+    expect(fakes.navigate).toHaveBeenCalledWith("External", {path: "/travel/planner?example=victoria-falls-3-days", title: "Three days in Victoria Falls"});
     const copy = screen.root.findAllByType("Text").map(t => t.props.children).filter(t => typeof t === "string").join(" ");
     for (const provider of ["Google Gemini", "Groq", "Anthropic", "Cerebras"]) expect(copy).toContain(provider);
     await enter("Your message", "private draft");

@@ -31,6 +31,7 @@
       <intent-filter android:autoVerify="true" data-generated="true">
         <action android:name="android.intent.action.VIEW"/>
         <data android:scheme="https" android:host="www.diasporaunlocked.com" android:pathPrefix="/reset-password"/>
+        <data android:scheme="https" android:host="www.diasporaunlocked.com" android:path="/care"/>
         <data android:scheme="https" android:host="www.diasporaunlocked.com" android:pathPrefix="/travel"/>
         <data android:scheme="https" android:host="www.diasporaunlocked.com" android:pathPrefix="/shop"/>
         <category android:name="android.intent.category.BROWSABLE"/>

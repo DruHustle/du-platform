@@ -11,12 +11,6 @@
     "again": "Erneut versuchen",
     "loading": "Konto wird geprüft…"
   },
-  "appearance": {
-    "label": "Darstellung",
-    "system": "System (automatisch)",
-    "light": "Hell",
-    "dark": "Dunkel"
-  },
   "brand": "Diaspora Unlocked",
   "tagline": "In Simbabwe verwurzelt. Im südlichen Afrika verbunden.",
   "about": "Über uns",
@@ -47,7 +41,9 @@
       "play": "Bei Google Play herunterladen",
       "title": "Mobile Apps",
       "available": "Downloadseite öffnen",
-      "unavailable": "Noch nicht verfügbar"
+      "unavailable": "Noch nicht verfügbar",
+      "apple": "Im App Store ansehen",
+      "testflight": "Testversion über TestFlight öffnen"
     },
     "about": {
       "title": "Über uns",
@@ -58,14 +54,14 @@
       "values_label": "Unsere Werte",
       "values_content": "Klare Informationen, nützliche Orientierung und ehrliche Angaben zum aktuellen Angebot.",
       "who_label": "Wer wir sind",
-      "who_content": "Mit Wurzeln in Simbabwe heißt Diaspora Unlocked Menschen aus der gesamten Diaspora des südlichen Afrikas und alle mit Interesse an der Region willkommen.",
+      "who_content": "Diaspora Unlocked hilft Menschen im Ausland, Besuche und Unterstützung für Angehörige in Simbabwe zu planen. Die Reisewerkzeuge decken auch ausgewählte Ziele im südlichen Afrika ab.",
       "what_label": "Was wir tun",
-      "what_content": "Produkte entdecken und Interesse anmelden, eine Geschäftsidee recherchieren, eine Reise planen oder Onesa fragen. Produktinteresse ist keine Bestellung oder Zahlung."
+      "what_content": "Suchen Sie Flüge und Unterkünfte, stöbern Sie in Produkten aus Simbabwe, finden Sie Anbieter für Bestattungsvorsorge oder planen Sie eine Reise mit Onesa. Buchung und Versicherungsberatung übernimmt der gewählte Anbieter."
     },
     "newsletter": {
       "confirmation_sent": "Prüfe deine E-Mails auf einen Bestätigungslink. Hast du bereits bestätigt, stehst du auf der Liste.",
       "delivery_pending": "Anmeldung gespeichert. Der E-Mail-Versand ist vorübergehend nicht verfügbar. Ihre Bestätigung wird gesendet, sobald er wieder funktioniert.",
-      "consent": "Bestätige deine E-Mail-Adresse für Neuigkeiten und Möglichkeiten von Diaspora Unlocked. Du kannst dich jederzeit abmelden. Dadurch wird kein Plattformkonto angelegt.",
+      "consent": "Bestätigen Sie Ihre Anmeldung über den Link in der E-Mail. Jeder Newsletter enthält einen Abmeldelink. Benachrichtigungen zur Verfügbarkeit bestellen Sie separat auf der Produktseite.",
       "privacy": "Datenschutzerklärung",
       "title": "Newsletter",
       "description": "Simbabwische Produkte, Reiseideen für das südliche Afrika und Neuigkeiten für die Diaspora per E-Mail.",
@@ -73,7 +69,7 @@
       "subscribe_aria": "Newsletter abonnieren",
       "already_subscribed": "Diese E-Mail ist bereits für den Newsletter abonniert.",
       "subscribed": "Prüfen Sie Ihre E-Mails auf den Bestätigungslink.",
-      "error": "Das Abonnieren ist derzeit nicht möglich."
+      "error": "Die Anmeldung ist fehlgeschlagen. Prüfen Sie die E-Mail-Adresse und versuchen Sie es erneut."
     },
     "contact": {
       "options_title": "Kontaktoptionen",
@@ -98,7 +94,7 @@
     "have_account": "Haben Sie bereits ein Konto?",
     "login_here": "Hier anmelden",
     "welcome_back": "Willkommen zurück",
-    "login_subtitle": "Melden Sie sich bei Ihrem Plattformkonto an. Stöbern und Newsletter-Abonnement sind ohne Anmeldung möglich.",
+    "login_subtitle": "Melden Sie sich an, um gespeicherte Reisen zu öffnen. Flüge, Produkte und Versicherungsanbieter können Sie als Gast suchen.",
     "forgot_password": "Passwort vergessen?",
     "login": "Anmelden",
     "no_account": "Haben Sie noch kein Konto?",
@@ -138,7 +134,12 @@
       "number": "Das Passwort muss mindestens eine Zahl enthalten.",
       "special": "Das Passwort muss mindestens ein Sonderzeichen enthalten.",
       "meets": "Erfüllt die Passwortanforderungen"
-    }
+    },
+    "signing_in": "Anmeldung läuft …",
+    "email_required": "Geben Sie Ihre E-Mail-Adresse ein.",
+    "email_invalid": "Prüfen Sie, ob Ihre E-Mail-Adresse vollständig ist.",
+    "password_required": "Geben Sie Ihr Passwort ein.",
+    "login_failed": "Prüfen Sie E-Mail-Adresse und Passwort. Haben Sie Ihr Passwort vergessen, nutzen Sie den Link zum Zurücksetzen."
   },
   "nav": {
     "home": "Startseite",
@@ -167,10 +168,10 @@
     "export_sectors_desc": "Schlüsselindustrien und Chancen",
     "export_roadmap": "Export-Roadmap",
     "export_roadmap_desc": "Schritt-für-Schritt-Exportprozess",
-    "technology": "Technologie",
-    "technology_capabilities": "Technologische Kapazitäten",
+    "technology": "Onesa",
+    "technology_capabilities": "Onesa-Werkzeuge",
     "technology_capabilities_desc": "Wie Onesa Diaspora Unlocked unterstützt",
-    "technology_industries": "Technologiebranchen",
+    "technology_industries": "Fragen an Onesa",
     "technology_industries_desc": "Technologieideen und Fragen nach Branche",
     "payments": "Zahlungen",
     "discover": "Entdecken",
@@ -178,15 +179,18 @@
     "close_menu": "Menü schließen",
     "language_hint": "Verwenden Sie das Globussymbol, um die Sprache zu ändern.",
     "open_menu": "Menü öffnen",
-    "menu": "Navigationsmenü"
+    "menu": "Navigationsmenü",
+    "care": "Vorsorge",
+    "business_guides": "Geschäftsleitfäden",
+    "skip_to_content": "Zum Hauptinhalt"
   },
   "home": {
-    "hero_title": "Diaspora Unlocked — Simbabwe und die Diaspora des südlichen Afrikas",
-    "hero_subtitle": "In Simbabwe verwurzelt. Im südlichen Afrika verbunden.",
+    "hero_title": "Plane deine nächste Reise nach Hause",
+    "hero_subtitle": "Suche Flüge nach Simbabwe und ins südliche Afrika oder finde eine Unterkunft in der Nähe deiner Familie.",
     "tourism": "Reisen",
-    "technology": "Technologie",
+    "technology": "Onesa",
     "investments": "Investitionen",
-    "explore_now": "Plattform entdecken",
+    "explore_now": "Shop, Vorsorge und Onesa",
     "inquiry_btn": "Kontaktieren Sie uns",
     "inquiry_title": "Allgemeine Anfrage",
     "ready_to_connect_title": "Bereit zur Vernetzung?",
@@ -206,55 +210,48 @@
     },
     "tiles": {
       "shop": {
-        "title": "Geschäft",
-        "description": "Finden Sie Lebensmittel, Kunsthandwerk und Fanbekleidung aus Simbabwe für zu Hause oder als Geschenk.",
-        "detail": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet.",
-        "stats": "Produkte ansehen",
-        "image_alt": "Giraffen und Akazien als Silhouetten im Sonnenuntergang"
+        "title": "Shop",
+        "description": "Entdecke Lebensmittel und Kunsthandwerk aus Simbabwe. Auf der Produktseite findest du Angaben zur Verfügbarkeit und zur E-Mail-Benachrichtigung.",
+        "stats": "Produkte aus Simbabwe ansehen"
       },
-      "technology": {
-        "title": "Technologie",
-        "description": "Frage Onesa nach simbabwischen Produkten, regionalen Reisen und praktischen Geschäftsideen.",
-        "detail": "Vergleiche Möglichkeiten, erstelle eine Checkliste oder entwirf einen Reiseplan. Wichtige Details bestätigst du bei den Anbietern.",
-        "stats": "KI-Werkzeuge entdecken",
-        "image_alt": "Illustration einer Frau mit Elefanten in einer Savannenlandschaft"
+      "care": {
+        "title": "Vorsorge",
+        "description": "Finde Anbieter für Bestattungskosten in Simbabwe oder eine Überführung aus dem Ausland.",
+        "stats": "Anbieter für Bestattungsvorsorge finden"
       },
-      "investment": {
-        "title": "Investition",
-        "description": "Recherchiere Geschäftsideen in Simbabwe, von Landwirtschaft und Bau bis zu Bergbaudienstleistungen und Handel.",
-        "detail": "Beginne mit einer überschaubaren Idee, verstehe Kosten und Risiken und prüfe die Details, bevor du Geld investierst.",
-        "stats": "Geschäftsideen entdecken",
-        "image_alt": "Frisches Gemüse in Körben"
+      "onesa": {
+        "title": "Onesa",
+        "description": "Erstelle einen Reiseplan für Simbabwe oder stelle eine Frage zu einem Produkt im Katalog.",
+        "stats": "Onesa öffnen"
       },
-      "tourism": {
-        "title": "Reisen",
-        "description": "Plane Reisen in die Heimat und entdecke Ziele in Simbabwe und im südlichen Afrika.",
-        "detail": "Suche Flüge und Unterkünfte, lies regionale Reiseführer oder entwirf mit Onesa eine Reiseroute für Simbabwe.",
-        "stats": "Reiseziel finden",
-        "image_alt": "Die Victoriafälle und die umliegende grüne Landschaft in Simbabwe"
+      "business": {
+        "title": "Unternehmensratgeber",
+        "description": "Informiere dich über Projekte in Simbabwe, prüfe Kosten und suche Unternehmen.",
+        "stats": "Unternehmensratgeber lesen"
       }
     },
     "discovery": {
-      "title": "Mit der Heimat verbunden, über Grenzen hinweg.",
-      "description": "Simbabwe ist unser Ausgangspunkt. Ob deine Wurzeln in Simbabwe oder anderswo im südlichen Afrika liegen: Hier bist du willkommen. Entdecke Produkte aus der Heimat, regionale Reisen und praktische Geschäftsideen."
-    }
+      "title": "Was möchtest du außerdem tun?"
+    },
+    "flights_action": "Flüge suchen",
+    "stays_action": "Unterkunft finden"
   },
   "tech": {
     "chat_with_onesa": "Chatten Sie mit Onesa",
     "restore_chat_bubble": "Chat-Blase anzeigen",
     "landing": {
-      "eyebrow": "Technologie & praktische Werkzeuge",
-      "title": "KI-Hilfe für alltägliche Pläne.",
+      "eyebrow": "Reiseplanung und Chat",
+      "title": "Onesa",
       "highlight": "Mit Onesa.",
-      "description": "Frage nach simbabwischen Produkten, Reisen im südlichen Afrika oder praktischen Geschäftsideen. Vergleiche mit Onesa Möglichkeiten, ordne deine Fragen und entwirf einen Plan.",
+      "description": "Beginnen Sie mit drei Tagen in Victoria Falls. Wählen Sie Reisedaten und Interessen für Ihren Reiseentwurf oder stellen Sie Onesa eine Frage.",
       "principle": "Beginne mit einer Frage. Finde einen klareren nächsten Schritt.",
       "image_alt": "Illustration einer Frau mit Elefanten in einer Savannenlandschaft",
       "caption": "Onesa, für Simbabwe und Reisen im südlichen Afrika.",
       "tools_cta": "Werkzeuge entdecken"
     },
     "tools": {
-      "title": "Was du mit Onesa tun kannst",
-      "subtitle": "Stelle eine Frage, entwirf einen Reiseplan oder erkunde den AR-Guide und die VR-Demo.",
+      "title": "Eine Reise planen oder eine Frage stellen",
+      "subtitle": "Der Entwurf enthält Kostenschätzungen. Klären Sie Öffnungszeiten, Verkehrsmittel und Preise vor der Buchung direkt beim Anbieter.",
       "chat": {
         "title": "Eine Frage stellen",
         "description": "Erhalte verständliche Erklärungen zu Produkten, Orten und Geschäftsideen. Grenze mit weiteren Fragen ein, was du brauchst.",
@@ -262,9 +259,9 @@
         "image_alt": "Illustration einer Frau mit Elefanten in einer Savannenlandschaft"
       },
       "trip": {
-        "title": "Eine Simbabwe-Reise planen",
+        "title": "Drei Tage in Victoria Falls",
         "description": "Erstelle einen Entwurf passend zu Terminen, Interessen und Budget. Bestätige vorgeschlagene Stationen, Transport und Preise bei den Anbietern.",
-        "cta": "Reise planen",
+        "cta": "Drei Tage in Victoria Falls planen",
         "image_alt": "Die Victoriafälle in Simbabwe"
       },
       "vr": {
@@ -306,7 +303,7 @@
       "subtitle": "Praktische Ansätze für Landwirtschaft, Handel und Dienstleistungen. Sie helfen beim Organisieren der Arbeit; DU stellt dafür keine Spezialsoftware bereit.",
       "prompt_label": "Frag Onesa zum Beispiel",
       "next": "Möchtest du eine digitale Idee mit einem Geschäft verbinden? Entdecke kleine Einstiegsprojekte und die nötigen ersten Prüfungen.",
-      "cta": "Geschäftsideen entdecken",
+      "cta": "Geschäftsleitfäden lesen",
       "farming": {
         "title": "Anbau und Verkäufe festhalten",
         "description": "Beginne mit einem Anbauzyklus. Erfasse Ausgaben, Pflanztermine, Erntemengen und Verkäufe in einer einfachen Tabelle, die ihr gemeinsam prüfen könnt.",
@@ -759,7 +756,11 @@
       "masuwe": {
         "title": "Masuwe SEZ Bau eines Villenprojekts",
         "description": "Profil einer geplanten Tourismusentwicklung im Raum Victoria Falls.",
-        "highlights": ["SEZ Corridor", "Hospitality Assets", "Tourism Demand"]
+        "highlights": [
+          "SEZ Corridor",
+          "Hospitality Assets",
+          "Tourism Demand"
+        ]
       },
       "leather": {
         "title": "Linkdef Seifenherstellungsprojekt",
@@ -800,7 +801,11 @@
       "solar": {
         "title": "Solgas Energy: Solaranlage und Batteriespeicher",
         "description": "Profil eines Solar- und Batteriespeichervorhabens. Kapazität, Genehmigungen und Finanzierung müssen bestätigt werden.",
-        "highlights": ["Solarstrom", "Battery Storage", "Grid Support"]
+        "highlights": [
+          "Solarstrom",
+          "Battery Storage",
+          "Grid Support"
+        ]
       },
       "beef_dairy": {
         "title": "Agro Strong: Rinder- und Milchwirtschaft",
@@ -872,7 +877,7 @@
       }
     },
     "ntir": {
-      "back": "Zurück zu Investitionen",
+      "back": "Zurück zu den Leitfäden",
       "title": "NTIR-Firmenverzeichnis",
       "subtitle": "Durchsuche das von Diaspora Unlocked gepflegte Unternehmensverzeichnis nach Name, Branche oder Ort. Einträge sind Rechercheansätze, keine amtliche Registrierung oder unabhängige Prüfung.",
       "placeholder": "Name, Branche, Ort",
@@ -935,7 +940,7 @@
       }
     },
     "project_details": {
-      "back": "Zurück zur Investition",
+      "back": "Zurück zu den Leitfäden",
       "not_found_title": "Projekt nicht gefunden",
       "not_found_desc": "Dieses Projektprofil ist nicht verfügbar. Kehre zum Projektkatalog zurück, um andere Einträge zu erkunden.",
       "badge": "Projektdetails",
@@ -1000,7 +1005,7 @@
         }
       }
     },
-    "back_to_investment": "Zurück zur Investition",
+    "back_to_investment": "Zurück zu den Leitfäden",
     "energy": {
       "opportunities": {
         "mini_grids": {
@@ -1101,13 +1106,13 @@
       }
     },
     "landing": {
-      "eyebrow": "Unternehmen & Investitionen",
-      "title": "Geben Sie Ihren Ideen Raum.",
-      "highlight": "In Simbabwe.",
+      "eyebrow": "Geschäftsleitfäden",
+      "title": "Leitfäden für Geschäftsvorhaben",
+      "highlight": "",
       "description": "Geschäftsideen mit Wurzeln in Simbabwe, für Menschen vor Ort und in der Diaspora des südlichen Afrikas. Erkunde ein überschaubares erstes Projekt und was du vor dem Einsatz deiner Ersparnisse prüfen solltest.",
       "ideas_cta": "Geschäftsideen erkunden",
       "plan_cta": "Den ersten Schritt planen",
-      "principle": "Klein anfangen. Kunden verstehen. Beteiligt bleiben.",
+      "principle": "",
       "image_caption": "Alltäglicher Bedarf. Ideen zum Weiterdenken."
     },
     "plan": {
@@ -1165,7 +1170,8 @@
         "cta": "Programm für Simbabwe lesen"
       },
       "note": "DU stellt Informationen für eigene Recherchen bereit. Wir prüfen keine Angebote, bündeln kein Kapital und wickeln keine Investitionen ab. Erträge sind ungewiss; Kapitalverluste sind möglich. Externe Quellen geprüft am 22. Oktober 2026."
-    }
+    },
+    "open_guide": "Leitfaden „{{title}}“ lesen"
   },
   "common": {
     "coming_soon": "Wir entwickeln intelligente Lösungen, die mithilfe fortschrittlicher KI-Technologie die Art und Weise verändern, wie Sie sich vernetzen, arbeiten und wachsen.",
@@ -1383,7 +1389,7 @@
     },
     "products": {
       "title": "Produktkatalog",
-      "subtitle": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet.",
+      "subtitle": "Für ausgewählte Produkte kannst du eine Bestellung anfragen. Der Shop prüft Bestand und Lieferung an deine Adresse und sendet dir vor der Zahlung ein endgültiges Angebot.",
       "back_to_shop": "Zurück zum Shop",
       "default_country": "Deutschland",
       "filters": {
@@ -1557,19 +1563,22 @@
     "loading": "Produkte werden geladen...",
     "landing": {
       "eyebrow": "Simbabwe einkaufen",
-      "title": "Essen, Kunsthandwerk und mehr.",
+      "title": "Produkte aus Simbabwe ansehen",
       "highlight": "Eine Verbindung zu Simbabwe.",
       "caption": "Lebensmittel · Kunsthandwerk · Fanartikel",
-      "collections_cta": "Kategorien entdecken"
+      "collections_cta": "Produktkategorien ansehen"
     },
     "delivery_coverage": "Freigegebene Lieferländer: {{countries}}.",
-    "no_delivery_destinations": "Derzeit sind Lieferungen in kein Land möglich.",
+    "no_delivery_destinations": "Geplant ist der Versand aus Deutschland in EU-Länder. Aktuell ist noch kein Lieferziel freigeschaltet.",
     "currency": {
       "label": "Shop-Währung",
       "EUR": "Euro (EUR)",
       "USD": "US-Dollar (USD)",
       "ZAR": "Südafrikanischer Rand (ZAR)",
       "note": "Preise sind Schätzwerte. Endgültige Produktpreise und DHL-Versandkosten werden vor der Zahlung bestätigt. Referenzumrechnung: 15. Oktober 2026."
+    },
+    "availability": {
+      "pricing_unavailable": "Einige Katalogpreise sind nicht verfügbar. Versuche es erneut."
     }
   },
   "notfound": {
@@ -1708,8 +1717,8 @@
     "partial": "Ein Teil der Suchergebnisse ist vorübergehend nicht verfügbar.",
     "categories": {
       "tourism": "Reisen",
-      "investment": "Investition",
-      "technology": "Technologie",
+      "investment": "Geschäftsleitfäden",
+      "technology": "Onesa",
       "impact": "Auswirkungen",
       "ntir": "NTIR",
       "compliance": "Einhaltung"
@@ -1729,8 +1738,8 @@
     "loading": "Suche läuft…",
     "failed": "Die Suche ist derzeit nicht verfügbar. Bitte versuchen Sie es erneut.",
     "retry": "Erneut versuchen",
-    "prompt": "Suche nach Flügen, Unterkünften, Produkten oder Onesa AI.",
-    "description": "Finde Produkte, Reiseziele, Geschäftsideen und Onesa-Werkzeuge."
+    "prompt": "Zum Beispiel „Flüge“, „Bestattung“ oder einen Produktnamen eingeben.",
+    "description": "Flüge, Unterkünfte, Produkte aus Simbabwe, Versicherungsanbieter und Geschäftsleitfäden finden."
   },
   "error_boundary": {
     "unexpected": "Es ist ein unerwarteter Fehler aufgetreten.",
@@ -2105,9 +2114,9 @@
     "command_recovered": "Die Aktion wurde gespeichert. Prüfen Sie vor dem Fortfahren den aktuellen Status.",
     "command_unconfirmed": "Die Antwort konnte nicht bestätigt werden. Prüfen Sie den Status oder wiederholen Sie die unveränderte Aktion; keine weitere Zahlungsanfrage senden.",
     "command_changed": "Die Anfrage hat sich geändert. Prüfen Sie vor dem Fortfahren den aktuellen Status.",
-    "readiness_prelaunch": "Wir bereiten den Shop vor",
+    "readiness_prelaunch": "Bestellungen sind geschlossen",
     "readiness_limited": "Begrenzter Europa-Pilot",
-    "readiness_pending_note": "Melden Sie Interesse an, um von der Verfügbarkeit zu erfahren. Keine Bestellung oder Zahlung.",
+    "readiness_pending_note": "Fordere eine Benachrichtigung an, um zu erfahren, wann du diesen Artikel anfragen kannst.",
     "readiness_pilot_note": "Nur ausdrücklich freigegebene Zielländer und Produkte gehören zum Pilot. Der Shop bestätigt Artikel, DHL-Lieferung und endgültige Bedingungen einzeln.",
     "operator_details_title": "Betreiberangaben",
     "delivery_title": "Lieferung und Zahlung",
@@ -2118,28 +2127,28 @@
     "product_unavailable": "Dieses Produkt ist nicht mehr im Katalog verfügbar."
   },
   "product_interest": {
-    "action": "Interesse anmelden",
-    "scope": "Bestätigen Sie Ihre E-Mail für eine einmalige Verfügbarkeitsnachricht zu diesem Produkt. Abmelden ist über den Link in der E-Mail möglich. Keine Bestellung, Reservierung oder Zahlung; unabhängig vom Newsletter.",
+    "action": "Bei Verfügbarkeit per E-Mail benachrichtigen",
+    "scope": "Bestätige deine E-Mail-Adresse, um einmal benachrichtigt zu werden, sobald dieses Produkt verfügbar ist. Über den Link in der E-Mail kannst du abbestellen. Die Newsletter-Anmeldung erfolgt separat.",
     "email": "E-Mail-Adresse",
     "submit": "Bestätigungslink per E-Mail senden",
     "close": "Schließen",
     "received": "Falls eine Bestätigung nötig ist, senden wir einen Link. Bitte auch im Spamordner nachsehen.",
     "error": "Die Anfrage konnte nicht gespeichert werden. Bitte erneut versuchen.",
     "invalid_email": "Bitte eine gültige E-Mail-Adresse eingeben.",
-    "title": "Produktinteresse",
-    "confirm_subject": "Produktinteresse bestätigen",
+    "title": "E-Mail zur Produktverfügbarkeit",
+    "confirm_subject": "Verfügbarkeitsbenachrichtigung bestätigen",
     "confirm_body": "Bestätigen Sie Ihre E-Mail-Adresse, um einmalig über die Verfügbarkeit dieses Produkts informiert zu werden.",
     "expiry": "Der Bestätigungslink ist 48 Stunden gültig. Ignorieren Sie diese E-Mail, wenn Sie die Anfrage nicht gestellt haben.",
     "available_subject": "Produkt für eine Anfrage verfügbar",
     "available_body": "Dieses Produkt ist derzeit für eine betreute Bestellanfrage verfügbar. Aktuellen Bestand und Bedingungen finden Sie auf der Produktseite; diese Nachricht reserviert keine Ware.",
     "cancel": "Produktbenachrichtigung abbestellen",
-    "confirm": "Produktinteresse bestätigen",
+    "confirm": "Meine Benachrichtigung bestätigen",
     "confirmed": "E-Mail bestätigt. Wir benachrichtigen Sie einmalig, wenn das Produkt freigegeben und verfügbar ist. Verfügbarkeit ist nicht garantiert.",
     "cancelled": "Diese Produktbenachrichtigung ist abbestellt. Newsletter-Einstellungen bleiben unverändert.",
     "invalid_link": "Dieser Link ist ungültig, abgelaufen oder bereits verwendet. Fordern Sie auf der Produktseite einen neuen an.",
     "updating": "Wird aktualisiert…",
-    "available_empty": "Noch sind keine Produkte bestellbar. Entdecken Sie den Katalog und melden Sie unverbindlich Interesse an.",
-    "prelaunch": "Produkte entdecken und Interesse anmelden — keine Bestellung oder Zahlung. Der Verkauf ist noch nicht geöffnet.",
+    "available_empty": "Derzeit sind keine Produkte bestellbar. Entferne den Filter, um Produkte anzusehen und eine Benachrichtigung auszuwählen.",
+    "prelaunch": "Stöbere in Lebensmitteln, Kunsthandwerk und Fankleidung aus Simbabwe. Bestellungen sind derzeit geschlossen. Öffne ein Produkt, um dich einmalig per E-Mail benachrichtigen zu lassen.",
     "saved_notice": "Ihre Auswahl bleibt gespeichert. Einige Artikel sind nicht verfügbar oder überschreiten den Bestand. Bitte prüfen oder entfernen.",
     "remove_unavailable": "Nicht verfügbare Artikel entfernen",
     "price_note": "Angezeigte Preise sind Richtwerte. Prüfen Sie die aktuellen Produktinformationen vor einer Bestellanfrage.",
@@ -2154,19 +2163,19 @@
   "contact_enquiry": {
     "open": "Nachricht senden",
     "title": "Kontakt zum Team",
-    "scope": "Ihre Anfrage wird gespeichert, bevor wir den Empfang bestätigen. Servicenachrichten sind von Newsletter-Abonnements getrennt.",
+    "scope": "Schreiben Sie dem Team von Diaspora Unlocked. Sobald wir Ihre Nachricht erhalten, sehen Sie hier eine Referenznummer. Eine Bestätigung geht auch per E-Mail an Sie. Bitte keine Passwörter oder Zahlungsdaten angeben.",
     "name": "Ihr Name",
     "email": "E-Mail-Adresse",
     "phone": "Telefon (optional)",
     "subject": "Betreff",
     "message": "Nachricht",
-    "submit": "Anfrage speichern",
-    "saving": "Wird gespeichert…",
-    "received": "Ihre Anfrage wurde empfangen und gespeichert. E-Mail-Annahme und Zustellung werden getrennt erfasst.",
+    "submit": "Nachricht senden",
+    "saving": "Wird gesendet …",
+    "received": "Ihre Nachricht ist angekommen. Bewahren Sie die Referenznummer für Rückfragen auf.",
     "reference": "Referenz",
     "new": "Neue Anfrage beginnen",
-    "failed": "Wir konnten die Speicherung nicht bestätigen. Ihre Nachricht bleibt erhalten. Wiederholen Sie die unveränderte Anfrage oder beginnen Sie ausdrücklich eine neue.",
-    "changed": "Diese ungeklärte Anfrage gehört zu Ihrer vorherigen Nachricht. Wiederholen Sie diese unverändert oder beginnen Sie eine neue Anfrage.",
+    "failed": "Der Eingang ließ sich nicht bestätigen. Ihre Nachricht steht noch im Formular. Senden Sie sie mit denselben Angaben erneut.",
+    "changed": "Für die frühere Nachricht fehlt noch die Bestätigung. Senden Sie den ursprünglichen Text erneut oder beginnen Sie eine neue Anfrage.",
     "privacy": "Wir speichern Ihre Anfrage, Sprache und Benachrichtigungsverlauf in unserer Datenbank, damit das Team antworten kann. Dies ist keine Marketing-Anmeldung. Für Berichtigung oder Löschung wenden Sie sich an info@diasporaunlocked.com."
   },
   "travel": {
@@ -2183,17 +2192,17 @@
     "my-trips": "Meine Reisen",
     "description": "Familie besuchen, in die Heimat reisen oder Neues entdecken? Plane Reisen nach, von und innerhalb von Simbabwe und dem südlichen Afrika und buche direkt bei den Anbietern.",
     "choose-location": "Wähle einen Ort aus der Liste.",
-    "no-locations": "Kein passender Ort. Versuche es mit einer Stadt, einem Land oder einem Flughafencode.",
+    "no-locations": "Kein passender Ort. Versuche eine andere Stadt oder ein anderes Land.",
     "clear-confirm": "Reisedaten, Suchen, Budgetposten und ausgewählte Angebote in diesem Browser löschen?",
     "search-intro": "Beginne mit Reisedaten und Reisenden. Die Angaben bleiben beim Wechsel zwischen Reisebereichen erhalten.",
     "origin": "Abflughafen",
-    "destination": "Zielflughafen / Umgebung",
+    "destination": "Ankunftsflughafen",
     "stay-area": "Zielgebiet",
     "trip-type": "Flugart",
     "return": "Hin und zurück",
     "one-way": "Nur Hinflug",
-    "departure": "Abreise / Abholung",
-    "return-date": "Rückreise / Rückgabe",
+    "departure": "Abflugdatum",
+    "return-date": "Rückflugdatum",
     "check-in": "Anreise",
     "check-out": "Abreise",
     "adults": "Erwachsene",
@@ -2210,14 +2219,14 @@
     "unsupported-options": "Flexible Reisedaten und Nachbarflughäfen sind noch nicht angebunden. Wähle konkrete Flughäfen und Daten.",
     "review-search": "Suchangaben prüfen",
     "search-ready": "Deine Suchübersicht",
-    "no-results": "Live-Vergleiche sind noch nicht angebunden. Es wurde kein Anbieter durchsucht und kein Preis oder Bestand bestätigt.",
+    "no-results": "Kopiere diese Angaben, um Verfügbarkeit und Mietpreise bei KAYAK zu prüfen.",
     "add-search": "Suche zur Reise hinzufügen",
     "added": "Suche zum Entwurf hinzugefügt.",
     "copy-search": "Suchangaben kopieren",
     "copied": "Kopiert",
     "copy-error": "Kopieren nicht verfügbar. Markiere und kopiere die Übersicht oben.",
     "open-provider": "KAYAK-Suche öffnen ↗",
-    "handoff-note": "Öffnet eine öffentliche Suchseite in einem neuen Tab. Daten, Reisende und Orte werden nicht übertragen. Kopiere die Angaben und gib sie bei KAYAK ein. Keine freigegebene Affiliate-Anbindung.",
+    "handoff-note": "KAYAK öffnet sich in einem neuen Tab. Gib deine Suchdaten dort ein. Das Unternehmen, bei dem du buchst, übernimmt Zahlung, Änderungen und Support. Über diesen Link erhält Diaspora Unlocked keine Provision.",
     "review-trip": "Meine Reisen ansehen",
     "disclosure": "Der Anbieter übernimmt Buchung, Zahlung und Kundenservice. Kann Diaspora Unlocked über einen Link eine Provision erhalten, kennzeichnen wir ihn, bevor du fortfährst.",
     "guest-draft": "Dein Reiseentwurf",
@@ -2331,7 +2340,7 @@
       "continue": "Weiter zu {{provider}}",
       "checkout-owner": "{{provider}} übernimmt Buchung, Zahlung und Kundenservice. Prüfe dort den Endpreis und die Stornierungsbedingungen.",
       "affiliate-disclosure": "Awin kann Cookies verwenden, um deine Buchung zuzuordnen. Diaspora Unlocked kann eine Provision erhalten, wenn du den Empfehlungslink wählst. Du kannst auch direkt zu Kiwi.com gehen.",
-      "affiliate-choice": "Empfehlungstracking erlauben und weiter",
+      "affiliate-choice": "Mit Provisionszuordnung zu Kiwi.com",
       "referral-failed": "Der Empfehlungslink konnte nicht geöffnet werden. Dein Flug bleibt ausgewählt. Nutze den direkten Anbieterlink oder versuche es erneut.",
       "no-reservation": "DU erstellt keine Reservierung und hält keinen Preis. Buchung und endgültige Preise werden beim Anbieter bestätigt.",
       "nationality": "Nationalität des Gastes (Ländercode mit 2 Buchstaben)",
@@ -2347,7 +2356,27 @@
       "airports-note": "Wähle genaue Flughäfen. Erweiterung auf nahe Flughäfen ist nicht verfügbar; Datumsflexibilität gilt nur für Flugdaten.",
       "flex-one": "±1 Tag"
     },
-    "weather": "Wetter"
+    "weather": "Wetter",
+    "purpose": {
+      "flights": "Vergleiche Flüge nach Simbabwe und im südlichen Afrika. Prüfe den Gruppenpreis, das Gepäck und die Weiterfahrt vom Flughafen.",
+      "stays": "Finde eine Unterkunft für deine Familie. Vergleiche die Gesamtkosten für alle Nächte, Zimmer und Gäste.",
+      "car-hire": "Plane Abholung und Rückgabe. Prüfe die Kaution und hole vor einem Grenzübertritt die schriftliche Erlaubnis des Vermieters ein.",
+      "my-trips": "Verwalte Suchanfragen, vorgemerkte Angebote und eigene Kostenschätzungen. Verfügbarkeit und Buchung bestätigst du beim Anbieter."
+    },
+    "form-intro": {
+      "flights": "Wähle Flughäfen, Reisedaten und Reisende. Prüfe deine Angaben und suche dann bei Kiwi.com.",
+      "stays": "Wähle Reiseziel, An- und Abreisedatum, Zimmer und Gäste. Prüfe deine Angaben und suche dann bei Pilot.",
+      "car-hire": "Wähle Ort und Zeit für Abholung und Rückgabe. Kopiere deine Suchdaten für KAYAK."
+    },
+    "pickup-date": "Abholdatum",
+    "dropoff-date": "Rückgabedatum",
+    "stay-area-note": "Wähle die Stadt oder Region für deinen Aufenthalt. Prüfe Adresse und Gesamtpreis aller Nächte bei Pilot.",
+    "car-location-note": "Wähle Abhol- und Rückgabeort. Prüfe Station, Öffnungszeiten und Anforderungen an den Fahrer beim Vermieter.",
+    "kayak": {
+      "flights": "Flüge auf KAYAK suchen ↗",
+      "stays": "Unterkünfte auf KAYAK suchen ↗",
+      "car-hire": "Mietwagen auf KAYAK suchen ↗"
+    }
   },
   "weather": {
     "title": "Wetter",
@@ -2405,5 +2434,38 @@
     "loaded": "Vorhersage für {{place}} geladen.",
     "view-forecast": "Vorhersage ansehen",
     "interval": "in {{hours}} Std."
+  },
+  "care": {
+    "title": "Bestattungsvorsorge für Angehörige in Simbabwe und im Ausland",
+    "intro": "Finden Sie Anbieter, die Bestattungskosten mit einer Geldleistung abdecken oder eine Überführung nach Simbabwe organisieren. Wählen Sie aus, welche Unterstützung Ihre Familie braucht.",
+    "image": "Familientreffen in Simbabwe",
+    "funeral": "Wie kann ich Bestattungskosten für Angehörige in Simbabwe absichern?",
+    "repatriation": "Wie kann ich die Überführung eines Angehörigen aus dem Ausland nach Simbabwe absichern?",
+    "lookup": "Anbieterinformationen finden",
+    "lookup_help": "Wählen Sie Ihr Anliegen und beide Wohnsitzländer. Ihre Auswahl bleibt auf diesem Gerät. Klären Sie vor einem Antrag mit dem Anbieter die Voraussetzungen, Wartezeiten und Ausschlüsse.",
+    "goal": "Was möchten Sie absichern?",
+    "choose_goal": "Anliegen auswählen",
+    "applicant": "In welchem Land wohnen Sie?",
+    "covered": "In welchem Land wohnt die zu versichernde Person?",
+    "choose_country": "Land auswählen",
+    "no_match": "Für diese Kombination liegen uns keine bestätigten Anbieterinformationen vor. Prüfen Sie beide Wohnsitzländer und Ihr Anliegen oder fragen Sie einen Versicherer in Ihrem Wohnsitzland.",
+    "handoff": "Der Link führt zur Website des Anbieters. Dieser berät Sie, bearbeitet Anträge und Leistungsfälle und nimmt Beiträge entgegen. Diaspora Unlocked erhält für diesen Link keine Vergütung.",
+    "providers": {
+      "zb": {
+        "title": "ZB · Geldleistung für Bestattungskosten",
+        "body": "ZB beschreibt eine Geldleistung für die Bestattung anspruchsberechtigter Angehöriger in Simbabwe. Fragen Sie, welche Angehörigen Sie einschließen können und wer das Geld erhält.",
+        "action": "Bestattungsvorsorge bei ZB ansehen"
+      },
+      "diaspora": {
+        "title": "Diaspora Insurance · Geldleistung im Todesfall",
+        "body": "Die Familie kann mit dem Geld die Bestattung oder Überführung nach Simbabwe bezahlen und die Organisation selbst übernehmen. Erkundigen Sie sich nach den Vorgaben zu Staatsangehörigkeit und Wohnsitz aller versicherten Personen.",
+        "action": "Bestattungsvorsorge bei Diaspora Insurance prüfen"
+      },
+      "doves": {
+        "title": "Doves · Organisierte Überführung",
+        "body": "Der Global Plan umfasst laut Doves die Überführung nach Simbabwe mit Dokumenten und Bestattungsorganisation. Fragen Sie, welche Leistungen Doves vom Wohnsitzland Ihres Angehörigen aus organisiert.",
+        "action": "Global Plan bei Doves ansehen"
+      }
+    }
   }
 }

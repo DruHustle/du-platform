@@ -27,13 +27,14 @@ export function ShopScreen({ route }: { route?: { params?: Partial<ShopFilters> 
   const filters = { ...defaultShopFilters, ...route?.params };
   const products = data ? filterShopProducts(data, filters) : [];
   const coverage = data && !loading && !error && deliveryCoverage(data);
+  const ordering = data && !loading && !error && data.products.some(product => canRequestProduct(data, product));
   const filtered = Boolean(filters.q.trim() || filters.availableOnly || filters.category !== "all");
   const quantity = cart.items.reduce((count, item) => count + item.quantity, 0);
   return <Screen>
     <Heading>Shop</Heading>
-    <Copy>Explore Zimbabwean products, check availability and request updates.</Copy>
+    <Copy>{ordering ? "Browse Zimbabwean products. Request an item and the shop will confirm stock, delivery and the final price before payment." : "Browse Zimbabwean food, crafts and supporter apparel. Choose a product to get a one-time availability email."}</Copy>
     {!!coverage && <Copy>{coverage}</Copy>}
-    <Action title={`Basket (${quantity})`} onPress={() => navigation.navigate("Cart")} secondary />
+    {(ordering || quantity > 0) && <Action title={ordering ? `Basket (${quantity})` : `Saved basket (${quantity})`} onPress={() => navigation.navigate("Cart")} secondary />}
     <Card>
       <Field label="Search products" placeholder="Product name or description" value={filters.q}
         onChangeText={q => navigation.setParams({ q })} autoCapitalize="none" returnKeyType="search" />
@@ -49,11 +50,11 @@ export function ShopScreen({ route }: { route?: { params?: Partial<ShopFilters> 
           </Pressable>;
         })}
       </View>
-      <View style={{ flexDirection: "row", minHeight: 48, alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+      {(ordering || filters.availableOnly) && <View style={{ flexDirection: "row", minHeight: 48, alignItems: "center", justifyContent: "space-between", gap: 12 }}>
         <Text style={{ flex: 1, fontSize: 16, color: colors.ink }}>Available to request only</Text>
         <Switch hitSlop={8} accessibilityLabel="Available to request only" value={filters.availableOnly}
           onValueChange={availableOnly => navigation.setParams({ availableOnly })} />
-      </View>
+      </View>}
       {filtered && <Action title="Clear filters" secondary onPress={() => navigation.setParams(defaultShopFilters)} />}
     </Card>
     {loading && !data && <Loading label="Loading products…" />}
@@ -101,9 +102,9 @@ export function ProductScreen({ route }: { route: { params: { slug: string } } }
         {orderable ? <>
           <Copy>Available to request through assisted ordering.</Copy>
           <Action title="Add to basket" onPress={() => { cart.add(product); navigation.navigate("Cart"); }} />
-        </> : <Copy>{loading ? "Checking ordering availability…" : error ? "Ordering availability could not be checked." : "Ordering is currently unavailable for this product."}</Copy>}
+        </> : <Copy>{loading ? "Checking ordering availability…" : error ? "Ordering availability could not be checked." : "Orders for this product are closed."}</Copy>}
       </Card>
-      <ProductUpdates key={product.slug} product={product} />
+      {!orderable && <ProductUpdates key={product.slug} product={product} />}
       <PublishedDetails productId={product.id} />
     </>}
   </Screen>;
@@ -140,14 +141,14 @@ function ProductUpdates({ product }: { product: Product }) {
     }
   }
   return <Card>
-    <Heading>Availability update</Heading>
-    {status === "sent" ? <Message message="Request received. If confirmation is needed, we’ll send an email link." /> : <>
-      <Copy>Get a one-time email when this product is available. This does not place an order.</Copy>
+    <Heading>Product availability alert</Heading>
+    {status === "sent" ? <Message message="If confirmation is needed, we’ll email you a link. Check your inbox and spam folder." /> : <>
+      <Copy>Confirm your email to receive one alert when this product becomes available. Cancel using the link in the email. Newsletter signup is separate.</Copy>
       <Field label="Email address" value={email} onChangeText={value => { setEmail(value); setFailure(""); }}
         editable={status === "idle"} keyboardType="email-address" autoCapitalize="none" autoComplete="email"
         returnKeyType="send" onSubmitEditing={() => void send()} />
       {!!failure && <Message error message={failure} />}
-      <Action title={status === "sending" ? "Sending…" : "Request an update"} disabled={status === "sending"} onPress={() => void send()} />
+      <Action title={status === "sending" ? "Sending…" : "Email me when available"} disabled={status === "sending"} onPress={() => void send()} />
     </>}
   </Card>;
 }
@@ -186,7 +187,7 @@ export function CartScreen() {
     return () => { active = false; };
   }, [restoreAttempt]);
   const submit = async () => {
-    if (sending.current || !restored) return;
+    if (sending.current || !restored || (!pending && !orderable)) return;
     sending.current = true;
     setError(""); setBusy(true);
     let payload = pending;
@@ -233,10 +234,16 @@ export function CartScreen() {
       setBusy(false);
     }
   };
+  const catalogue = useCatalog();
+  const orderable = Boolean(catalogue.data && !catalogue.loading && !catalogue.error && cart.items.length && cart.items.every(({ product, quantity }) => {
+    const current = catalogue.data!.products.find(item => item.id === product.id);
+    return current && current.stock_qty >= quantity && canRequestProduct(catalogue.data!, current);
+  }));
   const editable = restored && !busy && !pending;
   return <Screen>
     <Heading>Basket</Heading>
-    <Copy>Submitting a request does not complete a payment. The team will follow up with the next steps.</Copy>
+    {!pending && !order && <Copy>{catalogue.loading ? "Checking which products can be requested…" : orderable ? "Send your request to the shop. The team will confirm stock, delivery and the final price before you pay." : "Browse the catalogue and choose a product to set up an availability alert."}</Copy>}
+    {!!catalogue.error && <Action title="Retry availability check" secondary onPress={() => void catalogue.load()} />}
     {order && <OrderStatus key={order.orderRef} order={order} />}
     {!restored && !error && <Loading label="Checking for a saved request…" />}
     {!!error && <Message error message={error} />}
@@ -251,11 +258,11 @@ export function CartScreen() {
     </Card> : cart.items.map(({ product, quantity }) => <Card key={product.id}>
       <Copy>{product.name} · {money(product.price_cents, product.currency)}</Copy>
       <Copy>Quantity: {quantity}</Copy>
-      <Action title="Add one" secondary disabled={!editable || quantity >= product.stock_qty} onPress={() => cart.setQuantity(product.id, quantity + 1)} />
+      <Action title="Add one" secondary disabled={!editable || !orderable || quantity >= product.stock_qty} onPress={() => cart.setQuantity(product.id, quantity + 1)} />
       <Action title="Remove one" secondary disabled={!editable || quantity <= 1} onPress={() => cart.setQuantity(product.id, quantity - 1)} />
       <Action title="Remove" secondary disabled={!editable} onPress={() => cart.remove(product.id)} />
     </Card>)}
-    {(cart.items.length > 0 || pending) && <Card>
+    {(orderable || pending) && <Card>
       <Heading>Contact and delivery</Heading>
       <Field label="Full name" value={name} onChangeText={setName} autoComplete="name" editable={editable} />
       <Field label="Email" value={email} onChangeText={setEmail} autoComplete="email" keyboardType="email-address" autoCapitalize="none" editable={editable} />

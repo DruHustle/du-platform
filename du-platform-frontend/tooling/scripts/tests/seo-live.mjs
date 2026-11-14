@@ -52,8 +52,9 @@ for (const pathname of [
   "/shop",
   "/shop/products",
   "/travel",
-  "/technology",
-  "/investment",
+  "/onesa",
+  "/care",
+  "/business-guides",
   "/investment/opportunities",
   "/investment/projects/masuwe",
 ]) {

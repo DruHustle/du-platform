@@ -17,7 +17,7 @@ describe("Shop discovery", () => {
       { ...catalog.readiness, commercialReady: false }, { ...catalog.readiness, mode: "prelaunch" },
       { ...catalog.readiness, enforcement: "report_only" }, { ...catalog.readiness, destinationCountries: [] },
     ]) {
-      expect(deliveryCoverage({ ...catalog, readiness })).toBe("Delivery is currently unavailable to all destinations.");
+      expect(deliveryCoverage({ ...catalog, readiness })).toBe("Delivery is planned from Germany to EU countries. No delivery destinations are open yet.");
     }
   });
   it.each(["/shop/product/mazoe-orange", "/shop/products?product=mazoe-orange"])("opens the specific product from %s", href => {

@@ -377,7 +377,7 @@ try {
       .getByRole("heading", { name: "Flights", exact: true, level: 1 })
       .waitFor();
     const dest = page.getByRole("combobox", {
-      name: "Destination airport / area",
+      name: "Arrival airport",
     });
     await dest.fill("zimbabwe");
     await page
@@ -411,10 +411,10 @@ try {
     await dest.press("Enter");
     assert.match(await dest.inputValue(), /VFA/);
     await page
-      .getByLabel("Departure / pickup date", { exact: true })
+      .getByLabel("Departure date", { exact: true })
       .fill(future(30));
     await page
-      .getByLabel("Return / drop-off date", { exact: true })
+      .getByLabel("Return flight date", { exact: true })
       .fill(future(28));
     await page
       .getByRole("button", { name: "Review search details", exact: true })
@@ -424,7 +424,7 @@ try {
       .filter({ hasText: "Choose an end date" })
       .waitFor();
     await page
-      .getByLabel("Return / drop-off date", { exact: true })
+      .getByLabel("Return flight date", { exact: true })
       .fill(future(37));
     await page
       .getByRole("combobox", { name: "Children (0–17)", exact: true })
@@ -457,7 +457,7 @@ try {
     await page
       .getByText("The supplier amount has changed.", { exact: false })
       .waitFor();
-    const referralButton = page.getByRole("button", { name: "Allow referral tracking and continue" });
+    const referralButton = page.getByRole("button", { name: "Continue to Kiwi.com with referral tracking" });
     await page.getByText("If a link can earn Diaspora Unlocked a commission", { exact: false }).waitFor();
     await page.getByRole("link", { name: "Continue to Kiwi.com ↗", exact: true }).waitFor();
     assert.equal(await referralButton.count(), 0);
@@ -500,7 +500,7 @@ try {
       .getByRole("button", { name: "Add search to trip", exact: true })
       .click();
     const popupPromise = context.waitForEvent("page");
-    await page.getByRole("link", { name: "Open KAYAK search ↗" }).click();
+    await page.getByRole("link", { name: "Search flights on KAYAK ↗" }).click();
     const popup = await popupPromise;
     await popup.waitForLoadState();
     assert.equal(popup.url(), "https://www.kayak.com/flights");
@@ -662,7 +662,7 @@ try {
     await selectedFlight
       .getByText("The supplier amount has changed.", { exact: false })
       .waitFor();
-    await selectedFlight.getByRole("button", { name: "Allow referral tracking and continue" }).click();
+    await selectedFlight.getByRole("button", { name: "Continue to Kiwi.com with referral tracking" }).click();
     await page.getByRole("heading", { name: "Simulated referral network" }).waitFor();
     const landing = new URL(page.url());
     assert.equal(landing.origin, "https://www.awin1.com");
@@ -699,7 +699,7 @@ try {
     assert.match(
       await page
         .getByRole("combobox", {
-          name: "Destination airport / area",
+          name: "Arrival airport",
           exact: true,
         })
         .inputValue(),
@@ -707,7 +707,7 @@ try {
     );
     assert.equal(
       await page
-        .getByLabel("Departure / pickup date", { exact: true })
+        .getByLabel("Departure date", { exact: true })
         .inputValue(),
       future(30)
     );

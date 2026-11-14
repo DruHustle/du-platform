@@ -21,26 +21,11 @@ const output = join(tmpdir(), "du-theme-review");
 await mkdir(output, { recursive: true });
 const checks = [],
   errors = [];
-async function appearance(page, preference, resolved) {
-  await page.waitForFunction(
-    ({ preference, resolved }) =>
-      document.documentElement.dataset.themePreference === preference &&
-      document.documentElement.classList.contains("dark") ===
-        (resolved === "dark"),
-    { preference, resolved }
-  );
-  assert.equal(
-    await page.evaluate(
-      () => getComputedStyle(document.documentElement).colorScheme
-    ),
-    resolved
-  );
-  await page.evaluate(
-    () =>
-      new Promise(done =>
-        requestAnimationFrame(() => requestAnimationFrame(done))
-      )
-  );
+async function appearance(page) {
+  await page.locator("main h1").first().waitFor();
+  assert.equal(await page.locator(".theme-switcher").count(), 0);
+  assert.equal(await page.evaluate(() => document.documentElement.classList.contains("dark")), false);
+  assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme), "light");
 }
 try {
   for (const [engineName, engine] of [
@@ -57,6 +42,7 @@ try {
         });
         await context.addInitScript(() => {
           try {
+            localStorage.setItem("theme", "dark");
             localStorage.setItem("du_cookie_consent_v1", "rejected");
             localStorage.setItem("du_cookie_consent_seen_v1", "shown");
           } catch {}
@@ -67,53 +53,15 @@ try {
         await page
           .getByRole("heading", { name: "Flights", level: 1, exact: true })
           .waitFor();
-        await appearance(page, "system", "dark");
-        assert.equal(
-          await page.locator(".travel-heading .discovery-eyebrow").count(),
-          0
-        );
-        assert.deepEqual(
-          await page.locator(".travel-nav a").allTextContents(),
-          [
-            "Overview",
-            "Flights",
-            "Stays",
-            "Car Hire",
-            "My Trips",
-            "Weather",
-            "Explore",
-          ]
-        );
-        assert.equal(
-          await page
-            .locator(".travel-page")
-            .evaluate(e => getComputedStyle(e).backgroundColor),
-          "rgb(11, 19, 34)"
-        );
+        await appearance(page);
+        assert.equal(await page.evaluate(() => localStorage.getItem("theme")), null);
+        assert.equal(await page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches), true);
         await page.emulateMedia({ colorScheme: "light" });
-        await appearance(page, "system", "light");
-        assert.equal(
-          await page
-            .locator(".travel-page")
-            .evaluate(e => getComputedStyle(e).backgroundColor),
-          "rgb(248, 250, 251)"
-        );
-        const control = page.getByLabel("Appearance", { exact: true });
-        await control.selectOption("dark");
-        await appearance(page, "dark", "dark");
+        await appearance(page);
         await page.reload();
-        await appearance(page, "dark", "dark");
-        await page
-          .getByLabel("Appearance", { exact: true })
-          .selectOption("light");
-        await page.emulateMedia({ colorScheme: "dark" });
-        await appearance(page, "light", "light");
-        await page
-          .getByLabel("Appearance", { exact: true })
-          .selectOption("system");
-        await appearance(page, "system", "dark");
+        await appearance(page);
         await page.locator(".travel-search").screenshot({
-          path: join(output, `${engineName}-${width}-dark-search.png`),
+          path: join(output, engineName + "-" + width + "-brand-search.png"),
         });
         assert(
           await page.evaluate(
@@ -142,25 +90,25 @@ try {
         for (const path of [
           "/",
           "/shop",
-          "/technology",
-          "/investment",
+          "/onesa",
+          "/business-guides",
           "/travel/explore",
         ]) {
           await page.goto(base + path + "?lng=en");
           await page.locator(".discovery-section").first().waitFor();
-          await appearance(page, "system", "dark");
+          await appearance(page);
           assert.equal(
             await page
               .locator(".discovery-section")
               .first()
               .evaluate(e => getComputedStyle(e).backgroundColor),
-            "rgb(11, 19, 34)"
+            "rgb(248, 250, 251)"
           );
           assert(
             await page.evaluate(
               () => document.documentElement.scrollWidth <= innerWidth + 1
             ),
-            path + " dark overflow"
+            path + " overflow"
           );
           if (path === "/")
             await page
@@ -171,21 +119,8 @@ try {
               });
         }
         checks.push(
-          `${engineName}/${width}: auto light/dark, live change, persistent override, System reset, Travel navigation/headings, five discovery pages and overflow`
+          `${engineName}/${width}: branded appearance after a saved dark preference and OS changes, Travel navigation/headings, five discovery pages and overflow`
         );
-        if (width === 375) {
-          const other = await context.newPage();
-          await other.goto(base + "/travel/flights?lng=en");
-          await appearance(other, "system", "dark");
-          await page
-            .getByLabel("Appearance", { exact: true })
-            .selectOption("light");
-          await appearance(other, "light", "light");
-          await page.evaluate(() => localStorage.removeItem("theme"));
-          await appearance(other, "system", "dark");
-          await other.close();
-          checks.push(`${engineName}: cross-tab preference change and removal`);
-        }
         await context.close();
       }
       const blocked = await browser.newContext({
@@ -206,14 +141,10 @@ try {
       await page
         .getByRole("heading", { name: "Flights", level: 1, exact: true })
         .waitFor();
-      await appearance(page, "system", "dark");
-      await page
-        .getByLabel("Appearance", { exact: true })
-        .selectOption("light");
-      await appearance(page, "light", "light");
+      await appearance(page);
       await blocked.close();
       checks.push(
-        `${engineName}: blocked storage retains working System and manual choices`
+        `${engineName}: blocked storage retains the branded appearance`
       );
     } finally {
       await browser.close();

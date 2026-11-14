@@ -53,12 +53,12 @@ def product_capture(target):
     assistant_target = Path(target).with_name('Onesa.png')
     screen.adb('shell','am','start','-W','-a','android.intent.action.VIEW',
                '-d', 'diasporaunlocked://onesa-ai-chat', screen.PACKAGE)
-    screen.wait_for_label('Onesa assistant')
+    screen.wait_for_label('Onesa')
     screen.capture(assistant_target)
     screen.adb('shell', 'am', 'force-stop', screen.PACKAGE)
     screen.adb('shell', 'am', 'start', '-W', '-n', screen.PACKAGE+'/.MainActivity')
-    screen.wait_for_label('Explore what connects us')
-    tap(find('Browse products', True))
+    screen.wait_for_label('Plan your next trip home')
+    tap(find('Browse Zimbabwean products', True))
     find('Search products')
     product = find('View details for ', scroll=True, prefix=True)
     name = product.get('content-desc', '').removeprefix('View details for ')
@@ -72,7 +72,7 @@ def product_capture(target):
 
 
 def flight():
-    tap(find('Search providers',True)); tap(find('Check current provider details',True,55)); tap(find('Continue to Kiwi.com',True,45))
+    tap(find('Search Kiwi.com',True)); tap(find('Check current provider details',True,55)); tap(find('Continue to Kiwi.com',True,45))
     deadline=time.monotonic()+20
     while time.monotonic()<deadline:
         state=screen.adb('shell','dumpsys','activity','activities').decode()
@@ -89,7 +89,7 @@ def flight():
 def sign_in():
     screen.adb('shell','am','force-stop',screen.PACKAGE)
     screen.adb('shell','am','start','-W','-n',screen.PACKAGE+'/.MainActivity')
-    screen.wait_for_label('Explore what connects us')
+    screen.wait_for_label('Plan your next trip home')
     screen.adb('shell', 'am', 'start', '-W', '-a', 'android.intent.action.VIEW',
                '-d', 'diasporaunlocked://login', screen.PACKAGE)
     screen.wait_for_label('Welcome back')

@@ -1,3 +1,4 @@
+import type { TravelCategory } from "@/domain/travel";
 import { useState } from "react";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
@@ -26,7 +27,7 @@ export const travelGuides = [
     source: "https://www.discovercars.com/terms-and-conditions",
   },
 ];
-export default function TravelGuides() {
+export default function TravelGuides({ category }: { category?: TravelCategory }) {
   const { t } = useTranslation();
   const [message, setMessage] = useState("");
   return (
@@ -36,7 +37,7 @@ export default function TravelGuides() {
       </h2>
       <p>{t("travel.reviewed")}</p>
       <div className="travel-guides-grid">
-        {travelGuides.map(g => (
+        {travelGuides.filter(guide => !category || guide.category === category).map(g => (
           <article id={g.id} key={g.id} className="content-panel">
             <h3>{t(`travel.guides-content.${g.id}.title`)}</h3>
             <p>{t(`travel.guides-content.${g.id}.body`)}</p>
@@ -44,11 +45,11 @@ export default function TravelGuides() {
               {t("travel.source")}
             </a>
             <div className="travel-actions">
-              <Button asChild>
+              {!category && <Button asChild>
                 <Link href={`/travel/${g.category}`}>
                   {t(`travel.${g.category}`)}
                 </Link>
-              </Button>
+              </Button>}
               <Button
                 variant="outline"
                 onClick={async () => {
@@ -69,8 +70,10 @@ export default function TravelGuides() {
         ))}
       </div>
       {message && <p role="status">{message}</p>}
+      {!category && <>
       <h2 className="page-section-title mt-8">{t("travel.coverage")}</h2>
       <p>{t("travel.coverage-note")}</p>
+      </>}
     </section>
   );
 }

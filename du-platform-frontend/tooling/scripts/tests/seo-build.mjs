@@ -160,7 +160,7 @@ for (const pathname of paths) {
       `${pathname}: missing app asset`
     );
   }
-  if (seo.robots === "index,follow") expectedLocations.push(canonical);
+  if (seo.robots === "index,follow" && seo.canonicalPath === pathname) expectedLocations.push(canonical);
   console.log(`PASS initial HTML ${pathname}`);
 }
 assert.deepEqual(
@@ -179,32 +179,20 @@ console.log(
   `PASS ${paths.length} route documents; ${locations.length} canonical sitemap URLs; robots and static-hosting configuration`
 );
 
-for (const route of [
-  "/",
-  "/shop",
-  "/shop/products",
-  "/travel",
-  "/investment",
-  "/technology",
+for (const [route, promise] of [
+  ["/", 'href="/travel/stays"'],
+  ["/shop", "one-time email alert"],
+  ["/shop/products", "email alert"],
+  ["/travel", 'href="/travel/flights"'],
+  ["/care", "funeral costs for a relative in Zimbabwe"],
+  ["/business-guides", 'href="/ntir"'],
+  ["/onesa", 'href="/travel/planner?example=victoria-falls-3-days"'],
 ]) {
-  const html = fs.readFileSync(
-    path.join(root, route === "/" ? "index.html" : route.slice(1) + ".html"),
-    "utf8"
-  );
-  assert(
-    html.includes("public-preview"),
-    `${route} needs substantive initial content`
-  );
-  assert(
-    !html.includes("Loading Diaspora Unlocked"),
-    `${route} must not contain the loading shell`
-  );
-  assert(
-    html.includes("one-time availability alert") ||
-      html.includes("Search flights to, from and within Southern Africa") ||
-      html.includes("research starting points") ||
-      html.includes("cannot book a trip")
-  );
+  const file = route === "/" ? "index.html" : route.slice(1) + ".html";
+  const html = fs.readFileSync(path.join(root, file), "utf8");
+  assert(html.includes("public-preview"), `${route} needs substantive initial content`);
+  assert(!html.includes("Loading Diaspora Unlocked"), `${route} must not contain the loading shell`);
+  assert(html.includes(promise), `${route} initial HTML must include ${promise}`);
 }
 
 assert(

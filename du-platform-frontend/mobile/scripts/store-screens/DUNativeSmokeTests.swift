@@ -18,8 +18,8 @@ final class DUNativeSmokeTests: XCTestCase {
 
     private func openTravel(in app: XCUIApplication) {
         app.launch()
-        XCTAssertTrue(app.staticTexts["Explore what connects us"].waitForExistence(timeout: 60))
-        let flights = app.buttons["Find flights"]
+        XCTAssertTrue(app.staticTexts["Plan your next trip home"].waitForExistence(timeout: 60))
+        let flights = app.buttons["Search flights"]
         scrollTo(flights, in: app)
         flights.tap()
         XCTAssertTrue(app.buttons["Stays"].waitForExistence(timeout: 20))
@@ -28,21 +28,21 @@ final class DUNativeSmokeTests: XCTestCase {
     func testOpenTravelFromHome() {
         let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
         app.launch()
-        XCTAssertTrue(app.staticTexts["Explore what connects us"].waitForExistence(timeout: 60))
+        XCTAssertTrue(app.staticTexts["Plan your next trip home"].waitForExistence(timeout: 60))
         attach("Home")
-        let flights = app.buttons["Find flights"]
+        let flights = app.buttons["Search flights"]
         scrollTo(flights, in: app)
         flights.tap()
         XCTAssertTrue(app.buttons["Stays"].waitForExistence(timeout: 20))
-        XCTAssertTrue(app.staticTexts["Enter a city name or a three-letter airport code."].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Choose your departure and destination airports."].waitForExistence(timeout: 10))
         attach("Travel")
     }
 
     func testOpenProductFromHome() {
         let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
         app.launch()
-        let browse = app.buttons["Browse products"]
-        XCTAssertTrue(app.staticTexts["Explore what connects us"].waitForExistence(timeout: 60))
+        let browse = app.buttons["Browse Zimbabwean products"]
+        XCTAssertTrue(app.staticTexts["Plan your next trip home"].waitForExistence(timeout: 60))
         scrollTo(browse, in: app); browse.tap()
         XCTAssertTrue(app.textFields["Search products"].waitForExistence(timeout: 20))
         let product = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "View details for ")).firstMatch
@@ -59,7 +59,7 @@ final class DUNativeSmokeTests: XCTestCase {
     func testDirectFlightHandoff() {
         let app = XCUIApplication(bundleIdentifier: "com.diasporaunlocked.app")
         openTravel(in: app)
-        let search = app.buttons["Search providers"]
+        let search = app.buttons["Search Kiwi.com"]
         scrollTo(search, in: app)
         search.tap()
         let check = app.buttons.matching(NSPredicate(format: "label == %@", "Check current provider details")).firstMatch

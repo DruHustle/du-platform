@@ -26,6 +26,7 @@ export default function ProductPage() {
   const [, params] = useRoute("/shop/product/:slug");
   const { products, status, source, pricing, refresh, readiness } = useShopCatalog();
   const product = products.find(p => p.slug === params?.slug);
+  const orderable = status === "ready" && source === "db" && product && canRequestProduct(readiness, product);
   const { cart, add, removeOne } = useShopCart();
   const { currency } = useShopCurrency();
   const { t, i18n } = useTranslation();
@@ -119,14 +120,14 @@ export default function ProductPage() {
                   </p>
                   <p>
                     {t(
-                      canRequestProduct(readiness, product)
+                      orderable
                         ? "pilot.available_now"
-                        : "shop.products.stock.out"
+                        : "product_interest.title"
                     )}
                   </p>
                   <DeliveryCoverage />
                   <PilotReadinessNotice />
-                  {canRequestProduct(readiness, product) ? (
+                  {orderable ? (
                     <div id="interest" tabIndex={-1} className="flex scroll-mt-28 flex-wrap items-center gap-3">
                       <QuantityControl
                         name={product.name}
@@ -151,7 +152,7 @@ export default function ProductPage() {
                       <ProductInterest product={product} />
                     </div>
                   )}
-                  {canRequestProduct(readiness, product) && (
+                  {orderable && (
                     <p className="text-sm text-white/65">
                       {t("product_interest.quote_note")}
                     </p>

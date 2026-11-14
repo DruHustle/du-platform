@@ -27,7 +27,7 @@ export async function writeAppLinks(output, env) {
     applinks: {
       details: [{
         appIDs: [prefix + "." + packageName],
-        components: ["/reset-password", "/shop", "/shop/*", "/travel", "/travel/*"].map(route => ({ "/": route })),
+        components: ["/reset-password", "/shop", "/shop/*", "/travel", "/travel/*", "/care"].map(route => ({ "/": route })),
       }],
     },
   };

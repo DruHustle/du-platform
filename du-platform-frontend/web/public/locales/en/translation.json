@@ -11,12 +11,6 @@
     "again": "Try again",
     "loading": "Checking account…"
   },
-  "appearance": {
-    "label": "Appearance",
-    "system": "System (automatic)",
-    "light": "Light",
-    "dark": "Dark"
-  },
   "brand": "Diaspora Unlocked",
   "tagline": "Rooted in Zimbabwe. Connected across Southern Africa.",
   "about": "About",
@@ -47,7 +41,9 @@
       "play": "Get it on Google Play",
       "title": "Mobile apps",
       "available": "Open download page",
-      "unavailable": "Not yet available"
+      "unavailable": "Not yet available",
+      "apple": "View in the App Store",
+      "testflight": "Join the TestFlight beta"
     },
     "about": {
       "title": "About us",
@@ -58,14 +54,14 @@
       "values_label": "Our Values",
       "values_content": "Clear information, useful guidance and honest explanations of what is available.",
       "who_label": "Who we are",
-      "who_content": "Rooted in Zimbabwe, Diaspora Unlocked welcomes people across the Southern African diaspora and anyone interested in the region.",
+      "who_content": "Diaspora Unlocked helps people abroad plan visits and find services for family in Zimbabwe. Travel tools also cover selected destinations across Southern Africa.",
       "what_label": "What we do",
-      "what_content": "Browse products and register interest, research a business idea, draft a trip plan or ask Onesa a question. Product interest is not an order or payment."
+      "what_content": "Search for a flight or a stay, browse Zimbabwean products, find a funeral cover provider, or draft an itinerary with Onesa. Book travel and discuss insurance directly with the provider you choose."
     },
     "newsletter": {
       "confirmation_sent": "Check your email for a confirmation link. If you have already confirmed, you are on the list.",
       "delivery_pending": "Subscription request saved. Email delivery is temporarily unavailable. If no confirmation arrives, try subscribing again later.",
-      "consent": "Confirm your email to receive Diaspora Unlocked news and opportunities. Unsubscribe at any time. This does not create a platform account.",
+      "consent": "Use the link we email you to join. Every newsletter includes an unsubscribe link. Product availability alerts are requested separately on product pages.",
       "privacy": "Privacy policy",
       "title": "Newsletter",
       "description": "Zimbabwean products, Southern African travel ideas and diaspora news by email.",
@@ -73,7 +69,7 @@
       "subscribe_aria": "Subscribe to newsletter",
       "already_subscribed": "This email is already subscribed to the newsletter.",
       "subscribed": "Check your email for a confirmation link.",
-      "error": "Unable to subscribe right now."
+      "error": "We could not submit your email. Check the address and try again."
     },
     "contact": {
       "options_title": "Contact Options",
@@ -98,9 +94,9 @@
     "have_account": "Already have an account?",
     "login_here": "Login Here",
     "welcome_back": "Welcome Back",
-    "login_subtitle": "Sign in to your platform account. You can browse and subscribe to the newsletter without signing in.",
+    "login_subtitle": "Sign in to return to your saved trips. You can search for flights, browse products and look up cover providers as a guest.",
     "forgot_password": "Forgot Password?",
-    "login": "Login",
+    "login": "Sign in",
     "no_account": "Don't have an account?",
     "register_now": "Register Now",
     "close": "Close",
@@ -138,7 +134,12 @@
       "number": "Password must contain at least one number.",
       "special": "Password must contain at least one special character.",
       "meets": "Meets password requirements"
-    }
+    },
+    "signing_in": "Signing in…",
+    "email_required": "Enter your email address.",
+    "email_invalid": "Check that your email address is complete.",
+    "password_required": "Enter your password.",
+    "login_failed": "Check your email and password and try again. Use the reset link if you have forgotten your password."
   },
   "nav": {
     "home": "Home",
@@ -168,25 +169,28 @@
     "export_sectors_desc": "Key industries and opportunities",
     "export_roadmap": "Export Roadmap",
     "export_roadmap_desc": "Step-by-step export process",
-    "technology": "Technology",
-    "technology_capabilities": "Technology Capabilities",
+    "technology": "Onesa",
+    "technology_capabilities": "Onesa tools",
     "technology_capabilities_desc": "How Onesa powers help on Diaspora Unlocked",
-    "technology_industries": "Technology Industries",
+    "technology_industries": "Questions for Onesa",
     "technology_industries_desc": "Explore technology ideas and questions by sector",
     "discover": "Discover",
     "admin": "Admin",
     "close_menu": "Close menu",
     "language_hint": "Use the globe icon to change language.",
     "open_menu": "Open menu",
-    "menu": "Navigation menu"
+    "menu": "Navigation menu",
+    "care": "Care",
+    "business_guides": "Business guides",
+    "skip_to_content": "Skip to main content"
   },
   "home": {
-    "hero_title": "Diaspora Unlocked — Zimbabwe and the Southern African diaspora",
-    "hero_subtitle": "Rooted in Zimbabwe. Connected across Southern Africa.",
+    "hero_title": "Plan your next trip home",
+    "hero_subtitle": "Look for flights to Zimbabwe and across Southern Africa, or find a place to stay near family.",
     "tourism": "Travel",
-    "technology": "Technology",
+    "technology": "Onesa",
     "investments": "Investments",
-    "explore_now": "Explore the platform",
+    "explore_now": "Shop, Care and Onesa",
     "inquiry_btn": "Contact Us",
     "inquiry_title": "General Inquiry",
     "ready_to_connect_title": "Ready to Connect?",
@@ -207,54 +211,47 @@
     "tiles": {
       "shop": {
         "title": "Shop",
-        "description": "Find Zimbabwean food, crafts and supporter apparel for your home or as a gift.",
-        "detail": "Browse products and register interest — no order or payment. Sales are not open yet.",
-        "stats": "Browse products",
-        "image_alt": "Giraffes and acacia trees silhouetted at sunset"
+        "description": "Browse Zimbabwean food and crafts. Open a product to check availability and email alert options.",
+        "stats": "Browse Zimbabwean products"
       },
-      "technology": {
-        "title": "Technology",
-        "description": "Ask Onesa about Zimbabwean products, regional travel and practical business ideas.",
-        "detail": "Compare options, prepare a checklist or draft a trip plan. Important details still need checking with providers.",
-        "stats": "Explore AI tools",
-        "image_alt": "Illustration of a woman with elephants in a savannah landscape"
+      "care": {
+        "title": "Care",
+        "description": "Find providers to ask about funeral costs in Zimbabwe or bringing a loved one home from abroad.",
+        "stats": "Find funeral cover providers"
       },
-      "investment": {
-        "title": "Investment",
-        "description": "Research business ideas in Zimbabwe, from farming and construction to mining services and everyday trade.",
-        "detail": "Start with a manageable idea, understand the costs and risks, and check the details before committing money.",
-        "stats": "Explore business ideas",
-        "image_alt": "Fresh vegetables displayed in baskets"
+      "onesa": {
+        "title": "Onesa",
+        "description": "Draft a Zimbabwe itinerary or ask a question about a product in the catalogue.",
+        "stats": "Open Onesa"
       },
-      "tourism": {
-        "title": "Travel",
-        "description": "Plan journeys home and discover destinations across Zimbabwe and Southern Africa.",
-        "detail": "Search flights and stays, read regional guides or draft a Zimbabwe itinerary with Onesa.",
-        "stats": "Find your next destination",
-        "image_alt": "Victoria Falls and the surrounding green landscape in Zimbabwe"
+      "business": {
+        "title": "Business guides",
+        "description": "Research a project in Zimbabwe, check the costs and look up businesses.",
+        "stats": "Read business guides"
       }
     },
     "discovery": {
-      "title": "Your home connection, across borders.",
-      "description": "Zimbabwe is our starting point. Whether your roots are in Zimbabwe or elsewhere in Southern Africa, you belong here. Explore products from home, regional travel and practical business ideas."
-    }
+      "title": "What else can we help you do?"
+    },
+    "flights_action": "Search flights",
+    "stays_action": "Find a stay"
   },
   "tech": {
     "chat_with_onesa": "Chat with Onesa",
     "restore_chat_bubble": "Show chat bubble",
     "landing": {
-      "eyebrow": "Technology & everyday tools",
-      "title": "AI help for everyday plans.",
+      "eyebrow": "Trip planning and chat",
+      "title": "Onesa",
       "highlight": "Powered by Onesa.",
-      "description": "Ask about Zimbabwean products, travel across Southern Africa or practical business ideas. Use Onesa to compare options, organise your questions and draft a plan.",
+      "description": "Start with three days in Victoria Falls. Choose your dates and interests to draft an itinerary, or ask Onesa a question about your visit.",
       "principle": "Start with a question. Leave with a clearer next step.",
       "image_alt": "Illustration of a woman with elephants in a savannah landscape",
       "caption": "Onesa, for Zimbabwe and journeys across Southern Africa.",
       "tools_cta": "Explore the tools"
     },
     "tools": {
-      "title": "What you can do with Onesa",
-      "subtitle": "Ask a question, draft a trip plan or explore the AR guide and VR demo.",
+      "title": "Plan a visit or ask a question",
+      "subtitle": "Drafts use estimated costs. Check opening times, transport and prices with each provider before booking.",
       "chat": {
         "title": "Ask a question",
         "description": "Get plain-language explanations about products, places and business ideas. Use follow-up questions to narrow down what you need.",
@@ -262,9 +259,9 @@
         "image_alt": "Illustration of a woman with elephants in a savannah landscape"
       },
       "trip": {
-        "title": "Plan a Zimbabwe visit",
+        "title": "Three days in Victoria Falls",
         "description": "Build a draft around your dates, interests and budget. Confirm suggested stops, transport and prices with the relevant providers.",
-        "cta": "Plan a trip",
+        "cta": "Plan three days in Victoria Falls",
         "image_alt": "Victoria Falls in Zimbabwe"
       },
       "vr": {
@@ -306,7 +303,7 @@
       "subtitle": "Practical starting ideas for a farm, shop or service business. These are ways to organise work, rather than specialist software provided by DU.",
       "prompt_label": "Try asking Onesa",
       "next": "Ready to connect a digital idea to a business? Explore small starting projects and the checks to make first.",
-      "cta": "Explore business ideas",
+      "cta": "Read business guides",
       "farming": {
         "title": "Keep a crop and sales record",
         "description": "Start with one growing cycle. Record input spending, planting dates, harvest quantities and sales in a simple sheet that you and your grower can review.",
@@ -759,7 +756,11 @@
       "masuwe": {
         "title": "Masuwe SEZ Construction of Villas Project",
         "description": "Profile of a proposed tourism and hospitality development in the Victoria Falls area.",
-        "highlights": ["SEZ Corridor", "Hospitality Assets", "Tourism Demand"]
+        "highlights": [
+          "SEZ Corridor",
+          "Hospitality Assets",
+          "Tourism Demand"
+        ]
       },
       "leather": {
         "title": "Linkdef Soap Manufacturing Project",
@@ -800,7 +801,11 @@
       "solar": {
         "title": "Solgas Energy Solar PV Plant + BESS",
         "description": "Profile of a solar generation and battery storage proposal. Capacity, approvals and financing need confirmation.",
-        "highlights": ["Solar generation", "Battery Storage", "Grid Support"]
+        "highlights": [
+          "Solar generation",
+          "Battery Storage",
+          "Grid Support"
+        ]
       },
       "beef_dairy": {
         "title": "Agro Strong Beef and Dairy Farming Venture",
@@ -872,7 +877,7 @@
       }
     },
     "ntir": {
-      "back": "Back to Investment",
+      "back": "Back to business guides",
       "title": "NTIR business directory",
       "subtitle": "Search the business directory maintained by Diaspora Unlocked by name, sector or location. Entries are research starting points, not official registration or independent verification.",
       "placeholder": "Name, sector or place",
@@ -935,7 +940,7 @@
       }
     },
     "project_details": {
-      "back": "Back to Investment",
+      "back": "Back to business guides",
       "not_found_title": "Project not found",
       "not_found_desc": "This project profile is unavailable. Return to the project catalogue to explore other entries.",
       "badge": "Project Details",
@@ -1000,7 +1005,7 @@
         }
       }
     },
-    "back_to_investment": "Back to Investment",
+    "back_to_investment": "Back to business guides",
     "energy": {
       "opportunities": {
         "mini_grids": {
@@ -1101,13 +1106,13 @@
       }
     },
     "landing": {
-      "eyebrow": "Business & investment",
-      "title": "Put your ideas to work.",
-      "highlight": "In Zimbabwe.",
+      "eyebrow": "Business guides",
+      "title": "Business guides",
+      "highlight": "",
       "description": "Business ideas rooted in Zimbabwe, for people at home and across the Southern African diaspora. Explore a manageable first project and what to check before using your savings.",
       "ideas_cta": "Explore business ideas",
       "plan_cta": "Plan your first step",
-      "principle": "Start small. Know your customer. Stay involved.",
+      "principle": "",
       "image_caption": "Everyday needs. Ideas worth exploring."
     },
     "plan": {
@@ -1165,7 +1170,8 @@
         "cta": "Read the Zimbabwe programme"
       },
       "note": "DU provides information for your own research. We do not verify offers, pool capital or process investments. Returns are uncertain and capital can be lost. External resources checked 22 October 2026."
-    }
+    },
+    "open_guide": "Read the {{title}} guide"
   },
   "regulations": {
     "badge": "Compliance Hub",
@@ -1449,7 +1455,7 @@
     },
     "products": {
       "title": "Product catalogue",
-      "subtitle": "Browse products and register interest — no order or payment. Sales are not open yet.",
+      "subtitle": "Selected products are available to request. The shop checks stock and delivery for your address and sends you a final quote before payment.",
       "back_to_shop": "Back to Shop",
       "default_country": "Germany",
       "filters": {
@@ -1623,19 +1629,22 @@
     "loading": "Loading products...",
     "landing": {
       "eyebrow": "Shop Zimbabwe",
-      "title": "Food, crafts and more.",
+      "title": "Browse Zimbabwean products",
       "highlight": "A connection to Zimbabwe.",
       "caption": "Food · Crafts · Supporter apparel",
-      "collections_cta": "Explore categories"
+      "collections_cta": "View product categories"
     },
     "delivery_coverage": "Approved delivery destinations: {{countries}}.",
-    "no_delivery_destinations": "Delivery is currently unavailable to all destinations.",
+    "no_delivery_destinations": "Delivery is planned from Germany to EU countries. No delivery destinations are open yet.",
     "currency": {
       "label": "Shop currency",
       "EUR": "EUR · Euro",
       "USD": "USD · US dollar",
       "ZAR": "ZAR · South African rand",
       "note": "Prices are estimates; final product and DHL delivery costs are confirmed before payment. Reference conversion: 15 October 2026."
+    },
+    "availability": {
+      "pricing_unavailable": "Some catalogue prices are unavailable. Try again for updated prices."
     }
   },
   "notfound": {
@@ -1708,8 +1717,8 @@
     "partial": "Some search results are temporarily unavailable.",
     "categories": {
       "tourism": "Travel",
-      "investment": "Investment",
-      "technology": "Technology",
+      "investment": "Business guides",
+      "technology": "Onesa",
       "impact": "Impact",
       "ntir": "NTIR",
       "compliance": "Compliance"
@@ -1729,8 +1738,8 @@
     "loading": "Searching…",
     "failed": "Search is unavailable right now. Please try again.",
     "retry": "Try again",
-    "prompt": "Search for flights, accommodation, products or Onesa AI.",
-    "description": "Find products, destinations, business ideas and Onesa tools."
+    "prompt": "Try “flights”, “funeral” or a product name.",
+    "description": "Find flights, stays, Zimbabwean products, cover providers or business guides."
   },
   "error_boundary": {
     "unexpected": "An unexpected error occurred.",
@@ -2105,9 +2114,9 @@
     "command_recovered": "The action was saved. Review the current status before continuing.",
     "command_unconfirmed": "The response could not be confirmed. Check current status or retry the unchanged action; do not submit another financial request.",
     "command_changed": "The request changed. Review the current status before continuing.",
-    "readiness_prelaunch": "We’re preparing the shop",
+    "readiness_prelaunch": "Orders are closed",
     "readiness_limited": "Limited Europe pilot",
-    "readiness_pending_note": "Register your interest to hear when products become available. No order or payment.",
+    "readiness_pending_note": "Choose a product alert to hear when ordering opens for that item.",
     "readiness_pilot_note": "Only explicitly approved destination countries and products are in the pilot. The shop confirms each item, DHL delivery and final terms individually.",
     "operator_details_title": "Operator details",
     "delivery_title": "Delivery and payment",
@@ -2118,28 +2127,28 @@
     "product_unavailable": "This product is no longer available in the catalogue."
   },
   "product_interest": {
-    "action": "Register interest",
-    "scope": "Confirm your email to receive one availability alert for this product. Cancel using the link in the email. No order, reservation or payment; separate from our newsletter.",
+    "action": "Email me when available",
+    "scope": "Confirm your email to get one alert when this product becomes available. You can cancel using the link in the email. Newsletter signup is separate.",
     "email": "Email address",
     "submit": "Email me a confirmation link",
     "close": "Close",
     "received": "If confirmation is needed, we will email a link. Please check your inbox and spam folder.",
     "error": "We could not save your request. Please try again.",
     "invalid_email": "Enter a valid email address.",
-    "title": "Product interest",
-    "confirm_subject": "Confirm your product interest",
+    "title": "Product availability alert",
+    "confirm_subject": "Confirm your availability alert",
     "confirm_body": "Confirm that this email belongs to you to receive one availability alert for this product.",
     "expiry": "This confirmation link expires in 48 hours. Ignore this email if you did not request it.",
     "available_subject": "Product available to request",
     "available_body": "This product is currently available for an assisted order request. Check the product page for current stock and terms; this alert does not reserve goods.",
     "cancel": "Cancel this product alert",
-    "confirm": "Confirm product interest",
+    "confirm": "Confirm my alert",
     "confirmed": "Email confirmed. We will send one alert if this product becomes eligible and available. Stock is not guaranteed.",
     "cancelled": "This product alert is cancelled. Newsletter preferences are unchanged.",
     "invalid_link": "This link is invalid, expired or already used. Request a new link from the product page.",
     "updating": "Updating…",
-    "available_empty": "Nothing is available to order yet. Browse the catalogue and register interest without placing an order.",
-    "prelaunch": "Browse products and register interest — no order or payment. Sales are not open yet.",
+    "available_empty": "No products can be ordered right now. Clear the filter to browse products and choose an email alert.",
+    "prelaunch": "Browse Zimbabwean food, crafts and supporter apparel. Orders are closed. Open a product to get a one-time availability email.",
     "saved_notice": "Your choices are kept. Some saved items are unavailable or exceed current stock. Review or remove them.",
     "remove_unavailable": "Remove unavailable items",
     "price_note": "Displayed prices are indicative. Check current product information before making an order request.",
@@ -2154,19 +2163,19 @@
   "contact_enquiry": {
     "open": "Send a message",
     "title": "Contact the team",
-    "scope": "Your enquiry is saved before we confirm receipt. Service emails are separate from newsletter subscriptions.",
+    "scope": "Send a question to the Diaspora Unlocked team. A reference appears here when we receive your message. We also send a receipt to your email. Leave out passwords and payment details.",
     "name": "Name",
     "email": "Email address",
     "phone": "Phone (optional)",
     "subject": "Subject",
     "message": "Message",
-    "submit": "Save enquiry",
-    "saving": "Saving…",
-    "received": "Your enquiry has been received and saved. Email acceptance and delivery are tracked separately.",
+    "submit": "Send message",
+    "saving": "Sending…",
+    "received": "We received your message. Keep this reference if you contact us again.",
     "reference": "Reference",
     "new": "Start a new enquiry",
-    "failed": "We could not confirm that your enquiry was saved. Your message is kept. Retry unchanged, or explicitly start a new enquiry.",
-    "changed": "This unresolved request belongs to your previous message. Retry it unchanged, or start a new enquiry.",
+    "failed": "We could not confirm receipt. Your message is still in this form. Send it again with the same details.",
+    "changed": "We are still checking your earlier message. Retry the original wording or choose “Start a new enquiry” to send a different message.",
     "privacy": "We store your enquiry, language and notification history in our database so the team can respond. This does not subscribe you to marketing. Contact info@diasporaunlocked.com for correction or deletion requests."
   },
   "travel": {
@@ -2183,17 +2192,17 @@
     "my-trips": "My Trips",
     "description": "Visiting family, heading home or exploring somewhere new? Plan journeys to, from and within Zimbabwe and Southern Africa, then book directly with providers.",
     "choose-location": "Choose a location from the list.",
-    "no-locations": "No matching locations. Try a city, country or airport code.",
+    "no-locations": "No matching location. Try a different city or country.",
     "clear-confirm": "Clear this browser’s trip details, searches, allowances and selected options?",
     "search-intro": "Start with your dates and travellers. These details follow you between Travel sections.",
     "origin": "Departure airport",
-    "destination": "Destination airport / area",
+    "destination": "Arrival airport",
     "stay-area": "Destination area",
     "trip-type": "Flight type",
     "return": "Return",
     "one-way": "One-way",
-    "departure": "Departure / pickup date",
-    "return-date": "Return / drop-off date",
+    "departure": "Departure date",
+    "return-date": "Return flight date",
     "check-in": "Check-in",
     "check-out": "Check-out",
     "adults": "Adults",
@@ -2210,14 +2219,14 @@
     "unsupported-options": "Flexible dates and nearby-airport searches are not connected yet. Select exact airports and dates.",
     "review-search": "Review search details",
     "search-ready": "Your search brief",
-    "no-results": "Live comparison is not connected. No supplier has been searched and no availability or price is confirmed.",
+    "no-results": "Copy these details to check car availability and prices on KAYAK.",
     "add-search": "Add search to trip",
     "added": "Search added to your draft.",
     "copy-search": "Copy search details",
     "copied": "Copied",
     "copy-error": "Copy was unavailable. Select and copy the summary above.",
     "open-provider": "Open KAYAK search ↗",
-    "handoff-note": "Opens a public search page in a new tab. Dates, travellers and locations are not transferred. Copy the details above and enter them on KAYAK. This is not an approved affiliate integration.",
+    "handoff-note": "KAYAK opens in a new tab. Enter your search details there. The company you book with handles payment, changes and support. This ordinary link earns Diaspora Unlocked no referral fee.",
     "review-trip": "Review My Trips",
     "disclosure": "The provider handles your booking, payment and support. If a link can earn Diaspora Unlocked a commission, we label it before you continue.",
     "guest-draft": "Your draft trip",
@@ -2331,7 +2340,7 @@
       "continue": "Continue to {{provider}}",
       "checkout-owner": "{{provider}} handles checkout, payment and booking support. Confirm the final total and cancellation terms there.",
       "affiliate-disclosure": "Awin can use cookies to attribute your booking. Diaspora Unlocked may earn a commission if you choose the referral link. You can also continue directly to Kiwi.com.",
-      "affiliate-choice": "Allow referral tracking and continue",
+      "affiliate-choice": "Continue to Kiwi.com with referral tracking",
       "referral-failed": "The referral link could not open. Your flight is still selected. Use the direct provider link or try again.",
       "no-reservation": "No reservation or price hold is created on DU. Booking and final prices are confirmed on the supplier site.",
       "nationality": "Guest nationality (2-letter country code)",
@@ -2347,7 +2356,27 @@
       "airports-note": "Select exact airports. Nearby-airport expansion is unavailable; date flexibility applies only to flight dates.",
       "flex-one": "±1 day"
     },
-    "weather": "Weather"
+    "weather": "Weather",
+    "purpose": {
+      "flights": "Compare flights to Zimbabwe and across Southern Africa. Check the fare for your whole party, baggage and the journey from the airport.",
+      "stays": "Find a stay for your family. Compare the cost for all nights, rooms and guests before choosing a property.",
+      "car-hire": "Plan where to collect and return a car. Check the deposit and ask the rental company for written permission before crossing a border.",
+      "my-trips": "Keep searches, shortlisted options and your own budget estimates together. Open a provider to confirm availability and make a reservation."
+    },
+    "form-intro": {
+      "flights": "Choose your airports, travel dates and passengers. Review your details, then search Kiwi.com.",
+      "stays": "Choose a destination, check-in and check-out dates, rooms and guests. Review your details, then search Pilot.",
+      "car-hire": "Choose pickup and return locations and times. Copy your search details to use on KAYAK."
+    },
+    "pickup-date": "Pickup date",
+    "dropoff-date": "Drop-off date",
+    "stay-area-note": "Choose the city or area where you want to stay. Confirm the property address and full-stay price with Pilot.",
+    "car-location-note": "Choose the pickup and return areas. Check the exact desk, opening hours and driver requirements with the rental company.",
+    "kayak": {
+      "flights": "Search flights on KAYAK ↗",
+      "stays": "Find stays on KAYAK ↗",
+      "car-hire": "Search rental cars on KAYAK ↗"
+    }
   },
   "weather": {
     "title": "Weather",
@@ -2405,5 +2434,38 @@
     "loaded": "Forecast loaded for {{place}}.",
     "view-forecast": "View forecast",
     "interval": "over {{hours}} h"
+  },
+  "care": {
+    "title": "Funeral cover for family at home and abroad",
+    "intro": "Find providers that pay a cash benefit for funeral costs or arrange a return to Zimbabwe. Start with the help your family needs.",
+    "image": "A family gathering in Zimbabwe",
+    "funeral": "How can I cover funeral costs for a relative in Zimbabwe?",
+    "repatriation": "How can I arrange cover to bring a loved one home from abroad?",
+    "lookup": "Find provider information",
+    "lookup_help": "Choose your goal and both countries of residence to see relevant provider pages. Your choices stay on this device. Ask the provider to confirm eligibility, waiting periods and exclusions before applying.",
+    "goal": "What do you want to arrange?",
+    "choose_goal": "Choose a goal",
+    "applicant": "Where do you live?",
+    "covered": "Where does the person you want to cover live?",
+    "choose_country": "Choose a country",
+    "no_match": "We have no verified provider listing for this combination. Check the two countries and your goal, or ask an insurer serving the country where you live.",
+    "handoff": "This link opens the provider’s website. The provider handles advice, applications, premiums and claims. Diaspora Unlocked earns no fee for this link.",
+    "providers": {
+      "zb": {
+        "title": "ZB · Cash funeral benefit",
+        "body": "ZB describes a cash payment to meet funeral costs for eligible family members in Zimbabwe. Ask which relatives you can include and who receives the payment.",
+        "action": "Read the cash funeral plan at ZB"
+      },
+      "diaspora": {
+        "title": "Diaspora Insurance · Funeral cash plan",
+        "body": "The family can use a cash benefit to pay for a funeral or transport to Zimbabwe and choose who makes the arrangements. Ask about nationality and residence for everyone you want to cover.",
+        "action": "Check funeral cash cover at Diaspora Insurance"
+      },
+      "doves": {
+        "title": "Doves · Arranged repatriation",
+        "body": "The Global Plan describes support for returning a loved one to Zimbabwe, including documents and funeral arrangements. Ask Doves which services it arranges from the country where your loved one lives.",
+        "action": "Check the Global Plan at Doves"
+      }
+    }
   }
 }

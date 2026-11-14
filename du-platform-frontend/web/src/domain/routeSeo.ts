@@ -1,4 +1,5 @@
 import { travelRedirects } from "./travelRoutes";
+import businessGuideTitles from "./businessGuideTitles.json";
 import investmentProjectRoutes from "./investmentProjectRoutes.json";
 
 export const PUBLIC_SITE_ORIGIN = "https://www.diasporaunlocked.com";
@@ -20,9 +21,9 @@ export type RouteSeo = {
 };
 
 const SITE_NAME = "Diaspora Unlocked";
-const SITE_DEFAULT_TITLE = `${SITE_NAME} | Zimbabwe & Southern African Diaspora`;
+const SITE_DEFAULT_TITLE = `Plan your next trip home | ${SITE_NAME}`;
 const SITE_DEFAULT_DESCRIPTION =
-  "Rooted in Zimbabwe, connecting the Southern African diaspora with products from home, regional travel and practical business ideas, wherever you live.";
+  "Search flights and family stays in Zimbabwe and Southern Africa, browse Zimbabwean products, and find funeral cover providers.";
 const DEFAULT_ROBOTS = "index,follow";
 
 function normalizePathname(pathname: string): string {
@@ -65,16 +66,16 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       SITE_DEFAULT_TITLE,
       SITE_DEFAULT_DESCRIPTION,
       "/",
-      "Diaspora Unlocked — Zimbabwe and the Southern African diaspora"
+      "Plan your next trip home"
     );
   }
 
   if (pathname === "/shop/interest")
     return buildSeo(
-      "Product interest | Diaspora Unlocked",
+      "Product availability alert | Diaspora Unlocked",
       "Confirm or cancel a one-time product alert.",
       pathname,
-      "Product interest",
+      "Product availability alert",
       "noindex,nofollow"
     );
   if (pathname === "/shop/order-status")
@@ -103,14 +104,14 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname.startsWith("/shop/product/"))
     return buildSeo(
       "Product information | Diaspora Unlocked",
-      "Product details and indicative prices. Register interest for a one-time availability alert with no order, reservation or payment.",
+      "Check product details, indicative prices and availability. Open the product to see its email alert options.",
       pathname,
       "Product information"
     );
   if (pathname === "/shop") {
     return buildSeo(
       "Shop Zimbabwe Products | Diaspora Unlocked",
-      "Browse Zimbabwean food, crafts and supporter apparel. Build a basket and send an order request to confirm availability, delivery and payment details.",
+      "Browse Zimbabwean food, crafts and supporter apparel. Check each product for availability and one-time email alert options.",
       "/shop",
       "Shop Zimbabwe Products"
     );
@@ -119,19 +120,38 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/shop/products") {
     return buildSeo(
       "Zimbabwe Product Catalogue | Diaspora Unlocked",
-      "Browse Zimbabwean products and register interest for a one-time availability alert. No order, reservation or payment; sales are not open yet.",
+      "Browse Zimbabwean products. Open a product to see its details, availability and email alert options.",
       "/shop/products",
       "Zimbabwe Product Catalogue"
     );
   }
 
-  if (pathname === "/investment") {
+  if (pathname === "/care") {
     return buildSeo(
-      "Zimbabwe Business & Investment Ideas | Diaspora Unlocked",
-      "Explore practical business ideas in Zimbabwe, plan a small first project, and research existing projects and business requirements from home or abroad.",
-      "/investment",
-      "Zimbabwe Business & Investment Ideas"
+      "Funeral cover and repatriation to Zimbabwe | Diaspora Unlocked",
+      "Find official provider information about funeral costs for a relative in Zimbabwe or arranging repatriation from abroad. Check both countries of residence with the provider.",
+      "/care",
+      "Funeral cover for families in Zimbabwe and abroad"
     );
+  }
+
+  if (pathname === "/business-guides" || pathname === "/investment") {
+    return buildSeo(
+      "Zimbabwe Business Guides | Diaspora Unlocked",
+      "Explore practical business ideas in Zimbabwe, plan a small first project, and research existing projects and business requirements from home or abroad.",
+      "/business-guides",
+      "Zimbabwe Business Guides"
+    );
+  }
+
+  if (pathname.startsWith("/business-guides/")) {
+    const slug = pathname.slice("/business-guides/".length);
+    if (Object.hasOwn(businessGuideTitles, slug)) {
+      const title = businessGuideTitles[slug as keyof typeof businessGuideTitles];
+      return buildSeo(`${title} | Zimbabwe Business Guides`,
+        `Read the ${title.toLowerCase()} guide to plan your first project in Zimbabwe. Check customers, costs and progress before you commit.`,
+        pathname, title);
+    }
   }
 
   if (pathname === "/investment/opportunities") {
@@ -166,12 +186,12 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
     );
   }
 
-  if (pathname === "/technology") {
+  if (pathname === "/onesa" || pathname === "/technology") {
     return buildSeo(
-      "Onesa AI Tools & Practical Technology | Diaspora Unlocked",
-      "Use Onesa chat, draft Zimbabwe trip planning, AR guidance and 360° demos. Explore practical digital ideas for Zimbabweans and the wider Southern African diaspora.",
-      "/technology",
-      "Onesa AI Tools & Practical Technology"
+      "Onesa | Diaspora Unlocked",
+      "Plan three days in Victoria Falls or ask Onesa about a product. Edit your draft itinerary before checking prices and booking with providers.",
+      "/onesa",
+      "Onesa"
     );
   }
 
@@ -216,7 +236,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/travel") {
     return buildSeo(
       "Travel Southern Africa | Diaspora Unlocked",
-      "Explore Southern Africa, search flights and stays, and keep private trips and planning allowances. Book directly with providers; car hire uses a public search handoff.",
+      "Search flights and family stays, plan car hire, check the weather and save trip ideas. The provider you choose handles the booking and support.",
       "/travel",
       "Travel Southern Africa"
     );
@@ -261,7 +281,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/login") {
     return buildSeo(
       "Sign In | Diaspora Unlocked",
-      "Sign in to an existing Diaspora Unlocked account. Browsing and order requests do not require an account.",
+      "Sign in to see your saved trips and searches. You can browse the site as a guest.",
       "/login",
       "Sign In",
       "noindex,follow"
@@ -271,7 +291,7 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
   if (pathname === "/register") {
     return buildSeo(
       "Create Account | Diaspora Unlocked",
-      "Create a platform account. Browsing, order requests and newsletter subscriptions do not require an account.",
+      "Create an account to keep private trips and searches. You can browse or sign up for email updates as a guest.",
       "/register",
       "Create Account",
       "noindex,follow"

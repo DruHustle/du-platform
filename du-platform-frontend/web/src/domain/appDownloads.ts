@@ -33,5 +33,6 @@ export function downloadStatus(href: string | undefined) {
   if (!href) return 'unavailable';
   if (href.endsWith('.apk')) return 'apk';
   if (href.startsWith('https://play.google.com/')) return 'play';
-  return 'available';
+  if (href.startsWith('https://testflight.apple.com/')) return 'testflight';
+  return 'apple';
 }
