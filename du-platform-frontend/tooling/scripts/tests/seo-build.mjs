@@ -222,8 +222,8 @@ assert(
 for (const route of ["legal-notice", "delivery-and-returns"]) {
   const html = fs.readFileSync(path.join(root, route + ".html"), "utf8");
   assert(
-    html.includes("DRAFT") && html.includes("info@diasporaunlocked.com"),
-    "Draft policies must be readable in initial HTML"
+    html.includes("DHL delivery is planned from Germany") && html.includes("info@diasporaunlocked.com"),
+    "Customers can read delivery plans and reach the shop in the initial HTML"
   );
   assert(
     html.includes('content="noindex,follow"'),

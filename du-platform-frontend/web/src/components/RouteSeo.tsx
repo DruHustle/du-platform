@@ -63,6 +63,12 @@ const localizedPages: Record<string, [string, string]> = {
   ],
   "/login": ["auth.login", "auth.login_subtitle"],
   "/register": ["auth.create_account", "auth.register_subtitle"],
+  "/forgot-password": ["auth.forgot.title", "auth.forgot.subtitle"],
+  "/reset-password": ["auth.reset.title", "auth.reset.subtitle"],
+  "/newsletter": ["newsletter_preferences.manage_title", "newsletter_preferences.confirm_help"],
+  "/search": ["search.results.title_default", "search.description"],
+  "/legal-notice": ["pilot.operator_title", "pilot.operator_summary"],
+  "/delivery-and-returns": ["pilot.procedures_title", "pilot.procedures_summary"],
   "/privacy-policy": ["legal.privacy.title", "legal.privacy.p1"],
   "/terms-of-service": ["legal.terms.title", "legal.terms.p1"],
 };

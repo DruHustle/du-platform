@@ -4,8 +4,10 @@ import { useShopCatalog } from "../lib/useShopCatalog";
 
 export default function PilotReadinessNotice({
   operator = false,
+  showPolicyLinks = true,
 }: {
   operator?: boolean;
+  showPolicyLinks?: boolean;
 }) {
   const { t } = useTranslation();
   const { readiness: status, source, status: catalogStatus } = useShopCatalog();
@@ -29,13 +31,17 @@ export default function PilotReadinessNotice({
             : "pilot.readiness_pending_note"
         )}
       </p>
-      <Link href="/legal-notice" className="underline">
-        {t("pilot.operator_title")}
-      </Link>
-      {" · "}
-      <Link href="/delivery-and-returns" className="underline">
-        {t("pilot.procedures_title")}
-      </Link>
+      {showPolicyLinks && (
+        <>
+          <Link href="/legal-notice" className="underline">
+            {t("pilot.operator_title")}
+          </Link>
+          {" · "}
+          <Link href="/delivery-and-returns" className="underline">
+            {t("pilot.procedures_title")}
+          </Link>
+        </>
+      )}
       {operator && (
         <div className="mt-3 border-t border-white/15 pt-3">
           <p>

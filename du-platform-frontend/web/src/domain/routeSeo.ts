@@ -86,12 +86,20 @@ export function resolveRouteSeo(input: RouteSeoInput): RouteSeo {
       "Request status",
       "noindex,nofollow"
     );
-  if (["/legal-notice", "/delivery-and-returns"].includes(pathname))
+  if (pathname === "/delivery-and-returns")
     return buildSeo(
-      "Operator and pilot procedures | Diaspora Unlocked",
-      "Operator details and draft delivery, payment, cancellation and returns procedures.",
+      "Delivery, payment and returns | Diaspora Unlocked",
+      "Ask the shop about planned delivery from Germany, quotes, payments, cancellations and returns.",
       pathname,
-      "Operator and pilot procedures",
+      "Delivery, payment and returns",
+      "noindex,follow"
+    );
+  if (pathname === "/legal-notice")
+    return buildSeo(
+      "Operator and contact details | Diaspora Unlocked",
+      "Find contact and registration details for Onesa UG, the operator of Diaspora Unlocked in Heidelberg, Germany.",
+      pathname,
+      "Operator and contact details",
       "noindex,follow"
     );
   if (input.product && pathname === `/shop/product/${input.product.slug}`)
