@@ -104,7 +104,7 @@ const ROUTE_INDEX = [
     title: "Care",
     href: "/care",
     category: "Care",
-    tags: ["insurance", "funeral", "repatriation", "Zimbabwe", "life cover", "Versicherung", "Bestattung", "Rückführung", "mariro", "umngcwabo"],
+    tags: ["insurance", "funeral", "repatriation", "Zimbabwe", "Diaspora Insurance", "Doves", "ZB", "funeral cash plan", "Versicherung", "Bestattung", "Rückführung", "mariro", "umngcwabo"],
   },
   {
     title: "Business guides",
@@ -112,6 +112,18 @@ const ROUTE_INDEX = [
     category: "Investment",
     tags: ["investment", "business", "guides", "checklist", "money", "capital", "projects", "masuwe", "sez"],
   },
+  ...[
+    ["farming", "Farming & food production", "agriculture Landwirtschaft kurima ukulima"],
+    ["mining", "Mining supplies & services", "Bergbau migodhi imigodi"],
+    ["construction", "Construction & home improvements", "Hausbau kuvaka ukwakha"],
+    ["food", "Food processing & packaging", "Lebensmittelverarbeitung chikafu ukudla"],
+    ["solar", "Solar & water services", "Solarenergie mvura amanzi"],
+  ].map(([slug, title, terms]) => ({
+    title,
+    href: `/business-guides/${slug}`,
+    category: "Investment",
+    tags: ["business guide", ...terms.split(" ")],
+  })),
   {
     title: "Onesa",
     href: "/onesa",

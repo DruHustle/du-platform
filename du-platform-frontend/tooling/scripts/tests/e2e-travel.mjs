@@ -391,7 +391,7 @@ try {
     await dest.fill("Unknown city");
     await page
       .getByRole("status")
-      .filter({ hasText: "No matching locations" })
+      .filter({ hasText: "No matching location." })
       .waitFor();
     await dest.press("Tab");
     assert.equal(await dest.inputValue(), "Unknown city");

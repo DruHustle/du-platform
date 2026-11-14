@@ -12,6 +12,7 @@ import {
   SHOP_CATEGORY_CONFIG,
   type ShopSegmentKey,
 } from "@/lib/shopCategories";
+import { readOrderReceipt } from "../lib/checkoutSession";
 import { useShopCart } from "../lib/useShopCart";
 import { canRequestProduct, useShopCatalog } from "../lib/useShopCatalog";
 import ShopCurrencySelect from "../components/ShopCurrencySelect";
@@ -36,6 +37,7 @@ export default function Shop() {
   const { products, status, source, pricing, refresh, readiness } = useShopCatalog();
   const { cart, add, removeOne, itemCount } = useShopCart();
 
+  const receipt = readOrderReceipt();
   const ordering = status === "ready" && source === "db" && products.some(product => canRequestProduct(readiness, product));
   return (
     <Layout>
@@ -69,13 +71,13 @@ export default function Shop() {
         <DiscoverySection
           id="collections"
           title={t("shop.collections_title")}
-          action={(ordering || itemCount > 0) &&
+          action={(ordering || itemCount > 0 || receipt) &&
             <Link
               href="/shop/products?category=all&cart=1"
               className="shop-cart-link"
             >
               <ShoppingBag aria-hidden="true" className="h-4 w-4" />
-              {t(ordering ? "shop.products.cart.short_title" : "product_interest.saved_basket")}
+              {t(receipt && !itemCount ? "shop.products.order.view_request" : ordering ? "shop.products.cart.short_title" : "product_interest.saved_basket")}
               <span className="shop-cart-count" aria-live="polite">
                 {itemCount}
               </span>

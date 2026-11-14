@@ -48,6 +48,9 @@ const routeTitles = new Map([
   ["/travel/planner", "travel.onesa-planner"],
   ["/care", "nav.care"],
   ["/business-guides", "nav.business_guides"],
+  ...(["farming", "mining", "construction", "food", "solar"] as const).map(slug =>
+    [`/business-guides/${slug}`, `investment.opportunities.${slug}.title`] as const
+  ),
   ["/investment", "nav.business_guides"],
   ["/onesa", "nav.technology"],
   ["/technology", "nav.technology"],

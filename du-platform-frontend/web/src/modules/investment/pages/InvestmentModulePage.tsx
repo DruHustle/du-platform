@@ -55,11 +55,10 @@ export default function Investment() {
     <Layout>
       <div className="investment-landing">
         <DiscoveryHero
-          eyebrow={t("investment.landing.eyebrow")}
+          eyebrow="Zimbabwe"
           title={t("investment.landing.title")}
-          highlight={t("investment.landing.highlight")}
+          highlight=""
           description={t("investment.landing.description")}
-          principle={t("investment.landing.principle")}
           image="/images/pages/investment/horticulture.jpg"
           imageAlt={t("investment.opportunities.farming.image_alt")}
           caption={t("investment.landing.image_caption")}

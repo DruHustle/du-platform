@@ -90,7 +90,7 @@
     "password": "Passwort",
     "confirm_password": "Passwort bestätigen",
     "password_minimum": "Verwenden Sie 8–255 Zeichen mit einem Großbuchstaben, einer Zahl und einem Sonderzeichen.",
-    "terms_agreement": "Ich stimme den Nutzungsbedingungen und der Datenschutzerklärung gemäß der DSGVO-Daten-Governance zu.",
+    "terms_agreement": "Ich akzeptiere die Nutzungsbedingungen und habe die Datenschutzerklärung gelesen.",
     "have_account": "Haben Sie bereits ein Konto?",
     "login_here": "Hier anmelden",
     "welcome_back": "Willkommen zurück",
@@ -327,7 +327,8 @@
         "description": "Übe eine konkrete Aufgabe: eine Tabelle, eine klare Kundennachricht oder eine einfache Website. Nutze beim Lernen Beispieldaten.",
         "prompt": "Erstelle einen Übungsplan für Anfänger, um ein kleines Geschäft mit einer Tabelle zu verwalten.",
         "image_alt": "Ein für digitales Lernen ausgestatteter Klassenraum"
-      }
+      },
+      "open_question": "Diese Frage in Onesa öffnen"
     },
     "note": "KI-Antworten können unvollständig oder fehlerhaft sein. Prüfen Sie Preise, Verfügbarkeit und wichtige Anforderungen bei Anbietern oder offiziellen Quellen."
   },
@@ -1106,13 +1107,10 @@
       }
     },
     "landing": {
-      "eyebrow": "Geschäftsleitfäden",
       "title": "Leitfäden für Geschäftsvorhaben",
-      "highlight": "",
       "description": "Geschäftsideen mit Wurzeln in Simbabwe, für Menschen vor Ort und in der Diaspora des südlichen Afrikas. Erkunde ein überschaubares erstes Projekt und was du vor dem Einsatz deiner Ersparnisse prüfen solltest.",
       "ideas_cta": "Geschäftsideen erkunden",
       "plan_cta": "Den ersten Schritt planen",
-      "principle": "",
       "image_caption": "Alltäglicher Bedarf. Ideen zum Weiterdenken."
     },
     "plan": {
@@ -1662,7 +1660,7 @@
     "send": "Senden",
     "thinking": "Überlegt...",
     "starter_prompt": "Frage nach Simbabwe oder dem südlichen Afrika…",
-    "welcome": "Willkommen bei Diaspora Unlocked, in Simbabwe verwurzelt und offen für die Diaspora des südlichen Afrikas. Ich helfe dir, simbabwische Produkte, regionale Reisen und Geschäftsideen zu erkunden. Womit möchtest du beginnen?",
+    "welcome": "Was planen Sie? Fragen Sie nach einem Produkt aus Simbabwe, einem Reiseziel oder einer Geschäftsidee. Ich kann Ihnen die passende Seite zeigen und Fragen an den Anbieter vorschlagen.",
     "status_prefix": "Onesa-Status",
     "status_offline": "Nicht verbunden",
     "status_backend_unreachable": "Onesa ist gerade nicht verfügbar. Bitte versuche es später erneut.",
@@ -2466,6 +2464,7 @@
         "body": "Der Global Plan umfasst laut Doves die Überführung nach Simbabwe mit Dokumenten und Bestattungsorganisation. Fragen Sie, welche Leistungen Doves vom Wohnsitzland Ihres Angehörigen aus organisiert.",
         "action": "Global Plan bei Doves ansehen"
       }
-    }
+    },
+    "privacy": "Die Suche unter Vorsorge verarbeitet die beiden Wohnsitzländer auf Ihrem Gerät. Wenn Sie die Seite eines Anbieters öffnen, entscheiden Sie selbst, welche Angaben Sie dort machen. Es gilt dessen Datenschutzerklärung."
   }
 }

@@ -1,7 +1,13 @@
 import Layout from "@/components/Layout";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
-import { ArrowRight, Brain, Landmark, HeartHandshake, ShoppingBag } from "lucide-react";
+import {
+  ArrowRight,
+  Brain,
+  Landmark,
+  HeartHandshake,
+  ShoppingBag,
+} from "lucide-react";
 import MainPageHero from "@/modules/home/components/MainPageHero";
 import SwipeRail from "@/components/discovery/SwipeRail";
 import DiscoveryTile from "@/components/discovery/DiscoveryTile";
@@ -46,7 +52,7 @@ export default function Home() {
           title={t("home.discovery.title")}
         >
           <SwipeRail label={t("home.discovery.title")}>
-            {modules.map(module => (
+            {modules.map((module) => (
               <DiscoveryTile
                 key={module.key}
                 title={t(`home.tiles.${module.key}.title`)}

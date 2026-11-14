@@ -169,6 +169,13 @@ export default function Technology() {
                 icon={idea.icon}
                 image={idea.image}
                 imageAlt={t("tech.ideas." + idea.key + ".image_alt")}
+                footer={
+                  <Button asChild className={actionClass}>
+                    <Link href={"/onesa-ai-chat?example=" + idea.key}>
+                      {t("tech.ideas.open_question")}
+                    </Link>
+                  </Button>
+                }
               >
                 <p>{t("tech.ideas." + idea.key + ".description")}</p>
                 <dl className="technology-prompt">

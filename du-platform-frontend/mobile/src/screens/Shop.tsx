@@ -29,12 +29,20 @@ export function ShopScreen({ route }: { route?: { params?: Partial<ShopFilters> 
   const coverage = data && !loading && !error && deliveryCoverage(data);
   const ordering = data && !loading && !error && data.products.some(product => canRequestProduct(data, product));
   const filtered = Boolean(filters.q.trim() || filters.availableOnly || filters.category !== "all");
+  const [hasOrderRecord, setHasOrderRecord] = useState(false);
+  useFocusEffect(useCallback(() => {
+    let active = true;
+    void Promise.all([SecureStore.getItemAsync(ORDER_KEY), SecureStore.getItemAsync(PENDING_ORDER_KEY)])
+      .then(records => { if (active) setHasOrderRecord(records.some(Boolean)); })
+      .catch(() => { if (active) setHasOrderRecord(true); });
+    return () => { active = false; };
+  }, []));
   const quantity = cart.items.reduce((count, item) => count + item.quantity, 0);
   return <Screen>
     <Heading>Shop</Heading>
     <Copy>{ordering ? "Browse Zimbabwean products. Request an item and the shop will confirm stock, delivery and the final price before payment." : "Browse Zimbabwean food, crafts and supporter apparel. Choose a product to get a one-time availability email."}</Copy>
     {!!coverage && <Copy>{coverage}</Copy>}
-    {(ordering || quantity > 0) && <Action title={ordering ? `Basket (${quantity})` : `Saved basket (${quantity})`} onPress={() => navigation.navigate("Cart")} secondary />}
+    {(ordering || quantity > 0 || hasOrderRecord) && <Action title={hasOrderRecord && quantity === 0 ? "View saved request" : ordering ? `Basket (${quantity})` : `Saved basket (${quantity})`} onPress={() => navigation.navigate("Cart")} secondary />}
     <Card>
       <Field label="Search products" placeholder="Product name or description" value={filters.q}
         onChangeText={q => navigation.setParams({ q })} autoCapitalize="none" returnKeyType="search" />
@@ -235,9 +243,10 @@ export function CartScreen() {
     }
   };
   const catalogue = useCatalog();
-  const orderable = Boolean(catalogue.data && !catalogue.loading && !catalogue.error && cart.items.length && cart.items.every(({ product, quantity }) => {
-    const current = catalogue.data!.products.find(item => item.id === product.id);
-    return current && current.stock_qty >= quantity && canRequestProduct(catalogue.data!, current);
+  const currentCatalog = catalogue.data;
+  const orderable = Boolean(currentCatalog && !catalogue.loading && !catalogue.error && cart.items.length && cart.items.every(({ product, quantity }) => {
+    const current = currentCatalog.products.find(item => item.id === product.id);
+    return current && current.stock_qty >= quantity && canRequestProduct(currentCatalog, current);
   }));
   const editable = restored && !busy && !pending;
   return <Screen>

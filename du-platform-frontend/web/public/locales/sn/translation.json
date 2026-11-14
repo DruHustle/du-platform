@@ -90,7 +90,7 @@
     "password": "Phasuwedi",
     "confirm_password": "Simbisai phasuwedi",
     "password_minimum": "Shandisa mavara 8–255, kusanganisira bhii guru, nhamba, nechiratidzo.",
-    "terms_agreement": "Ndinobvuma Mitemo neMirayiro yeBasa neMitemo yeKuchengetedzwa kweData maererano nekurongeka kwedata reGDPR.",
+    "terms_agreement": "Ndinobvumirana nemitemo yekushandisa uye ndaverenga gwaro rekuvanzika.",
     "have_account": "Watova neakaundi here?",
     "login_here": "Pinda pano",
     "welcome_back": "Mauya zvakare",
@@ -327,7 +327,8 @@
         "description": "Sarudza basa rimwe rekudzidzira, setafura yemari, meseji yakajeka kumutengi kana webhusaiti iri nyore. Dzidza uchishandisa mashoko emuenzaniso.",
         "prompt": "Gadzira hurongwa hweanotanga kudzidza kushandisa tafura yedhijitari kutungamirira bhizinesi diki.",
         "image_alt": "Kirasi ine zvishandiso zvekudzidza nedhijitari"
-      }
+      },
+      "open_question": "Vhurai mubvunzo uyu muna Onesa"
     },
     "note": "Mhinduro dzeAI dzinogona kusakwana kana kukanganisa. Simbisa mitengo, kuwanikwa nezvinodiwa nemupi kana kwazvinobva zviri pamutemo."
   },
@@ -1106,13 +1107,10 @@
       }
     },
     "landing": {
-      "eyebrow": "Magwara ebhizinesi",
       "title": "Magwara ebhizimisi",
-      "highlight": "",
       "description": "Mazano ebhizinesi ane midzi muZimbabwe, kune vari kumusha nevaya vanobva kumaodzanyemba kweAfrica vari kunze kwenyika. Ongorora chirongwa chidiki chekutanga nezvaunofanira kutarisa usati washandisa mari yawakachengeta.",
       "ideas_cta": "Ongorora mazano ebhizimisi",
       "plan_cta": "Ronga danho rako rekutanga",
-      "principle": "",
       "image_caption": "Zvinodiwa zuva nezuva. Mazano ekuferefeta."
     },
     "plan": {
@@ -1662,7 +1660,7 @@
     "send": "Tumira",
     "thinking": "Ndiri kufunga...",
     "starter_prompt": "Bvunza nezveZimbabwe kana kumaodzanyemba kweAfrica…",
-    "welcome": "Mauya kuDiaspora Unlocked, ine midzi muZimbabwe uye yakavhurika kune vanobva kumaodzanyemba kweAfrica vari kunze kwenyika. Ndinogona kukubatsira kuongorora zvigadzirwa zveZimbabwe, nzendo mudunhu nemazano ebhizinesi. Munoda kutangira papi?",
+    "welcome": "Muri kurongei? Bvunzai nezvechinhu cheZimbabwe, nzvimbo yamuchashanyira kana zano rebhizinesi. Ndinogona kukubatsirai kuwana peji yakakodzera uye kufunga mibvunzo yekubvunza mupi.",
     "status_prefix": "Mamiro aOnesa",
     "status_offline": "Haisi online",
     "status_backend_unreachable": "Onesa haisi kuwanikwa parizvino. Edza zvakare gare gare.",
@@ -2466,6 +2464,7 @@
         "body": "Global Plan inotsanangura kuronga kudzosa mudiwa kuZimbabwe, kusanganisira magwaro nemariro. Bvunza Doves kuti ndezvipi zvavanoronga kubva kunyika inogara hama yako.",
         "action": "Tarisa Global Plan paDoves"
       }
-    }
+    },
+    "privacy": "Paunotsvaga rubatsiro rweinishuwarenzi, nyika dzamunogara mose dzinoshandiswa pamudziyo wako chete. Paunovhura webhusaiti yekambani, ndiwe unosarudza mashoko aunopa maererano nemitemo yayo yekuchengetedza mashoko."
   }
 }

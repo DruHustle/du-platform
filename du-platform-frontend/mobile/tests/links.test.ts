@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { navigationPath, travelLink } from "../src/links";
+import { businessGuideLink, navigationPath, travelLink } from "../src/links";
 describe("account deep links", () => {
+  it.each(["/onesa", "onesa/", "/technology?lng=sn"])("opens Onesa for %s", path => {
+    expect(navigationPath(path)).toBe("onesa-ai-chat");
+  });
+  it("preserves the individual web guide and legacy project record", () => {
+    for (const path of ["/business-guides/farming", "/investment#farming", "/investment/projects/horticulture", "/ntir?q=farmer"]) {
+      expect(businessGuideLink(path)).toEqual({path, title: "Business guides"});
+    }
+    expect(businessGuideLink("/investment-fake")).toBeUndefined();
+  });
   it("accepts a reset token from the email fragment", () => {
     expect(navigationPath("reset-password#token=abc123")).toBe("reset-password?token=abc123");
     expect(navigationPath("reset-password?next=account#token=abc123")).toBe("reset-password?next=account&token=abc123");

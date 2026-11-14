@@ -1,6 +1,7 @@
 import React from "react";
 import { act, create } from "react-test-renderer";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { CareScreen } from "../src/screens/Care";
 import { AssistantScreen, ContactScreen, ExternalScreen } from "../src/screens/Help";
 
 const fakes = vi.hoisted(() => ({
@@ -80,6 +81,37 @@ describe.each(["ios", "android"])("Onesa on %s", platform => {
     await press("Send message");
     expect(fakes.request).toHaveBeenCalledTimes(1);
     expect(fakes.request.mock.calls[0][1].body.message).toBe(draft);
+  });
+
+  it("checks both residences before offering public Care provider handoffs", async () => {
+    await render(<CareScreen />);
+    await press("How can I cover funeral costs for a relative in Zimbabwe?");
+    const chooseCountry = async (label, country) => {
+      await enter(label, country);
+      await press(country);
+    };
+    const applicant = "Where do you live?";
+    const covered = "Where does the person you want to cover live?";
+    await chooseCountry(applicant, "Germany");
+    expect(buttons("Read the cash funeral plan at ZB")).toHaveLength(0);
+    await chooseCountry(covered, "Zimbabwe");
+    await press("Read the cash funeral plan at ZB");
+    await press("Check funeral cash cover at Diaspora Insurance");
+    await press("How can I arrange cover to bring a loved one home from abroad?");
+    expect(buttons("Check the Global Plan at Doves")).toHaveLength(0);
+    await chooseCountry(covered, "Germany");
+    fakes.browser.mockRejectedValueOnce(new Error("Browser unavailable"));
+    await press("Check the Global Plan at Doves");
+    expect(screen.root.findAllByType("Text").some(n => String(n.props.children).includes("select the provider again"))).toBe(true);
+    await press("Check the Global Plan at Doves");
+    await chooseCountry(applicant, "Zimbabwe");
+    expect(buttons("Check the Global Plan at Doves")).toHaveLength(0);
+    expect(fakes.browser.mock.calls.map(([url]) => url)).toEqual([
+      "https://www.zb.co.zw/diaspora/cash-funeral-plan",
+      "https://diasporainsurance.com/zimbabwe/",
+      "https://doves.co.zw/global-plan/", "https://doves.co.zw/global-plan/",
+    ]);
+    expect(fakes.request).not.toHaveBeenCalled();
   });
 
   it("opens the directory directly from Investment, retries the same URL and preserves the main website action", async () => {

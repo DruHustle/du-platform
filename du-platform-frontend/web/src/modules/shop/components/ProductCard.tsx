@@ -69,7 +69,7 @@ export default function ProductCard({
             event.currentTarget.src = "/images/brand/diaspora_unlocked.png";
           }}
         />
-        {readiness?.commercialReady && available && product.stock_qty === 0 && (
+        {readiness?.commercialReady && readiness.approvedProductIds?.includes(product.id) && available && product.stock_qty === 0 && (
           <span className="shop-stock-label">
             {t("shop.products.stock.out", { defaultValue: "Out of Stock" })}
           </span>
