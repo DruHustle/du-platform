@@ -24,6 +24,9 @@ const icons: Record<string,string>={Home:"⌂",Shop:"▣",Travel:"✈",Assistant
 function MainTabs(){return <Tabs.Navigator screenOptions={({route})=>({headerStyle:{backgroundColor:colors.navy},headerTintColor:"white",headerTitleStyle:{fontWeight:"700"},tabBarActiveTintColor:colors.ink,tabBarInactiveTintColor:"#53657a",tabBarLabelStyle:{fontSize:12,fontWeight:"600"},tabBarIcon:({color})=><Text style={{color,fontSize:20}}>{icons[route.name]}</Text>})}><Tabs.Screen name="Home" component={HomeScreen} options={{headerTitle:"Diaspora Unlocked",tabBarLabel:"Home"}}/><Tabs.Screen name="Shop" component={ShopScreen}/><Tabs.Screen name="Travel" component={TravelScreen}/><Tabs.Screen name="Assistant" component={AssistantScreen} options={{title:"Onesa",tabBarAccessibilityLabel:"Onesa"}}/><Tabs.Screen name="Account" component={AccountScreen}/></Tabs.Navigator>;}
 const linking: LinkingOptions<any>={prefixes:["diasporaunlocked://","https://www.diasporaunlocked.com"],config:{initialRouteName:"Main",screens:{Main:{screens:{Home:"",Shop:"shop",Travel:"travel/:section?",Assistant:"onesa-ai-chat",Account:"login" }},Care:"care",Product:"shop/product/:slug",Reset:"reset-password"}},getStateFromPath: (path, options) => {
   const sitePath = path.startsWith("/") ? path : `/${path}`;
+  if (sitePath.split(/[?#]/, 1)[0] === "/travel/planner") {
+    return { index: 1, routes: [{ name: "Main" }, { name: "External", params: { path: sitePath, title: "Onesa trip planner" } }] };
+  }
   const guide = businessGuideLink(sitePath);
   if (guide) return { index: 1, routes: [{ name: "Main" }, { name: "External", params: guide }] };
   const shop = shopDestination(sitePath);

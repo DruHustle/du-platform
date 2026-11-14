@@ -8,7 +8,8 @@ export default function PilotReadinessNotice({
   operator?: boolean;
 }) {
   const { t } = useTranslation();
-  const { readiness: status } = useShopCatalog();
+  const { readiness: status, source, status: catalogStatus } = useShopCatalog();
+  const open = catalogStatus === "ready" && source === "db" && status?.commercialReady && status.mode === "pilot" && status.enforcement === "enforced";
   return (
     <aside
       role="note"
@@ -16,14 +17,14 @@ export default function PilotReadinessNotice({
     >
       <strong className="block text-amber-200">
         {t(
-          status?.commercialReady
+          open
             ? "pilot.readiness_limited"
             : "pilot.readiness_prelaunch"
         )}
       </strong>
       <p className="my-2">
         {t(
-          status?.commercialReady
+          open
             ? "pilot.readiness_pilot_note"
             : "pilot.readiness_pending_note"
         )}

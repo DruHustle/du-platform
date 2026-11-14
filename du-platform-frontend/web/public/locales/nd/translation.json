@@ -90,7 +90,7 @@
     "password": "Iphasivadi",
     "confirm_password": "Qinisekisa iphasivadi",
     "password_minimum": "Sebenzisa izinhlamvu ezingu-8–255, ezilohlamvu olukhulu, inombolo lophawu olukhethekileyo.",
-    "terms_agreement": "Ngiyavumelana leMithetho yeMisebenzi lePholisi yokuLondolozwa kweDatha mayelana lokuphathwa kwedatha yeGDPR.",
+    "terms_agreement": "Ngiyavuma imigomo yokusebenzisa njalo ngisifundile isaziso semfihlo.",
     "have_account": "Usule-akhawunti kakade?",
     "login_here": "Ngena lapha",
     "welcome_back": "Wamukelekile futhi",
@@ -327,7 +327,8 @@
         "description": "Khetha umsebenzi owodwa wokuzijwayeza, njengethebula, umlayezo ocacileyo wekhasimende kumbe iwebhusayithi elula. Sebenzisa imininingwane yezibonelo lapho ufunda.",
         "prompt": "Yenza uhlelo lomqali lokufunda ukusebenzisa ithebula ledijithali ukuphatha ibhizimusi elincane.",
         "image_alt": "Ikilasi elihlomele ukufunda ngedijithali"
-      }
+      },
+      "open_question": "Vula umbuzo lo kuOnesa"
     },
     "note": "Izimpendulo zeAI zingasilela kumbe ziphambane. Qinisekisa intengo, ukutholakala lokufunekayo kumhlinzeki kumbe emthonjeni osemthethweni."
   },
@@ -1106,13 +1107,10 @@
       }
     },
     "landing": {
-      "eyebrow": "Imihlahlandlela yezamabhizimusi",
       "title": "Imihlahlandlela yebhizimusi",
-      "highlight": "",
       "description": "Imibono yamabhizimisi egxile eZimbabwe, yabantu abasekhaya labavela e-Afrika eseNingizimu abahlala kwamanye amazwe. Hlola umsebenzi omncane wokuqala lalokho okumele ukuhlolisise ungakasebenzisi imali oyilondolozileyo.",
       "ideas_cta": "Hlola amacebo ebhizimusi",
       "plan_cta": "Hlela inyathelo lakho lokuqala",
-      "principle": "",
       "image_caption": "Izidingo zansuku zonke. Amacebo okuhlola."
     },
     "plan": {
@@ -1662,7 +1660,7 @@
     "send": "Thumela",
     "thinking": "Iyacabanga...",
     "starter_prompt": "Buza ngeZimbabwe kumbe i-Afrika eseNingizimu…",
-    "welcome": "Wamukelekile kuDiaspora Unlocked, egxile eZimbabwe levulekele abavela e-Afrika eseNingizimu abahlala kwamanye amazwe. Ngingakusiza ukuhlola imikhiqizo yeZimbabwe, uhambo esifundeni lemibono yamabhizimisi. Ufuna ukuqala ngaphi?",
+    "welcome": "Uhlela ukwenzani? Buza ngempahla yeZimbabwe, indawo ozayivakatshela loba umcabango webhizimusi. Ngingakunceda ukuthola ikhasi elifaneleyo lokucebisa imibuzo ongayibuza umphakeli.",
     "status_prefix": "Isimo se-Onesa",
     "status_offline": "Ayikho online",
     "status_backend_unreachable": "UOnesa katholakali khathesi. Zama futhi ngemva kwesikhathi.",
@@ -2466,6 +2464,7 @@
         "body": "I-Global Plan ichaza ukuhlelwa kokubuyisa othandekayo eZimbabwe, okugoqela amaphepha omthetho lamalungiselelo omngcwabo. Buza i-Doves ukuthi ihlela yiphi imisebenzi kusukela elizweni okuhlala kulo isihlobo sakho.",
         "action": "Hlola i-Global Plan ku-Doves"
       }
-    }
+    },
+    "privacy": "Nxa udinga ulwazi lomshuwalense, amazwe elihlala kuwo lobabili asetshenziswa kudivayisi yakho kuphela. Nxa uvula iwebhusayithi yenkampani, nguwe okhetha ukuthi uyinike luphi ulwazi ngaphansi kwemithetho yayo yokugcinwa kolwazi."
   }
 }

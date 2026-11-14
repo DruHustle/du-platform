@@ -1,4 +1,5 @@
 import React from "react";
+import { travelGuides } from "../domain/travelGuides";
 import english from "../../public/locales/en/translation.json";
 import { providerPages } from "../modules/care/providers";
 import businessGuideTitles from "../domain/businessGuideTitles.json";
@@ -27,13 +28,18 @@ export function PublicPagePreview({
 }) {
   const seo = resolveRouteSeo({ pathname });
   const draftPolicy = ["/legal-notice", "/delivery-and-returns"].includes(
-    pathname
+    pathname,
   );
   if (seo.robots.startsWith("noindex") && !draftPolicy) return null;
   const guideSlug = pathname.split("/")[2];
-  const guide = pathname.startsWith("/business-guides/") && Object.hasOwn(businessGuideTitles, guideSlug)
-    ? english.investment.opportunities[guideSlug as keyof typeof businessGuideTitles] : undefined;
-  const product = products.find(p => pathname === `/shop/product/${p.slug}`);
+  const guide =
+    pathname.startsWith("/business-guides/") &&
+    Object.hasOwn(businessGuideTitles, guideSlug)
+      ? english.investment.opportunities[
+          guideSlug as keyof typeof businessGuideTitles
+        ]
+      : undefined;
+  const product = products.find((p) => pathname === `/shop/product/${p.slug}`);
   return (
     <main
       className="public-preview"
@@ -52,7 +58,7 @@ export function PublicPagePreview({
       >
         <a href="/">Home</a>
         <a href="/travel">Travel</a>
-        {sections.map(s => (
+        {sections.map((s) => (
           <a key={s.href} href={s.href}>
             {s.title}
           </a>
@@ -101,20 +107,19 @@ export function PublicPagePreview({
           <p>{english.pilot.complaints}</p>
         </section>
       )}
-      {pathname.startsWith("/travel") && (
+      {["/travel", "/travel/explore", "/travel/flights", "/travel/stays", "/travel/car-hire"].includes(pathname) && (
         <section>
           <h2>{english.travel.guides}</h2>
           <p>{english.travel.reviewed}</p>
-          {Object.entries(english.travel["guides-content"]).map(
-            ([id, guide]) => (
-              <article key={id}>
-                <h3>
-                  <a href={`/travel/explore#${id}`}>{guide.title}</a>
-                </h3>
+          {travelGuides
+            .filter(({ category }) => pathname === "/travel" || pathname === "/travel/explore" || pathname === `/travel/${category}`)
+            .map(({ id }) => {
+              const guide = english.travel["guides-content"][id];
+              return <article key={id}>
+                <h3><a href={`/travel/explore#${id}`}>{guide.title}</a></h3>
                 <p>{guide.body}</p>
-              </article>
-            )
-          )}
+              </article>;
+            })}
           <p>{english.travel["coverage-note"]}</p>
           <a href="/travel/flights">Flights</a>
           {" · "}
@@ -144,44 +149,75 @@ export function PublicPagePreview({
           </a>
         </section>
       )}
-      {pathname === "/" && sections.map(s => (
-        <section key={s.href}>
-          <h2>{s.title}</h2>
-          <p>{s.description}</p>
-          <a href={s.href}>{s.stats}</a>
+      {pathname === "/" &&
+        sections.map((s) => (
+          <section key={s.href}>
+            <h2>{s.title}</h2>
+            <p>{s.description}</p>
+            <a href={s.href}>{s.stats}</a>
+          </section>
+        ))}
+      {pathname === "/care" && (
+        <section>
+          <h2>{english.care.funeral}</h2>
+          <p>{english.care.providers.zb.body}</p>
+          <a href={providerPages.zb} rel="noreferrer">
+            {english.care.providers.zb.action}
+          </a>
+          <p>{english.care.providers.diaspora.body}</p>
+          <a href={providerPages.diaspora} rel="noreferrer">
+            {english.care.providers.diaspora.action}
+          </a>
+          <h2>{english.care.repatriation}</h2>
+          <p>{english.care.providers.doves.body}</p>
+          <a href={providerPages.doves} rel="noreferrer">
+            {english.care.providers.doves.action}
+          </a>
+          <p>{english.care.handoff}</p>
         </section>
-      ))}
-      {pathname === "/care" && <section>
-        <h2>{english.care.funeral}</h2>
-        <p>{english.care.providers.zb.body}</p>
-        <a href={providerPages.zb} rel="noreferrer">{english.care.providers.zb.action}</a>
-        <p>{english.care.providers.diaspora.body}</p>
-        <a href={providerPages.diaspora} rel="noreferrer">{english.care.providers.diaspora.action}</a>
-        <h2>{english.care.repatriation}</h2>
-        <p>{english.care.providers.doves.body}</p>
-        <a href={providerPages.doves} rel="noreferrer">{english.care.providers.doves.action}</a>
-        <p>{english.care.handoff}</p>
-      </section>}
-      {pathname === "/onesa" && <section>
-        <a href="/travel/planner?example=victoria-falls-3-days">Plan three days in Victoria Falls</a> ·{" "}
-        <a href="/onesa-ai-chat">Ask Onesa about a product</a>
-      </section>}
-      {guide && <section>
-        <p>{guide.summary}</p><p>{guide.start}</p><p>{guide.checks}</p>
-        <a href="/regulations#due-diligence-checklist">{english.investment.plan.cta}</a>
-      </section>}
-      {["/business-guides", "/investment"].includes(pathname) && <section>
-        <ul>{Object.entries(businessGuideTitles).map(([slug, title]) =>
-          <li key={slug}><a href={`/business-guides/${slug}`}>{title}</a></li>)}</ul>
-        <a href="/regulations#due-diligence-checklist">{english.investment.plan.cta}</a>
-        <p>Check the costs, permissions and suppliers for your first project.</p>
-        <a href="/ntir">Look up a business</a> · <a href="/investment/opportunities">Read project profiles</a>
-      </section>}
+      )}
+      {pathname === "/onesa" && (
+        <section>
+          <a href="/travel/planner?example=victoria-falls-3-days">
+            Plan three days in Victoria Falls
+          </a>{" "}
+          · <a href="/onesa-ai-chat">Ask Onesa about a product</a>
+        </section>
+      )}
+      {guide && (
+        <section>
+          <p>{guide.summary}</p>
+          <p>{guide.start}</p>
+          <p>{guide.checks}</p>
+          <a href="/regulations#due-diligence-checklist">
+            {english.investment.plan.cta}
+          </a>
+        </section>
+      )}
+      {["/business-guides", "/investment"].includes(pathname) && (
+        <section>
+          <ul>
+            {Object.entries(businessGuideTitles).map(([slug, title]) => (
+              <li key={slug}>
+                <a href={`/business-guides/${slug}`}>{title}</a>
+              </li>
+            ))}
+          </ul>
+          <a href="/regulations#due-diligence-checklist">
+            {english.investment.plan.cta}
+          </a>
+          <p>
+            Check the costs, permissions and suppliers for your first project.
+          </p>
+          <a href="/ntir">Look up a business</a> ·{" "}
+          <a href="/investment/opportunities">Read project profiles</a>
+        </section>
+      )}
       {(pathname === "/shop" || pathname === "/shop/products") && (
         <section>
           <h2>Product catalogue</h2>
           <ul>
-            {products.map(p => (
+            {products.map((p) => (
               <li key={p.slug}>
                 <a href={`/shop/product/${p.slug}`}>{p.name}</a> —{" "}
                 {p.description}

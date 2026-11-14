@@ -165,6 +165,7 @@ try {
         await example.focus();
         await example.press("Enter");
         await page.waitForURL("**/travel/planner?example=victoria-falls-3-days");
+        await page.locator('main input[type="date"]').last().waitFor();
         const dates = await page.locator('main input[type="date"]').evaluateAll(fields => fields.map(input => input.valueAsNumber));
         assert.equal((dates[1] - dates[0]) / 86400000 + 1, 3);
         assert.equal(await page.locator('main select:has(option[value="hwange_national_park"])').inputValue(), "victoria_falls");

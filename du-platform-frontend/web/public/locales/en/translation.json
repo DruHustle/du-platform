@@ -90,7 +90,7 @@
     "password": "Password",
     "confirm_password": "Confirm Password",
     "password_minimum": "Use 8–255 characters, including an uppercase letter, a number, and a special character.",
-    "terms_agreement": "I agree to the Terms of Service and Privacy Policy regarding GDPR data governance.",
+    "terms_agreement": "I accept the Terms of Service and have read the Privacy Policy.",
     "have_account": "Already have an account?",
     "login_here": "Login Here",
     "welcome_back": "Welcome Back",
@@ -327,7 +327,8 @@
         "description": "Choose one task to practise, such as a spreadsheet, a clear customer message or a basic website. Use sample information while learning.",
         "prompt": "Make a beginner practice plan for using a spreadsheet to manage a small business.",
         "image_alt": "A classroom equipped for digital learning"
-      }
+      },
+      "open_question": "Open this question in Onesa"
     },
     "note": "AI answers can be incomplete or mistaken. Check prices, availability, requirements and important decisions with the relevant provider or official source."
   },
@@ -1106,13 +1107,10 @@
       }
     },
     "landing": {
-      "eyebrow": "Business guides",
       "title": "Business guides",
-      "highlight": "",
       "description": "Business ideas rooted in Zimbabwe, for people at home and across the Southern African diaspora. Explore a manageable first project and what to check before using your savings.",
       "ideas_cta": "Explore business ideas",
       "plan_cta": "Plan your first step",
-      "principle": "",
       "image_caption": "Everyday needs. Ideas worth exploring."
     },
     "plan": {
@@ -1662,7 +1660,7 @@
     "send": "Send",
     "thinking": "Thinking...",
     "starter_prompt": "Ask about Zimbabwe or Southern Africa…",
-    "welcome": "Welcome to Diaspora Unlocked, rooted in Zimbabwe and open to the Southern African diaspora. I can help you explore Zimbabwean products, regional travel and business ideas. Where would you like to start?",
+    "welcome": "What are you planning? Ask about a Zimbabwean product, a stop on your trip or a business idea. I can help you find the relevant page and suggest questions to take to a provider.",
     "status_prefix": "Onesa status",
     "status_offline": "Offline",
     "status_backend_unreachable": "Onesa is unavailable right now. Please try again later.",
@@ -2466,6 +2464,7 @@
         "body": "The Global Plan describes support for returning a loved one to Zimbabwe, including documents and funeral arrangements. Ask Doves which services it arranges from the country where your loved one lives.",
         "action": "Check the Global Plan at Doves"
       }
-    }
+    },
+    "privacy": "The Care lookup uses your two countries of residence on this device. When you open a provider page, you decide which details to give the provider under its own privacy policy."
   }
 }

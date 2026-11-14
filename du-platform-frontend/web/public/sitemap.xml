@@ -6,12 +6,42 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.diasporaunlocked.com/cookie-settings</loc>
+    <loc>https://www.diasporaunlocked.com/business-guides</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.diasporaunlocked.com/investment</loc>
+    <loc>https://www.diasporaunlocked.com/business-guides/construction</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/business-guides/farming</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/business-guides/food</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/business-guides/mining</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/business-guides/solar</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/care</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.diasporaunlocked.com/cookie-settings</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -86,6 +116,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.diasporaunlocked.com/onesa</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.diasporaunlocked.com/onesa-ai-chat</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -107,11 +142,6 @@
   </url>
   <url>
     <loc>https://www.diasporaunlocked.com/shop/products</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.diasporaunlocked.com/technology</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

@@ -301,9 +301,9 @@ export function ExternalScreen({route}: {route: {params: {path: string; title: s
 
   return <Screen>
     <Heading>{title}</Heading>
-    <Copy>This section opens on the Diaspora Unlocked website. You may need to sign in there.</Copy>
+    <Copy>{path.startsWith("/travel/planner") ? "Continue in your browser to choose dates, estimate costs and generate your itinerary." : "This section opens on the Diaspora Unlocked website. You may need to sign in there."}</Copy>
     {!!error && <Message error message={error}/>}
-    <Action title="Open website" disabled={!isSitePath(path)} onPress={() => void openWebsite(path)} />
+    <Action title={path.startsWith("/travel/planner") ? "Open trip planner" : "Open website"} disabled={!isSitePath(path)} onPress={() => void openWebsite(path)} />
     {(path === "/investment" || path === "/business-guides") && <Action secondary title="Search the business directory" onPress={() => void openWebsite("/ntir")} />}
   </Screen>;
 }

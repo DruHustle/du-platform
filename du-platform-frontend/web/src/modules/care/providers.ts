@@ -6,7 +6,11 @@ export const providerPages = {
 };
 export type Provider = keyof typeof providerPages;
 
-export function careProviders(goal: CareGoal, applicant: string, covered: string): Provider[] {
+export function careProviders(
+  goal: CareGoal,
+  applicant: string,
+  covered: string,
+): Provider[] {
   if (!applicant || !covered || applicant === "ZW") return [];
   if (goal === "funeral") return covered === "ZW" ? ["zb", "diaspora"] : [];
   return covered !== "ZW" ? ["doves", "diaspora"] : [];

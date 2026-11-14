@@ -43,6 +43,21 @@
               "scheme": "https",
               "host": "www.diasporaunlocked.com",
               "path": "/care"
+            },
+            {
+              "scheme": "https",
+              "host": "www.diasporaunlocked.com",
+              "path": "/onesa"
+            },
+            {
+              "scheme": "https",
+              "host": "www.diasporaunlocked.com",
+              "path": "/onesa-ai-chat"
+            },
+            {
+              "scheme": "https",
+              "host": "www.diasporaunlocked.com",
+              "path": "/technology"
             }
           ],
           "category": [

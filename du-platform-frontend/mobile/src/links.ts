@@ -2,6 +2,7 @@
 // Convert only that fragment to an in-memory navigation parameter.
 export function navigationPath(path: string): string {
   const [base, fragment] = path.split("#", 2);
+  if (/^\/?(?:onesa|technology)\/?(?:\?|$)/.test(base)) return "onesa-ai-chat";
   if (!fragment || !/^\/?reset-password(?:\?|$)/.test(base)) return path;
   const token = new URLSearchParams(fragment).get("token");
   if (!token) return base;
