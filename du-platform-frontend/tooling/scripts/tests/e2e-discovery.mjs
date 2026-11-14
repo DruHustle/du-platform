@@ -88,7 +88,7 @@ try {
     for (const path of [
       "/",
       "/onesa",
-      "/investment",
+      "/business-guides",
       "/travel",
       "/investment/opportunities",
       "/regulations",
@@ -199,7 +199,7 @@ try {
           0
         );
       }
-      if (path === "/investment") {
+      if (path === "/business-guides") {
         assert.equal(
           await page
             .getByRole("heading", {
@@ -318,7 +318,7 @@ try {
       const rails = page.locator(".swipe-rail");
       for (const rail of await rails.all()) {
         const viewport = rail.locator(".swipe-rail-viewport");
-        if (["/", "/onesa", "/investment", "/travel"].includes(path)) {
+        if (["/", "/onesa", "/business-guides", "/travel"].includes(path)) {
           const bounds = await viewport.boundingBox();
           const screenWidth = await page.evaluate(
             () => document.documentElement.clientWidth
@@ -399,7 +399,7 @@ try {
         const hit = await next.boundingBox();
         assert(hit.width >= 44 && hit.height >= 44);
       }
-      if (path === "/investment") {
+      if (path === "/business-guides") {
         const ideas = page.locator("#investment-innovation-opportunities");
         for (const card of await ideas.locator("article").all()) {
           const summary = card.locator("summary");
@@ -587,7 +587,13 @@ try {
       scenario:
         "project filtering resets position; empty recovery and detail navigation work",
     });
-    await page.goto(base + "/investment");
+    await page.goto(base + "/investment#farming");
+    await page.waitForFunction(() => document.querySelector("#farming details")?.open);
+    await page.locator('#farming a[href="/business-guides/farming"]').click();
+    await page.waitForURL("**/business-guides/farming");
+    await page.getByRole("heading", { name: "Farming & food production", exact: true }).waitFor();
+    record({ width, scenario: "Bookmarked farming guide opens the correct article" });
+    await page.goto(base + "/business-guides");
     await page
       .locator("#collective-model")
       .getByRole("link", {
@@ -691,7 +697,7 @@ try {
         "four matching companion tiles; static transcript removed; fourth tile opens virtual previews",
     });
     for (const language of ["de", "sn", "nd"]) {
-      await page.goto(`${base}/investment?lng=${language}`);
+      await page.goto(`${base}/business-guides?lng=${language}`);
       await page.waitForFunction(
         expected => document.documentElement.lang === expected,
         language

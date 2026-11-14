@@ -393,7 +393,8 @@ describe.skipIf(!url)("newsletter MySQL integration", () => {
           "SELECT id FROM newsletter_subscriptions FOR UPDATE NOWAIT"
         );
       } catch (error: any) {
-        if (error.code !== "ER_LOCK_NOWAIT") throw error;
+        // MariaDB reports NOWAIT conflicts using its lock-timeout error code.
+        if (!["ER_LOCK_NOWAIT", "ER_LOCK_WAIT_TIMEOUT"].includes(error.code)) throw error;
         rowLocked = true;
       }
       expect(rowLocked).toBe(true);
