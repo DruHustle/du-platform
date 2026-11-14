@@ -218,7 +218,7 @@ try {
       1
     );
     await page
-      .getByRole("link", { name: "Explore categories", exact: true })
+      .getByRole("link", { name: "View product categories", exact: true })
       .click();
     await page.waitForFunction(() => {
       const top = document
