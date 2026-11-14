@@ -20,24 +20,6 @@ def enter(label, value):
     live.type_in_field(label, value.replace(" ", "%s"))
 
 
-def read_outcome(label, prefix=False):
-    # After submitting, the form can shrink and place its receipt above the old button.
-    try:
-        return live.find(label, timeout=5, prefix=prefix)
-    except RuntimeError:
-        pass
-    document = live.screen.tree()
-    display = max((node for node in document.iter("node")
-                   if node.get("package") == live.screen.PACKAGE),
-                  key=lambda node: live.screen.area(node.attrib["bounds"]))
-    left, top, right, bottom = live.screen.rect(display.attrib["bounds"])
-    middle = str((left + right) // 2)
-    for _ in range(2):
-        live.screen.adb("shell", "input", "swipe", middle, str(top + (bottom-top)//4),
-                        middle, str(top + 3*(bottom-top)//4), "300")
-    return live.find(label, scroll=True, prefix=prefix)
-
-
 def submit_alert():
     live.open_app_link("shop/product/qa-visitor-product")
     live.find("Installed QA product")
@@ -48,7 +30,7 @@ def submit_alert():
     )
     enter("Email address", "visitor-alert@example.test")
     live.tap(live.find("Email me when available", scroll=True, actionable=True))
-    read_outcome("If confirmation is needed, we’ll email you a link. Check your inbox and spam folder.")
+    live.read_outcome("If confirmation is needed, we’ll email you a link. Check your inbox and spam folder.")
     print("PASS installed Android product alert reached the confirmation email instructions", flush=True)
 
 
@@ -61,7 +43,7 @@ def submit_support():
     enter("Subject", "Installed QA")
     enter("Message", "Please confirm receipt of this test support message.")
     live.tap(live.find("Send message", scroll=True, actionable=True))
-    receipt = read_outcome(RECEIPT_PREFIX, prefix=True)
+    receipt = live.read_outcome(RECEIPT_PREFIX, prefix=True)
     text = next(receipt.get(key) for key in ("text", "content-desc")
                 if receipt.get(key, "").startswith(RECEIPT_PREFIX))
     reference = text.removeprefix(RECEIPT_PREFIX)
