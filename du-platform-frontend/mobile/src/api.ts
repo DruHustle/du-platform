@@ -31,7 +31,8 @@ export async function request<T>(path: string, options: {
   const base = new URL(API_URL);
   const endpoint = new URL(API_URL + path);
   if (endpoint.origin !== base.origin || !endpoint.pathname.startsWith(`${base.pathname.replace(/\/$/, "")}/`)) throw new Error("Invalid API path");
-  let response: Response | undefined;
+  let response: Response;
+  let payload;
   const controller = new AbortController();
   const cancel = () => controller.abort();
   if (options.signal?.aborted) controller.abort();
@@ -45,29 +46,46 @@ export async function request<T>(path: string, options: {
       credentials: "omit",
       signal: controller.signal,
     });
-    let payload: any;
-    try { payload = await response.json(); }
-    catch (error) {
-      if (controller.signal.aborted) throw error;
-      if (!response.ok) throw new ApiError("The service is unavailable. Please try again.", response.status, "API_ERROR");
-      throw new ApiError("The service returned an invalid response. Please try again.", 502, "INVALID_RESPONSE");
+    try {
+      payload = response.status === 204 || response.status === 205 ? null : await response.json();
+    } catch (error) {
+      if (controller.signal.aborted || options.signal?.aborted) throw error;
+      if (response.ok) throw new ApiError("The service returned an unreadable response. Please try again.", 502, "INVALID_RESPONSE");
     }
-    if (!response.ok || payload?.success === false) {
-      const error: ApiErrorPayload = payload?.error || {};
-      throw new ApiError(error.message || payload?.message || "The service is unavailable. Please try again.", response.ok ? 502 : response.status, error.code || "API_ERROR");
-    }
-    const value = payload?.success === true && Object.prototype.hasOwnProperty.call(payload, "data") ? payload.data : payload;
-    if (value === null || typeof value !== "object" || (payload?.success === true && !Object.prototype.hasOwnProperty.call(payload, "data")))
-      throw new ApiError("The service returned an invalid response. Please try again.", 502, "INVALID_RESPONSE");
-    return value as T;
   } catch (error) {
-    if (options.signal?.aborted) throw error;
-    if (error instanceof ApiError) throw error;
+    if (options.signal?.aborted || error instanceof ApiError) throw error;
     throw new ApiError(controller.signal.aborted ? "The request timed out. Please try again." : "Could not connect. Check your connection and try again.");
   } finally {
     clearTimeout(timer);
     options.signal?.removeEventListener("abort", cancel);
   }
+  if (!response.ok || payload?.success === false) {
+    const error: ApiErrorPayload = payload?.error || {};
+    // A 2xx that reports success:false is a failed operation, not a client error.
+    throw new ApiError(error.message || payload?.message || "The service is unavailable. Please try again.", response.ok ? 502 : response.status, error.code || "API_ERROR");
+  }
+  if (response.status === 204 || response.status === 205) return null as T;
+  const hasData = payload?.success === true && Object.prototype.hasOwnProperty.call(payload, "data");
+  const value = hasData ? payload.data : payload;
+  // Screens render from these values, so reject an envelope without an object body.
+  if (value === null || typeof value !== "object" || (payload?.success === true && !hasData))
+    throw new ApiError("The service returned an invalid response. Please try again.", 502, "INVALID_RESPONSE");
+  return value as T;
+}
+
+export type ChatMessage = { role: "user" | "assistant"; content: string };
+
+export async function requestOnesaReply(conversation: ChatMessage[], signal: AbortSignal): Promise<string> {
+  const result = await request<{ reply: string; truncated?: boolean }>("/ai/chat", {
+    method: "POST",
+    body: { messages: conversation.slice(-20), language: "en" },
+    signal,
+    timeoutMs: 30_000,
+  });
+  if (typeof result?.reply !== "string" || !result.reply.trim() || result.truncated) {
+    throw new Error("The assistant could not complete a response. Please try again.");
+  }
+  return result.reply;
 }
 
 export type User = { id: number; fullName: string; email: string };

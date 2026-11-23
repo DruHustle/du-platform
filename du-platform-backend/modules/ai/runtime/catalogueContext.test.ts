@@ -73,7 +73,7 @@ it("only returns published facts and working catalogue links, without running pr
     })
   );
   expect(reply).toContain(
-    "[Mazoe Orange](/shop/products?product=mazoe-orange)"
+    "[Mazoe Orange](/shop/product/mazoe-orange)"
   );
   expect(reply).toContain("4.85 EUR");
   expect(reply).not.toMatch(/Secret|Ignore all/);

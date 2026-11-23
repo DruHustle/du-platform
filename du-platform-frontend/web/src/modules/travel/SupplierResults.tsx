@@ -6,7 +6,7 @@ import {
   type TravelQuote,
   type TravelResults,
 } from "@/domain/travel";
-import { searchTravel, revalidateTravelQuote } from "./api";
+import { searchTravel, revalidateTravelQuote, requestAwinReferral } from "./api";
 import { updateDraft, travelEvent } from "./store";
 import { Link, useLocation } from "wouter";
 import { prepareTravelChatDraft } from "./chatHandoff";
@@ -32,12 +32,15 @@ export function SupplierQuoteCard({
   const [current, setCurrent] = useState(quote);
   const [busy, setBusy] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [referralAvailable, setReferralAvailable] = useState(false);
   const [status, setStatus] = useState("");
   const request = useRef<AbortController | null>(null);
   const [now, setNow] = useState(Date.now());
   const sourceId = useRef(quote.id);
   useEffect(() => {
     if (sourceId.current === quote.id) return;
+    request.current?.abort();
+    setBusy(false);
     sourceId.current = quote.id;
     if (quote.id !== current.id) {
       setCurrent(quote);
@@ -79,6 +82,7 @@ export function SupplierQuoteCard({
       setCurrent(result.quote);
       setNow(Date.now());
       setChecked(true);
+      setReferralAvailable(result.referralAvailable === true && current.provider === "Kiwi.com");
       setStatus(
         t(result.changed ? "travel.live.changed" : "travel.live.checked")
       );
@@ -97,6 +101,26 @@ export function SupplierQuoteCard({
               : "travel.live.failed"
           )
         );
+    } finally {
+      if (!controller.signal.aborted) setBusy(false);
+    }
+  }
+  async function openReferral() {
+    if (busy || !checked || !referralAvailable) return;
+    if (Date.now() >= Date.parse(current.reviewAfter)) {
+      setChecked(false);
+      setStatus(t("travel.live.stale"));
+      return;
+    }
+    const controller = new AbortController();
+    request.current?.abort();
+    request.current = controller;
+    setBusy(true);
+    try {
+      const url = await requestAwinReferral(current, controller.signal);
+      if (!controller.signal.aborted && Date.now() < Date.parse(current.reviewAfter)) window.location.assign(url);
+    } catch {
+      if (!controller.signal.aborted) setStatus(t("travel.live.referral-failed"));
     } finally {
       if (!controller.signal.aborted) setBusy(false);
     }
@@ -238,16 +262,29 @@ export function SupplierQuoteCard({
           {t("travel.live.onesa")}
         </Button>
         {checked && !stale && (
-          <Button asChild>
+          <div>
+            <p>{t("travel.live.checkout-owner", { provider: current.provider })}</p>
+            {referralAvailable && <>
+              <p>{t("travel.live.affiliate-disclosure")}</p>
+              <Button disabled={busy} onClick={openReferral}>{t("travel.live.affiliate-choice")}</Button>
+            </>}
+            <Button asChild variant={referralAvailable ? "outline" : "default"}>
             <a
               href={current.bookingUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => travelEvent("resource_opened", current.category)}
+              onClick={event => {
+                if (Date.now() >= Date.parse(current.reviewAfter)) {
+                  event.preventDefault();
+                  setChecked(false);
+                  setStatus(t("travel.live.stale"));
+                } else travelEvent("resource_opened", current.category);
+              }}
             >
               {t("travel.live.continue", { provider: current.provider })} ↗
             </a>
           </Button>
+          </div>
         )}
       </div>
       {status && <p role="status">{status}</p>}

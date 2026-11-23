@@ -1,4 +1,16 @@
 {
+  "deletion": {
+    "title": "Request account deletion",
+    "details": "Request permanent deletion of your Diaspora Unlocked account, saved trips and associated personal data. The operator reviews records held separately and any retention obligations before closing your account.",
+    "password": "Current password",
+    "confirm": "Confirm deletion request",
+    "receipt": "Request received. Reference: {{reference}}. The operator will contact you about completion.",
+    "sign_in": "Sign in to request account deletion",
+    "password_error": "Check your current password and try again.",
+    "retry": "The request could not be confirmed. Retry to recover your reference.",
+    "again": "Try again",
+    "loading": "Checking account…"
+  },
   "appearance": {
     "label": "Appearance",
     "system": "System (automatic)",
@@ -106,6 +118,8 @@
     "reset": {
       "title": "Set New Password",
       "subtitle": "Choose a strong password for your account.",
+      "invalid_link": "This reset link is invalid or has expired.",
+      "request_link": "Request a new reset link",
       "missing_token": "Missing reset token. Please use the link sent to your email.",
       "new_password": "New Password",
       "show_password": "Show password",
@@ -1328,7 +1342,7 @@
       "markets_placeholder": "Markets (e.g. EU, UK)",
       "story_placeholder": "Story content",
       "testimonial_placeholder": "Testimonial",
-      "display_label": "Display on impact page",
+      "display_label": "Display on the Investment page",
       "add_story": "Add Impact Story",
       "badge_display": "Display",
       "badge_hide": "Don't display",
@@ -1445,7 +1459,11 @@
         "food": "Food & Nostalgia",
         "all_segments": "All product types",
         "select_segment": "Choose a product type",
-        "select_category": "Choose a category"
+        "search": "Search products",
+        "category": "Category",
+        "result_count_one": "{{count}} product",
+        "result_count_other": "{{count}} products",
+        "no_matches": "No matching products"
       },
       "loading": "Loading products...",
       "empty_state": "No products available in this category yet.",
@@ -1610,11 +1628,13 @@
       "caption": "Food · Crafts · Supporter apparel",
       "collections_cta": "Explore categories"
     },
+    "delivery_coverage": "Approved delivery destinations: {{countries}}.",
+    "no_delivery_destinations": "Delivery is currently unavailable to all destinations.",
     "currency": {
       "label": "Shop currency",
-      "EUR": "EUR · Europe",
-      "USD": "USD · Zimbabwe",
-      "ZAR": "ZAR · South Africa",
+      "EUR": "EUR · Euro",
+      "USD": "USD · US dollar",
+      "ZAR": "ZAR · South African rand",
       "note": "Prices are estimates; final product and DHL delivery costs are confirmed before payment. Reference conversion: 15 October 2026."
     }
   },
@@ -1685,6 +1705,7 @@
     }
   },
   "search": {
+    "partial": "Some search results are temporarily unavailable.",
     "categories": {
       "tourism": "Travel",
       "investment": "Investment",
@@ -1701,14 +1722,14 @@
     },
     "no_results": {
       "title": "No results found",
-      "message": "We couldn't find anything matching \"{{query}}\". Try searching for broader terms like \"Investment\", \"Tourism\", or \"Onesa\".",
+      "message": "No matches for “{{query}}”. Try a shorter phrase, such as “flights” or “hotels”.",
       "return_home": "Return Home"
     },
     "submit": "Search",
     "loading": "Searching…",
     "failed": "Search is unavailable right now. Please try again.",
     "retry": "Try again",
-    "prompt": "Search for tourism, investment, shopping, or Onesa AI.",
+    "prompt": "Search for flights, accommodation, products or Onesa AI.",
     "description": "Find products, destinations, business ideas and Onesa tools."
   },
   "error_boundary": {
@@ -1722,6 +1743,12 @@
   "cancel": "Cancel",
   "close": "Close",
   "impact": {
+    "feed": {
+      "loading": "Loading impact stories…",
+      "unavailable": "Impact stories could not be loaded.",
+      "retry": "Try again",
+      "empty": "No impact stories have been published yet."
+    },
     "cta_button": "Start Partnership",
     "cta_subtitle": "We collaborate with diaspora leaders, institutions, and businesses to scale impact. Let",
     "cta_title": "Partner with us",
@@ -2014,7 +2041,7 @@
     "payment_draft": "Proposed: review the final quote and payment instructions directly with the shop. Card payment through Stripe is planned but is not available yet; no payment is taken on this site. Record only actual received payments with a reference; dispatch after payment and product checks. Contract formation and payment procedures must be approved before launch.",
     "returns_draft": "Proposed returns contact: Onesa UG (haftungsbeschränkt), Diaspora Unlocked, Steinhofweg 47, 69123 Heidelberg, Germany; info@diasporaunlocked.com. Contact the shop with your request reference to cancel, report a problem or arrange a return. Withdrawal information/form, return-cost responsibility, applicable exceptions and refund procedures must be approved and published before commercial orders are accepted. Statutory consumer rights remain unaffected.",
     "complaints": "For complaints, cancellation or privacy requests, email info@diasporaunlocked.com with your reference. Do not email payment-card details.",
-    "privacy_flows": "Order requests store contact and address details, product/price snapshots, quotes, status history and email delivery records in the MySQL database hosted by Aiven. The API runs on Oracle and the frontend on Vercel. Resend processes transactional and confirmed newsletter emails. Order communications do not subscribe you to newsletters.",
+    "privacy_flows": "Order requests store contact and address details, product/price snapshots, quotes, status history and email delivery records in the MySQL database hosted by Aiven. The API runs on Render and the frontend on Vercel. Resend processes transactional and confirmed newsletter emails. Order communications do not subscribe you to newsletters.",
     "privacy_ai": "Onesa sends the conversation and selected trip preferences to configured AI providers: Google Gemini, with Groq, Anthropic and Cerebras fallback targets. Do not submit sensitive or payment information. AR camera processing is local; camera frames are not uploaded by the AR feature. Provider contracts, retention and international-transfer arrangements require operator review before commercial launch.",
     "privacy_controls": "Essential storage supports preferences, the basket and private tab-scoped receipts. Optional Vercel telemetry and anonymous funnel events run only with analytics consent. Revoke consent through Cookie settings. Names, email addresses, delivery details, access grants and chat contents are excluded from funnel events.",
     "privacy_retention": "Draft retention schedule: the operator must specify order/account retention, legal retention requirements, processor agreements and deletion procedures. Newsletter records include confirmation and opt-out status and delivery records; unsubscribe links stop future campaigns. Contact the operator for access, correction or deletion requests.",
@@ -2155,6 +2182,9 @@
     "explore": "Explore",
     "my-trips": "My Trips",
     "description": "Visiting family, heading home or exploring somewhere new? Plan journeys to, from and within Zimbabwe and Southern Africa, then book directly with providers.",
+    "choose-location": "Choose a location from the list.",
+    "no-locations": "No matching locations. Try a city, country or airport code.",
+    "clear-confirm": "Clear this browser’s trip details, searches, allowances and selected options?",
     "search-intro": "Start with your dates and travellers. These details follow you between Travel sections.",
     "origin": "Departure airport",
     "destination": "Destination airport / area",
@@ -2189,7 +2219,7 @@
     "open-provider": "Open KAYAK search ↗",
     "handoff-note": "Opens a public search page in a new tab. Dates, travellers and locations are not transferred. Copy the details above and enter them on KAYAK. This is not an approved affiliate integration.",
     "review-trip": "Review My Trips",
-    "disclosure": "DU does not sell travel or take reservations. Supplier searches and public search links are identified separately. No DU affiliate commission is configured. Providers confirm final prices and conditions.",
+    "disclosure": "The provider handles your booking, payment and support. If a link can earn Diaspora Unlocked a commission, we label it before you continue.",
     "guest-draft": "Your draft trip",
     "draft-note": "Kept on this browser when storage is available. No reservation is made. Saved searches are plans to check, not selected supplier offers.",
     "searches": "Searches to check",
@@ -2207,7 +2237,7 @@
     "funds-unknown": "Taxes, baggage, mandatory charges, extras and refundable deposits: unknown. These allowance subtotals are not a complete trip price or funds requirement. Supplier observations are listed separately below.",
     "onesa-planner": "Draft a Zimbabwe itinerary with Onesa",
     "private-trips": "Private saved trips & searches",
-    "private-note": "Sign in to save across devices. Only your account can read or delete these records. Loading a saved trip replaces this browser draft.",
+    "private-note": "Your saved trips and searches are private to your account. Loading one replaces the draft on this device.",
     "sign-in": "Sign in to save privately",
     "trip-name": "Trip / search name",
     "save-trip": "Save private trip",
@@ -2219,6 +2249,10 @@
     "restore": "Load into draft",
     "restored": "Saved details loaded into this browser draft.",
     "delete": "Delete",
+    "restore-confirm": "Replace this browser’s draft with “{{name}}”?",
+    "delete-confirm": "Delete “{{name}}” from your saved trips and searches?",
+    "deleted": "Deleted “{{name}}”.",
+    "list-error": "Could not load your saved list. Try again to refresh it.",
     "storage-error": "Could not access saved trips. Your browser draft is still here. Try again later.",
     "alerts": "Price alerts",
     "alerts-note": "Automatic monitoring is unavailable until a provider approves monitoring and delivery limits. No prices are being checked in the background.",
@@ -2295,6 +2329,10 @@
       "changed": "The supplier amount has changed. Review the new amount shown before continuing.",
       "expired": "This option was not returned by the new search. Your trip is retained. Search again for alternatives.",
       "continue": "Continue to {{provider}}",
+      "checkout-owner": "{{provider}} handles checkout, payment and booking support. Confirm the final total and cancellation terms there.",
+      "affiliate-disclosure": "Awin can use cookies to attribute your booking. Diaspora Unlocked may earn a commission if you choose the referral link. You can also continue directly to Kiwi.com.",
+      "affiliate-choice": "Allow referral tracking and continue",
+      "referral-failed": "The referral link could not open. Your flight is still selected. Use the direct provider link or try again.",
       "no-reservation": "No reservation or price hold is created on DU. Booking and final prices are confirmed on the supplier site.",
       "nationality": "Guest nationality (2-letter country code)",
       "nationality-note": "For example DE, ZW, ZA or GB. Hotel rate eligibility can depend on nationality; do not enter a passport number.",

@@ -8,6 +8,7 @@ import { StatusBar } from "expo-status-bar";
 import { SessionProvider } from "./src/session";
 import { CartProvider } from "./src/cart";
 import { nativeLink, nativeLinkingConfig, websiteLinkState } from "./src/links";
+import { shopDestination } from "./src/shopDiscovery";
 import { HomeScreen } from "./src/screens/Home";
 import { ShopScreen, ProductScreen, CartScreen } from "./src/screens/Shop";
 import { TravelScreen } from "./src/screens/Travel";
@@ -15,7 +16,7 @@ import { AccountScreen, ResetPasswordScreen } from "./src/screens/Account";
 import { AssistantScreen, ContactScreen, SearchScreen, ExternalScreen } from "./src/screens/Help";
 import { colors } from "./src/ui";
 
-type RootStackParams = { Main: undefined; Product: {slug: string}; Cart: undefined; Search: undefined; Contact: undefined; Reset: {token?: string} | undefined; External: {path: string; title: string} };
+type RootStackParams = { Main: undefined; Product: {slug: string}; Cart: undefined; Search: undefined; Contact: {reportReply: string} | undefined; Reset: {token?: string} | undefined; External: {path: string; title: string} };
 const Tabs=createBottomTabNavigator();const Stack=createNativeStackNavigator<RootStackParams>();
 const icons: Record<string,string>={Home:"⌂",Shop:"▣",Travel:"✈",Assistant:"✦",Account:"●"};
 function MainTabs() {
@@ -47,6 +48,16 @@ const linking: LinkingOptions<any>={
   getStateFromPath:(path,options)=>{
     const link=nativeLink(path);
     if(link.kind==="invalid")return undefined;
+    // Shop URLs keep the catalogue's search, availability and segment filters
+    // and their website titles. The basket shortcut and all other routes use
+    // the native link resolution.
+    const shop=link.kind==="native"&&link.path==="basket"?undefined:shopDestination(path.startsWith("/")?path:`/${path}`);
+    if(shop){
+      const tab=shop.screen==="Shop"?{name:"Shop",params:shop.params}:{name:"Shop"};
+      const main={name:"Main",state:{routes:[tab]}};
+      if(shop.screen==="Shop")return {routes:[main]};
+      return {index:1,routes:[main,{name:shop.screen,params:shop.params}]};
+    }
     if(link.kind==="website")return websiteLinkState(link);
     return getStateFromPath(link.path,options);
   },

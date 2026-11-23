@@ -43,7 +43,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -125,7 +129,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -207,7 +215,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -289,7 +301,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -368,7 +384,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -460,7 +480,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -539,7 +563,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -615,7 +643,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -696,7 +728,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -767,7 +803,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -829,7 +869,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -912,7 +956,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -973,7 +1021,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1027,13 +1079,20 @@
                           "type": "string"
                         }
                       },
-                      "required": ["requiresConfirmation", "message"]
+                      "required": [
+                        "requiresConfirmation",
+                        "message"
+                      ]
                     },
                     "error": {
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1115,13 +1174,19 @@
                           "$ref": "#/components/schemas/CreatedOrder"
                         }
                       },
-                      "required": ["order"]
+                      "required": [
+                        "order"
+                      ]
                     },
                     "error": {
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1212,13 +1277,19 @@
                           "$ref": "#/components/schemas/Order"
                         }
                       },
-                      "required": ["order"]
+                      "required": [
+                        "order"
+                      ]
                     },
                     "error": {
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1295,7 +1366,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1372,7 +1447,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1479,13 +1558,19 @@
                           "$ref": "#/components/schemas/Order"
                         }
                       },
-                      "required": ["order"]
+                      "required": [
+                        "order"
+                      ]
                     },
                     "error": {
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1592,7 +1677,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1637,13 +1726,55 @@
                       "const": true
                     },
                     "data": {
-                      "$ref": "#/components/schemas/TravelResults"
+                      "$ref": "#/components/schemas/TravelResults",
+                      "additionalProperties": false,
+                      "properties": {
+                        "provider": {
+                          "enum": [
+                            "Kiwi.com",
+                            "Pilot"
+                          ]
+                        },
+                        "category": {
+                          "enum": [
+                            "flights",
+                            "stays"
+                          ]
+                        },
+                        "retrievedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "quotes": {
+                          "type": "array",
+                          "maxItems": 20,
+                          "items": {
+                            "$ref": "#/components/schemas/TravelQuote"
+                          }
+                        },
+                        "rejectedCount": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "provider",
+                        "category",
+                        "retrievedAt",
+                        "quotes",
+                        "rejectedCount"
+                      ],
+                      "type": "object"
                     },
                     "error": {
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1709,13 +1840,35 @@
                       "const": true
                     },
                     "data": {
-                      "$ref": "#/components/schemas/TravelRevalidation"
+                      "$ref": "#/components/schemas/TravelRevalidation",
+                      "additionalProperties": false,
+                      "properties": {
+                        "quote": {
+                          "$ref": "#/components/schemas/TravelQuote"
+                        },
+                        "changed": {
+                          "type": "boolean"
+                        },
+                        "referralAvailable": {
+                          "type": "boolean",
+                          "description": "Returned only to clients requesting a placement. The provider relationship and exact link are checked again on explicit continuation."
+                        }
+                      },
+                      "required": [
+                        "quote",
+                        "changed"
+                      ],
+                      "type": "object"
                     },
                     "error": {
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1783,7 +1936,22 @@
             }
           }
         },
-        "description": "Submit the complete signed quote returned by search. The backend verifies provider/category, booking URL, signature and expiry; do not edit quote fields."
+        "description": "Submit the complete signed quote returned by search. The backend verifies provider/category, booking URL, signature and expiry; do not edit quote fields.",
+        "parameters": [
+          {
+            "name": "channel",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "web",
+                "android",
+                "ios"
+              ]
+            },
+            "description": "Request optional referral availability for this placement. iOS uses the direct provider link."
+          }
+        ]
       }
     },
     "/travel/alerts": {
@@ -1834,7 +2002,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -1909,13 +2081,19 @@
                           "format": "uuid"
                         }
                       },
-                      "required": ["id"]
+                      "required": [
+                        "id"
+                      ]
                     },
                     "error": {
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -2032,13 +2210,19 @@
                           "const": true
                         }
                       },
-                      "required": ["removed"]
+                      "required": [
+                        "removed"
+                      ]
                     },
                     "error": {
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -2113,7 +2297,7 @@
         "summary": "Search public content",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Matching public routes, products and directory entries. When a source is temporarily unavailable and other sources have matches, data.partial is true. An incomplete search with no matches returns an error so callers can retry.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2129,7 +2313,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -2201,7 +2389,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -2309,7 +2501,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"]
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ]
                 }
               }
             }
@@ -2534,7 +2730,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"],
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
                   "additionalProperties": false
                 }
               }
@@ -2614,7 +2814,10 @@
                       "const": "mysql"
                     }
                   },
-                  "required": ["ok", "mode"]
+                  "required": [
+                    "ok",
+                    "mode"
+                  ]
                 }
               }
             }
@@ -2633,7 +2836,10 @@
                       "type": "string"
                     }
                   },
-                  "required": ["ok", "error"]
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
                 }
               }
             }
@@ -2652,7 +2858,10 @@
                       "type": "string"
                     }
                   },
-                  "required": ["ok", "error"]
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
                 }
               }
             }
@@ -3219,7 +3428,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"]
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ]
                 }
               }
             }
@@ -3289,7 +3502,11 @@
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"]
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ]
                 }
               }
             }
@@ -3476,13 +3693,19 @@
                 "properties": {
                   "event": {
                     "type": "string",
-                    "enum": ["product_discovery", "basket_add"]
+                    "enum": [
+                      "product_discovery",
+                      "basket_add"
+                    ]
                   },
                   "consent": {
                     "const": true
                   }
                 },
-                "required": ["event", "consent"],
+                "required": [
+                  "event",
+                  "consent"
+                ],
                 "additionalProperties": false
               }
             }
@@ -3565,7 +3788,9 @@
                     "const": false
                   }
                 },
-                "required": ["consent"]
+                "required": [
+                  "consent"
+                ]
               }
             }
           }
@@ -4260,13 +4485,20 @@
                           "type": "string"
                         }
                       },
-                      "required": ["confirmed", "message"]
+                      "required": [
+                        "confirmed",
+                        "message"
+                      ]
                     },
                     "error": {
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"]
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ]
                 }
               }
             }
@@ -4337,13 +4569,19 @@
                           "const": true
                         }
                       },
-                      "required": ["cancelled"]
+                      "required": [
+                        "cancelled"
+                      ]
                     },
                     "error": {
                       "type": "null"
                     }
                   },
-                  "required": ["success", "data", "error"]
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ]
                 }
               }
             }
@@ -4443,6 +4681,277 @@
           }
         }
       }
+    },
+    "/admin/service-inbox/deletion-requests": {
+      "get": {
+        "summary": "List pending account-deletion requests as a verified administrator",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated pending requests and account identities"
+          },
+          "default": {
+            "description": "Validation, authentication, permission or storage failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000,
+              "default": 1
+            }
+          }
+        ],
+        "x-contract-coverage": "route-inventory"
+      }
+    },
+    "/admin/service-inbox/deletion-requests/{reference}/fulfill": {
+      "post": {
+        "summary": "Fulfill an authenticated deletion request after reviewing separately held records",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fulfilled receipt for the request reference"
+          },
+          "default": {
+            "description": "Validation, authentication, permission or storage failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "associatedDataReviewed",
+                  "customerNotificationArranged"
+                ],
+                "properties": {
+                  "associatedDataReviewed": {
+                    "const": true
+                  },
+                  "customerNotificationArranged": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "reference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-contract-coverage": "route-inventory"
+      }
+    },
+    "/auth/deletion-request": {
+      "post": {
+        "summary": "Request deletion of the signed-in account after current password confirmation",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Durable receipt with requestId and requested status"
+          },
+          "default": {
+            "description": "Validation, authentication, permission or storage failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "accountId",
+                  "password",
+                  "confirm"
+                ],
+                "properties": {
+                  "accountId": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "writeOnly": true
+                  },
+                  "confirm": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-contract-coverage": "route-inventory"
+      }
+    },
+    "/travel/referrals/awin": {
+      "post": {
+        "summary": "Prepare a consented flight referral to the selected Kiwi.com offer",
+        "description": "No booking or payment is made. The link-issuance record is idempotent by the signed quote ID. Keep the original supplier link available on partner or storage failure.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "channel",
+                  "quote",
+                  "consent"
+                ],
+                "properties": {
+                  "channel": {
+                    "enum": [
+                      "web",
+                      "android"
+                    ]
+                  },
+                  "quote": {
+                    "$ref": "#/components/schemas/TravelQuote"
+                  },
+                  "consent": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "success",
+                    "data",
+                    "error"
+                  ],
+                  "properties": {
+                    "success": {
+                      "const": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "url"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "format": "uri",
+                          "description": "Awin-generated tracking URL to the exact selected offer."
+                        }
+                      }
+                    },
+                    "error": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid consent, placement or signed observation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "The price review window expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Affiliate programme, referral storage or partner link unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-contract-coverage": "route-inventory"
+      }
     }
   },
   "components": {
@@ -4485,7 +4994,11 @@
             "format": "email"
           }
         },
-        "required": ["id", "fullName", "email"]
+        "required": [
+          "id",
+          "fullName",
+          "email"
+        ]
       },
       "Credentials": {
         "type": "object",
@@ -4501,7 +5014,10 @@
             "maxLength": 255
           }
         },
-        "required": ["email", "password"]
+        "required": [
+          "email",
+          "password"
+        ]
       },
       "Registration": {
         "type": "object",
@@ -4528,7 +5044,11 @@
             "maxLength": 255
           }
         },
-        "required": ["fullName", "email", "password"]
+        "required": [
+          "fullName",
+          "email",
+          "password"
+        ]
       },
       "NativeAuth": {
         "type": "object",
@@ -4548,7 +5068,12 @@
             "pattern": "^[a-f0-9]{96}$"
           }
         },
-        "required": ["message", "user", "accessToken", "sessionToken"]
+        "required": [
+          "message",
+          "user",
+          "accessToken",
+          "sessionToken"
+        ]
       },
       "BrowserAuth": {
         "type": "object",
@@ -4564,7 +5089,11 @@
             "minLength": 1
           }
         },
-        "required": ["message", "user", "accessToken"],
+        "required": [
+          "message",
+          "user",
+          "accessToken"
+        ],
         "additionalProperties": false
       },
       "Profile": {
@@ -4576,7 +5105,9 @@
             "maxLength": 255
           }
         },
-        "required": ["fullName"],
+        "required": [
+          "fullName"
+        ],
         "additionalProperties": false
       },
       "Error": {
@@ -4599,10 +5130,17 @@
               },
               "details": {}
             },
-            "required": ["code", "message"]
+            "required": [
+              "code",
+              "message"
+            ]
           }
         },
-        "required": ["success", "data", "error"],
+        "required": [
+          "success",
+          "data",
+          "error"
+        ],
         "additionalProperties": false
       },
       "TravelCriteria": {
@@ -4616,7 +5154,10 @@
           },
           "tripType": {
             "type": "string",
-            "enum": ["return", "one-way"]
+            "enum": [
+              "return",
+              "one-way"
+            ]
           },
           "departure": {
             "type": "string",
@@ -4655,7 +5196,12 @@
           },
           "currency": {
             "type": "string",
-            "enum": ["EUR", "GBP", "USD", "ZAR"]
+            "enum": [
+              "EUR",
+              "GBP",
+              "USD",
+              "ZAR"
+            ]
           },
           "pickup": {
             "type": "string"
@@ -4719,13 +5265,20 @@
                   "maximum": 2147483647
                 }
               },
-              "required": ["productId", "quantity"]
+              "required": [
+                "productId",
+                "quantity"
+              ]
             }
           },
           "currency": {
             "default": "EUR",
             "type": "string",
-            "enum": ["EUR", "USD", "ZAR"]
+            "enum": [
+              "EUR",
+              "USD",
+              "ZAR"
+            ]
           },
           "pricingRevision": {
             "type": "string",
@@ -4734,7 +5287,12 @@
           "language": {
             "default": "en",
             "type": "string",
-            "enum": ["en", "de", "sn", "nd"]
+            "enum": [
+              "en",
+              "de",
+              "sn",
+              "nd"
+            ]
           },
           "customerName": {
             "type": "string",
@@ -4779,11 +5337,17 @@
           "deliverySpeed": {
             "default": "normal",
             "type": "string",
-            "enum": ["normal", "express"]
+            "enum": [
+              "normal",
+              "express"
+            ]
           },
           "paymentMethod": {
             "type": "string",
-            "enum": ["manual_assisted", "dummy_gateway"]
+            "enum": [
+              "manual_assisted",
+              "dummy_gateway"
+            ]
           },
           "requestToken": {
             "type": "string",
@@ -4821,7 +5385,10 @@
           },
           "source": {
             "type": "string",
-            "enum": ["db", "memory"]
+            "enum": [
+              "db",
+              "memory"
+            ]
           },
           "cached": {
             "type": "boolean"
@@ -4886,7 +5453,10 @@
                     "type": "boolean"
                   }
                 },
-                "required": ["provider", "mode"]
+                "required": [
+                  "provider",
+                  "mode"
+                ]
               },
               "stays": {
                 "type": "object",
@@ -4908,7 +5478,10 @@
                     "type": "boolean"
                   }
                 },
-                "required": ["provider", "mode"]
+                "required": [
+                  "provider",
+                  "mode"
+                ]
               },
               "car-hire": {
                 "type": "object",
@@ -4930,10 +5503,17 @@
                     "type": "boolean"
                   }
                 },
-                "required": ["provider", "mode"]
+                "required": [
+                  "provider",
+                  "mode"
+                ]
               }
             },
-            "required": ["flights", "stays", "car-hire"]
+            "required": [
+              "flights",
+              "stays",
+              "car-hire"
+            ]
           },
           "locations": {
             "type": "array",
@@ -4950,7 +5530,11 @@
                   "type": "string"
                 }
               },
-              "required": ["id", "name", "country"]
+              "required": [
+                "id",
+                "name",
+                "country"
+              ]
             }
           },
           "resources": {
@@ -4969,7 +5553,11 @@
                 "format": "uri"
               }
             },
-            "required": ["flights", "stays", "car-hire"]
+            "required": [
+              "flights",
+              "stays",
+              "car-hire"
+            ]
           }
         },
         "required": [
@@ -4997,10 +5585,21 @@
           },
           "language": {
             "type": "string",
-            "enum": ["en", "de", "sn", "nd"]
+            "enum": [
+              "en",
+              "de",
+              "sn",
+              "nd"
+            ]
+          },
+          "next": {
+            "type": "string",
+            "description": "Optional task path. Only supported in-app destinations are included in reset emails."
           }
         },
-        "required": ["email"]
+        "required": [
+          "email"
+        ]
       },
       "ResetPassword": {
         "type": "object",
@@ -5022,7 +5621,10 @@
             "maxLength": 255
           }
         },
-        "required": ["token", "password"]
+        "required": [
+          "token",
+          "password"
+        ]
       },
       "TravelQuote": {
         "type": "object",
@@ -5038,11 +5640,17 @@
           },
           "provider": {
             "type": "string",
-            "enum": ["Kiwi.com", "Pilot"]
+            "enum": [
+              "Kiwi.com",
+              "Pilot"
+            ]
           },
           "category": {
             "type": "string",
-            "enum": ["flights", "stays"]
+            "enum": [
+              "flights",
+              "stays"
+            ]
           },
           "providerReference": {
             "type": "string",
@@ -5064,11 +5672,19 @@
           },
           "currency": {
             "type": "string",
-            "enum": ["EUR", "GBP", "USD", "ZAR"]
+            "enum": [
+              "EUR",
+              "GBP",
+              "USD",
+              "ZAR"
+            ]
           },
           "priceBasis": {
             "type": "string",
-            "enum": ["party-total", "unspecified"]
+            "enum": [
+              "party-total",
+              "unspecified"
+            ]
           },
           "retrievedAt": {
             "type": "string",
@@ -5191,7 +5807,11 @@
                     ]
                   }
                 },
-                "required": ["personalItem", "cabinBag", "checkedBag"],
+                "required": [
+                  "personalItem",
+                  "cabinBag",
+                  "checkedBag"
+                ],
                 "additionalProperties": false
               },
               {
@@ -5260,18 +5880,25 @@
           "reviewCount",
           "signature"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Signed supplier observation. Return the complete object unchanged for price revalidation. Kiwi.com flights use party totals and an opaque checkout URL. Pilot stays use an unspecified price basis."
       },
       "TravelResults": {
         "type": "object",
         "properties": {
           "provider": {
             "type": "string",
-            "enum": ["Kiwi.com", "Pilot"]
+            "enum": [
+              "Kiwi.com",
+              "Pilot"
+            ]
           },
           "category": {
             "type": "string",
-            "enum": ["flights", "stays"]
+            "enum": [
+              "flights",
+              "stays"
+            ]
           },
           "retrievedAt": {
             "type": "string",
@@ -5314,13 +5941,20 @@
               "properties": {
                 "category": {
                   "type": "string",
-                  "enum": ["flights", "stays", "car-hire"]
+                  "enum": [
+                    "flights",
+                    "stays",
+                    "car-hire"
+                  ]
                 },
                 "criteria": {
                   "$ref": "#/components/schemas/TravelCriteria"
                 }
               },
-              "required": ["category", "criteria"],
+              "required": [
+                "category",
+                "criteria"
+              ],
               "additionalProperties": false
             }
           },
@@ -5337,7 +5971,11 @@
                 },
                 "category": {
                   "type": "string",
-                  "enum": ["flights", "stays", "car-hire"]
+                  "enum": [
+                    "flights",
+                    "stays",
+                    "car-hire"
+                  ]
                 },
                 "amount": {
                   "type": "number",
@@ -5346,10 +5984,20 @@
                 },
                 "currency": {
                   "type": "string",
-                  "enum": ["EUR", "GBP", "USD", "ZAR"]
+                  "enum": [
+                    "EUR",
+                    "GBP",
+                    "USD",
+                    "ZAR"
+                  ]
                 }
               },
-              "required": ["id", "category", "amount", "currency"],
+              "required": [
+                "id",
+                "category",
+                "amount",
+                "currency"
+              ],
               "additionalProperties": false
             }
           },
@@ -5361,7 +6009,11 @@
             }
           }
         },
-        "required": ["criteria", "searches", "estimates"],
+        "required": [
+          "criteria",
+          "searches",
+          "estimates"
+        ],
         "additionalProperties": false
       },
       "SavedTravelInput": {
@@ -5374,13 +6026,20 @@
           },
           "kind": {
             "type": "string",
-            "enum": ["trip", "search"]
+            "enum": [
+              "trip",
+              "search"
+            ]
           },
           "draft": {
             "$ref": "#/components/schemas/TravelDraft"
           }
         },
-        "required": ["name", "kind", "draft"],
+        "required": [
+          "name",
+          "kind",
+          "draft"
+        ],
         "additionalProperties": false
       },
       "RestockNotification": {
@@ -5389,7 +6048,12 @@
           "language": {
             "default": "en",
             "type": "string",
-            "enum": ["en", "de", "sn", "nd"]
+            "enum": [
+              "en",
+              "de",
+              "sn",
+              "nd"
+            ]
           },
           "productId": {
             "type": "integer",
@@ -5412,7 +6076,11 @@
             "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
           }
         },
-        "required": ["productSlug", "productName", "email"]
+        "required": [
+          "productSlug",
+          "productName",
+          "email"
+        ]
       },
       "ContactInquiry": {
         "type": "object",
@@ -5430,7 +6098,12 @@
           "language": {
             "default": "en",
             "type": "string",
-            "enum": ["en", "de", "sn", "nd"]
+            "enum": [
+              "en",
+              "de",
+              "sn",
+              "nd"
+            ]
           },
           "email": {
             "type": "string",
@@ -5467,7 +6140,13 @@
             ]
           }
         },
-        "required": ["name", "requestId", "email", "subject", "message"]
+        "required": [
+          "name",
+          "requestId",
+          "email",
+          "subject",
+          "message"
+        ]
       },
       "NewsletterSubscription": {
         "type": "object",
@@ -5475,7 +6154,12 @@
           "language": {
             "default": "en",
             "type": "string",
-            "enum": ["en", "de", "sn", "nd"]
+            "enum": [
+              "en",
+              "de",
+              "sn",
+              "nd"
+            ]
           },
           "email": {
             "type": "string",
@@ -5488,7 +6172,9 @@
             "const": true
           }
         },
-        "required": ["email"]
+        "required": [
+          "email"
+        ]
       },
       "ProductDetails": {
         "type": "object",
@@ -5646,7 +6332,12 @@
                 "maxLength": 20000
               }
             },
-            "required": ["route", "cabin", "estimatedCostUsd", "rationale"],
+            "required": [
+              "route",
+              "cabin",
+              "estimatedCostUsd",
+              "rationale"
+            ],
             "additionalProperties": false
           },
           "hotels": {
@@ -5670,7 +6361,12 @@
                 "maxLength": 20000
               }
             },
-            "required": ["area", "style", "estimatedCostUsd", "rationale"],
+            "required": [
+              "area",
+              "style",
+              "estimatedCostUsd",
+              "rationale"
+            ],
             "additionalProperties": false
           },
           "carHire": {
@@ -5690,7 +6386,11 @@
                 "maxLength": 20000
               }
             },
-            "required": ["vehicleClass", "estimatedCostUsd", "rationale"],
+            "required": [
+              "vehicleClass",
+              "estimatedCostUsd",
+              "rationale"
+            ],
             "additionalProperties": false
           },
           "experiences": {
@@ -5717,7 +6417,12 @@
                   "maxLength": 20000
                 }
               },
-              "required": ["name", "location", "estimatedCostUsd", "rationale"],
+              "required": [
+                "name",
+                "location",
+                "estimatedCostUsd",
+                "rationale"
+              ],
               "additionalProperties": false
             }
           },
@@ -5756,7 +6461,12 @@
                   "maximum": 10000000
                 }
               },
-              "required": ["day", "title", "details", "estimatedDailyCostUsd"],
+              "required": [
+                "day",
+                "title",
+                "details",
+                "estimatedDailyCostUsd"
+              ],
               "additionalProperties": false
             }
           }
@@ -5780,7 +6490,9 @@
             "type": "string"
           }
         },
-        "required": ["message"]
+        "required": [
+          "message"
+        ]
       },
       "CurrentUser": {
         "type": "object",
@@ -5789,7 +6501,9 @@
             "$ref": "#/components/schemas/User"
           }
         },
-        "required": ["user"]
+        "required": [
+          "user"
+        ]
       },
       "RefreshedAccessToken": {
         "type": "object",
@@ -5802,20 +6516,29 @@
             "minLength": 1
           }
         },
-        "required": ["message", "accessToken"]
+        "required": [
+          "message",
+          "accessToken"
+        ]
       },
       "TravelSearchRequest": {
         "type": "object",
         "properties": {
           "category": {
             "type": "string",
-            "enum": ["flights", "stays"]
+            "enum": [
+              "flights",
+              "stays"
+            ]
           },
           "criteria": {
             "$ref": "#/components/schemas/TravelCriteria"
           }
         },
-        "required": ["category", "criteria"],
+        "required": [
+          "category",
+          "criteria"
+        ],
         "additionalProperties": false
       },
       "TravelRevalidation": {
@@ -5828,7 +6551,10 @@
             "type": "boolean"
           }
         },
-        "required": ["quote", "changed"]
+        "required": [
+          "quote",
+          "changed"
+        ]
       },
       "SavedTravel": {
         "type": "object",
@@ -5840,7 +6566,10 @@
           },
           "kind": {
             "type": "string",
-            "enum": ["trip", "search"]
+            "enum": [
+              "trip",
+              "search"
+            ]
           },
           "draft": {
             "$ref": "#/components/schemas/TravelDraft"
@@ -5854,7 +6583,13 @@
             "format": "date-time"
           }
         },
-        "required": ["name", "kind", "draft", "id", "updatedAt"],
+        "required": [
+          "name",
+          "kind",
+          "draft",
+          "id",
+          "updatedAt"
+        ],
         "additionalProperties": false
       },
       "ShopReadiness": {
@@ -5862,11 +6597,18 @@
         "properties": {
           "mode": {
             "type": "string",
-            "enum": ["observe", "prelaunch", "pilot"]
+            "enum": [
+              "observe",
+              "prelaunch",
+              "pilot"
+            ]
           },
           "enforcement": {
             "type": "string",
-            "enum": ["report_only", "enforced"]
+            "enum": [
+              "report_only",
+              "enforced"
+            ]
           },
           "commercialReady": {
             "type": "boolean"
@@ -5922,7 +6664,11 @@
                 "exclusiveMinimum": 0
               }
             },
-            "required": ["EUR", "USD", "ZAR"]
+            "required": [
+              "EUR",
+              "USD",
+              "ZAR"
+            ]
           },
           "shipping": {
             "type": "object",
@@ -5940,10 +6686,18 @@
                 "minimum": 0
               }
             },
-            "required": ["freeAboveCents", "normalCents", "expressCents"]
+            "required": [
+              "freeAboveCents",
+              "normalCents",
+              "expressCents"
+            ]
           }
         },
-        "required": ["revision", "ratesPerEur", "shipping"]
+        "required": [
+          "revision",
+          "ratesPerEur",
+          "shipping"
+        ]
       },
       "Product": {
         "type": "object",
@@ -5960,7 +6714,12 @@
           },
           "category": {
             "type": "string",
-            "enum": ["sports", "crafts", "food", "beverage"]
+            "enum": [
+              "sports",
+              "crafts",
+              "food",
+              "beverage"
+            ]
           },
           "description": {
             "type": "string"
@@ -6001,7 +6760,10 @@
           },
           "is_active": {
             "type": "integer",
-            "enum": [0, 1]
+            "enum": [
+              0,
+              1
+            ]
           }
         },
         "required": [
@@ -6036,7 +6798,10 @@
             ]
           }
         },
-        "required": ["details", "updatedAt"]
+        "required": [
+          "details",
+          "updatedAt"
+        ]
       },
       "OrderItem": {
         "type": "object",
@@ -6081,11 +6846,18 @@
           },
           "status": {
             "type": "string",
-            "enum": ["awaiting_payment", "paid", "failed"]
+            "enum": [
+              "awaiting_payment",
+              "paid",
+              "failed"
+            ]
           },
           "paymentMethod": {
             "type": "string",
-            "enum": ["manual_assisted", "dummy_gateway"]
+            "enum": [
+              "manual_assisted",
+              "dummy_gateway"
+            ]
           },
           "paymentReference": {
             "anyOf": [
@@ -6099,7 +6871,11 @@
           },
           "currency": {
             "type": "string",
-            "enum": ["EUR", "USD", "ZAR"]
+            "enum": [
+              "EUR",
+              "USD",
+              "ZAR"
+            ]
           },
           "subtotalCents": {
             "type": "integer",
@@ -6115,7 +6891,10 @@
           },
           "deliverySpeed": {
             "type": "string",
-            "enum": ["normal", "express"]
+            "enum": [
+              "normal",
+              "express"
+            ]
           },
           "createdAt": {
             "anyOf": [
@@ -6164,11 +6943,18 @@
           },
           "status": {
             "type": "string",
-            "enum": ["awaiting_payment", "paid", "failed"]
+            "enum": [
+              "awaiting_payment",
+              "paid",
+              "failed"
+            ]
           },
           "paymentMethod": {
             "type": "string",
-            "enum": ["manual_assisted", "dummy_gateway"]
+            "enum": [
+              "manual_assisted",
+              "dummy_gateway"
+            ]
           },
           "paymentReference": {
             "anyOf": [
@@ -6182,7 +6968,11 @@
           },
           "currency": {
             "type": "string",
-            "enum": ["EUR", "USD", "ZAR"]
+            "enum": [
+              "EUR",
+              "USD",
+              "ZAR"
+            ]
           },
           "subtotalCents": {
             "type": "integer",
@@ -6198,7 +6988,10 @@
           },
           "deliverySpeed": {
             "type": "string",
-            "enum": ["normal", "express"]
+            "enum": [
+              "normal",
+              "express"
+            ]
           },
           "createdAt": {
             "anyOf": [
@@ -6327,7 +7120,11 @@
                   "type": "string"
                 }
               },
-              "required": ["amountCents", "currency", "createdAt"]
+              "required": [
+                "amountCents",
+                "currency",
+                "createdAt"
+              ]
             }
           },
           "quotes": {
@@ -6360,7 +7157,10 @@
                   }
                 },
                 "expired": {
-                  "type": ["integer", "boolean"]
+                  "type": [
+                    "integer",
+                    "boolean"
+                  ]
                 }
               },
               "required": [
@@ -6388,7 +7188,11 @@
                 "minimum": 0
               }
             },
-            "required": ["currency", "shippingCents", "totalCents"]
+            "required": [
+              "currency",
+              "shippingCents",
+              "totalCents"
+            ]
           },
           "requestedItems": {
             "type": "array",
@@ -6428,7 +7232,10 @@
                   ]
                 }
               },
-              "required": ["action", "created_at"]
+              "required": [
+                "action",
+                "created_at"
+              ]
             }
           }
         },
@@ -6465,7 +7272,10 @@
             "maxLength": 1000
           }
         },
-        "required": ["requestId", "version"]
+        "required": [
+          "requestId",
+          "version"
+        ]
       },
       "PaymentConfirmation": {
         "type": "object",
@@ -6513,11 +7323,19 @@
                   }
                 }
               },
-              "required": ["title", "href", "category"]
+              "required": [
+                "title",
+                "href",
+                "category"
+              ]
             }
           }
         },
-        "required": ["query", "count", "results"]
+        "required": [
+          "query",
+          "count",
+          "results"
+        ]
       },
       "ContactReceipt": {
         "type": "object",
@@ -6533,7 +7351,11 @@
             "type": "string"
           }
         },
-        "required": ["received", "requestId", "message"]
+        "required": [
+          "received",
+          "requestId",
+          "message"
+        ]
       },
       "ChatRequest": {
         "type": "object",
@@ -6545,27 +7367,44 @@
               "properties": {
                 "role": {
                   "type": "string",
-                  "enum": ["user", "assistant"]
+                  "enum": [
+                    "user",
+                    "assistant"
+                  ]
                 },
                 "content": {
                   "type": "string",
                   "minLength": 1
                 }
               },
-              "required": ["role", "content"]
+              "required": [
+                "role",
+                "content"
+              ]
             },
             "minItems": 1
           },
           "language": {
             "type": "string",
-            "enum": ["en", "de", "sn", "nd"]
+            "enum": [
+              "en",
+              "de",
+              "sn",
+              "nd"
+            ]
           },
           "currency": {
             "type": "string",
-            "enum": ["EUR", "USD", "ZAR"]
+            "enum": [
+              "EUR",
+              "USD",
+              "ZAR"
+            ]
           }
         },
-        "required": ["messages"]
+        "required": [
+          "messages"
+        ]
       },
       "ChatReply": {
         "type": "object",
@@ -6581,7 +7420,10 @@
             "const": "published_catalogue"
           }
         },
-        "required": ["reply", "truncated"]
+        "required": [
+          "reply",
+          "truncated"
+        ]
       },
       "AssistantError": {
         "type": "object",
@@ -6597,18 +7439,29 @@
             "minimum": 0
           }
         },
-        "required": ["message"]
+        "required": [
+          "message"
+        ]
       },
       "TripPlanRequest": {
         "type": "object",
         "properties": {
           "language": {
             "type": "string",
-            "enum": ["en", "de", "sn", "nd"]
+            "enum": [
+              "en",
+              "de",
+              "sn",
+              "nd"
+            ]
           },
           "tripType": {
             "type": "string",
-            "enum": ["one_way", "round_trip", "multi_trip"]
+            "enum": [
+              "one_way",
+              "round_trip",
+              "multi_trip"
+            ]
           },
           "origin": {
             "type": "string"
@@ -6642,15 +7495,27 @@
           },
           "season": {
             "type": "string",
-            "enum": ["dry", "green", "shoulder"]
+            "enum": [
+              "dry",
+              "green",
+              "shoulder"
+            ]
           },
           "budget": {
             "type": "string",
-            "enum": ["low", "medium", "high"]
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
           },
           "comfort": {
             "type": "string",
-            "enum": ["budget", "standard", "premium"]
+            "enum": [
+              "budget",
+              "standard",
+              "premium"
+            ]
           },
           "days": {
             "type": "integer",
@@ -6676,13 +7541,19 @@
         "properties": {
           "source": {
             "type": "string",
-            "enum": ["ai", "fallback"]
+            "enum": [
+              "ai",
+              "fallback"
+            ]
           },
           "plan": {
             "$ref": "#/components/schemas/TripPlan"
           }
         },
-        "required": ["source", "plan"]
+        "required": [
+          "source",
+          "plan"
+        ]
       },
       "AiCapabilities": {
         "type": "object",
@@ -6697,7 +7568,10 @@
             "type": "boolean"
           }
         },
-        "required": ["domains", "integrationsReady"]
+        "required": [
+          "domains",
+          "integrationsReady"
+        ]
       },
       "PreferenceToken": {
         "type": "object",
@@ -6707,7 +7581,9 @@
             "pattern": "^[a-f0-9]{48}$"
           }
         },
-        "required": ["token"]
+        "required": [
+          "token"
+        ]
       },
       "Ping": {
         "type": "object",
@@ -6812,7 +7688,11 @@
             "type": "string"
           }
         },
-        "required": ["name", "quantity", "unitPriceCents"]
+        "required": [
+          "name",
+          "quantity",
+          "unitPriceCents"
+        ]
       }
     }
   }

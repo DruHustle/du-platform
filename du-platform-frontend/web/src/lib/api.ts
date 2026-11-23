@@ -12,15 +12,14 @@ const AUTH_HEADER_EXCLUDED_ENDPOINTS = new Set([
   "/auth/logout",
 ]);
 
+let refreshPromise: Promise<string> | null = null;
+let accessToken = "";
+let sessionGeneration = 0;
+
 type SessionRequestConfig = InternalAxiosRequestConfig & {
-  _authGeneration?: number;
+  _sessionGeneration?: number;
   _retryAfterRefresh?: boolean;
 };
-
-let refreshInFlight: { generation: number; promise: Promise<string> } | null =
-  null;
-let authGeneration = 0;
-let accessToken = "";
 
 function resolveApiBaseUrl() {
   // Deployed browsers always use the host's controlled API rewrite. Preview
@@ -80,11 +79,8 @@ export function markHasLoggedInBefore() {
   safeLocalStorage.setItem(HAS_LOGGED_IN_KEY, "1");
 }
 
-function storeAuthToken(token: string) {
-  if (typeof window === "undefined") return;
-  const normalized = String(token ?? "").trim();
-  if (!normalized) return;
-  accessToken = normalized;
+function storeAccessToken(token: string) {
+  accessToken = token;
   // Do not persist bearer tokens in browser storage.
   safeSessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
   safeLocalStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
@@ -92,16 +88,18 @@ function storeAuthToken(token: string) {
 }
 
 export function saveAuthToken(token: string) {
-  if (typeof window === "undefined" || !String(token ?? "").trim()) return;
-  // Explicit sign-in/account changes invalidate requests made by the old
-  // session. A token renewal, by contrast, stays in the same generation.
-  authGeneration += 1;
-  storeAuthToken(token);
+  if (typeof window === "undefined") return;
+  const normalized = String(token ?? "").trim();
+  if (!normalized) return;
+  sessionGeneration += 1;
+  refreshPromise = null;
+  storeAccessToken(normalized);
 }
 
 export function clearAuthToken() {
   if (typeof window === "undefined") return;
-  authGeneration += 1;
+  sessionGeneration += 1;
+  refreshPromise = null;
   accessToken = "";
   safeLocalStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
   safeSessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
@@ -137,18 +135,11 @@ export function hasLoggedInBefore(): boolean {
   return safeLocalStorage.getItem(HAS_LOGGED_IN_KEY) === "1";
 }
 
-api.interceptors.request.use(config => {
-  const sessionConfig = config as SessionRequestConfig;
-  // A retry can wait in Axios's asynchronous interceptor queue after the
-  // response handler checks its session. Preserve that captured generation
-  // and cancel it before attaching credentials from a different account.
-  if (
-    sessionConfig._authGeneration !== undefined &&
-    sessionConfig._authGeneration !== authGeneration
-  ) {
-    throw new axios.CanceledError("Authentication session changed.", config);
+api.interceptors.request.use((config: SessionRequestConfig) => {
+  config._sessionGeneration ??= sessionGeneration;
+  if (config._sessionGeneration !== sessionGeneration) {
+    throw new axios.CanceledError("Account session changed.");
   }
-  sessionConfig._authGeneration = authGeneration;
   const token = loadAuthToken();
   if (!token) return config;
 
@@ -182,32 +173,21 @@ api.interceptors.response.use(
     if (
       status !== 401 ||
       !config ||
+      config._sessionGeneration !== sessionGeneration ||
       config._retryAfterRefresh ||
-      config._authGeneration !== authGeneration ||
       isAuthHeaderExcludedEndpoint(requestUrl)
     ) {
       return Promise.reject(error);
     }
 
     try {
-      const generation = authGeneration;
-      if (refreshInFlight?.generation !== generation) {
-        const entry = {
-          generation,
-          promise: refreshAuthTokenFromSession(),
-        };
-        entry.promise = entry.promise.finally(() => {
-          if (refreshInFlight === entry) refreshInFlight = null;
-        });
-        refreshInFlight = entry;
-      }
-      const token = await refreshInFlight.promise;
-      if (!token || generation !== authGeneration) {
+      const token = await refreshAuthTokenFromSession();
+      if (!token || config._sessionGeneration !== sessionGeneration) {
         return Promise.reject(error);
       }
 
       config._retryAfterRefresh = true;
-      const headers = ensureAxiosHeaders(config as InternalAxiosRequestConfig);
+      const headers = ensureAxiosHeaders(config);
       headers.set("Authorization", `Bearer ${token}`);
       return api(config);
     } catch (refreshError: any) {
@@ -221,15 +201,22 @@ api.interceptors.response.use(
   }
 );
 
-export async function refreshAuthTokenFromSession(): Promise<string> {
-  const generation = authGeneration;
-  const response = await api.post("/auth/token/refresh");
-  // A late response must never sign a user back in or replace a newly signed-in
-  // account's bearer token, even if the original refresh succeeded remotely.
-  if (generation !== authGeneration) return "";
-  const token = String(response?.data?.accessToken ?? "").trim();
-  if (token) storeAuthToken(token);
-  return token;
+export function refreshAuthTokenFromSession(): Promise<string> {
+  if (refreshPromise) return refreshPromise;
+  const generation = sessionGeneration;
+  const request = api
+    .post("/auth/token/refresh")
+    .then(response => {
+      if (generation !== sessionGeneration) return "";
+      const token = String(response.data?.accessToken ?? "").trim();
+      if (token && typeof window !== "undefined") storeAccessToken(token);
+      return token;
+    })
+    .finally(() => {
+      if (refreshPromise === request) refreshPromise = null;
+    });
+  refreshPromise = request;
+  return request;
 }
 
 export function getApiErrorMessage(
@@ -257,7 +244,6 @@ export function getApiErrorMessage(
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {
     accessToken = "";
-    authGeneration += 1;
-    refreshInFlight = null;
+    refreshPromise = null;
   });
 }

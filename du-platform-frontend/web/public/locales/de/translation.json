@@ -1,4 +1,16 @@
 {
+  "deletion": {
+    "title": "Kontolöschung beantragen",
+    "details": "Beantragen Sie die dauerhafte Löschung Ihres Diaspora-Unlocked-Kontos, Ihrer gespeicherten Reisen und Ihrer zugehörigen personenbezogenen Daten. Der Betreiber prüft separat gespeicherte Daten und Aufbewahrungspflichten, bevor er das Konto schließt.",
+    "password": "Aktuelles Passwort",
+    "confirm": "Löschantrag bestätigen",
+    "receipt": "Antrag eingegangen. Referenz: {{reference}}. Der Betreiber informiert Sie über den Abschluss.",
+    "sign_in": "Zum Beantragen der Kontolöschung anmelden",
+    "password_error": "Prüfen Sie Ihr aktuelles Passwort und versuchen Sie es erneut.",
+    "retry": "Der Antrag konnte nicht bestätigt werden. Versuchen Sie es erneut, um die Referenz zu erhalten.",
+    "again": "Erneut versuchen",
+    "loading": "Konto wird geprüft…"
+  },
   "appearance": {
     "label": "Darstellung",
     "system": "System (automatisch)",
@@ -106,6 +118,8 @@
     "reset": {
       "title": "Neues Passwort festlegen",
       "subtitle": "Wählen Sie ein sicheres Passwort für Ihr Konto.",
+      "invalid_link": "Dieser Link ist ungültig oder abgelaufen.",
+      "request_link": "Neuen Link zum Zurücksetzen anfordern",
       "missing_token": "Fehlendes Reset-Token. Bitte verwenden Sie den Link, der Ihnen per E-Mail zugesandt wurde.",
       "new_password": "Neues Passwort",
       "show_password": "Passwort anzeigen",
@@ -1262,7 +1276,7 @@
       "markets_placeholder": "Märkte (z. B. EU, UK)",
       "story_placeholder": "Inhalt der Geschichte",
       "testimonial_placeholder": "Erfahrungsbericht",
-      "display_label": "Auf der Wirkungsseite anzeigen",
+      "display_label": "Auf der Investitionsseite anzeigen",
       "add_story": "Wirkungsgeschichte hinzufügen",
       "badge_display": "Anzeigen",
       "badge_hide": "Ausblenden",
@@ -1379,7 +1393,11 @@
         "food": "Essen & Nostalgie",
         "all_segments": "Alle Produktarten",
         "select_segment": "Produktart wählen",
-        "select_category": "Kategorie wählen"
+        "search": "Produkte suchen",
+        "category": "Kategorie",
+        "result_count_one": "{{count}} Produkt",
+        "result_count_other": "{{count}} Produkte",
+        "no_matches": "Keine passenden Produkte gefunden"
       },
       "loading": "Produkte werden geladen...",
       "empty_state": "In dieser Kategorie sind noch keine Produkte verfügbar.",
@@ -1544,11 +1562,13 @@
       "caption": "Lebensmittel · Kunsthandwerk · Fanartikel",
       "collections_cta": "Kategorien entdecken"
     },
+    "delivery_coverage": "Freigegebene Lieferländer: {{countries}}.",
+    "no_delivery_destinations": "Derzeit sind Lieferungen in kein Land möglich.",
     "currency": {
       "label": "Shop-Währung",
-      "EUR": "EUR · Europa",
-      "USD": "USD · Simbabwe",
-      "ZAR": "ZAR · Südafrika",
+      "EUR": "Euro (EUR)",
+      "USD": "US-Dollar (USD)",
+      "ZAR": "Südafrikanischer Rand (ZAR)",
       "note": "Preise sind Schätzwerte. Endgültige Produktpreise und DHL-Versandkosten werden vor der Zahlung bestätigt. Referenzumrechnung: 15. Oktober 2026."
     }
   },
@@ -1685,6 +1705,7 @@
     }
   },
   "search": {
+    "partial": "Ein Teil der Suchergebnisse ist vorübergehend nicht verfügbar.",
     "categories": {
       "tourism": "Reisen",
       "investment": "Investition",
@@ -1701,14 +1722,14 @@
     },
     "no_results": {
       "title": "Keine Ergebnisse gefunden",
-      "message": "Wir konnten nichts finden, was mit „{{query}}“ übereinstimmt. Versuchen Sie, nach umfassenderen Begriffen wie „Investment“, „Tourismus“ oder „Onesa“ zu suchen.",
+      "message": "Keine Treffer für „{{query}}“. Probiere einen kürzeren Begriff wie „Flüge“ oder „Unterkünfte“.",
       "return_home": "Heimkehr"
     },
     "submit": "Suchen",
     "loading": "Suche läuft…",
     "failed": "Die Suche ist derzeit nicht verfügbar. Bitte versuchen Sie es erneut.",
     "retry": "Erneut versuchen",
-    "prompt": "Suchen Sie nach Tourismus, Investitionen, Einkauf oder Onesa AI.",
+    "prompt": "Suche nach Flügen, Unterkünften, Produkten oder Onesa AI.",
     "description": "Finde Produkte, Reiseziele, Geschäftsideen und Onesa-Werkzeuge."
   },
   "error_boundary": {
@@ -1722,6 +1743,12 @@
   "cancel": "Stornieren",
   "close": "Schließen",
   "impact": {
+    "feed": {
+      "loading": "Wirkungsgeschichten werden geladen…",
+      "unavailable": "Die Wirkungsgeschichten konnten nicht geladen werden.",
+      "retry": "Erneut versuchen",
+      "empty": "Es wurden noch keine Wirkungsgeschichten veröffentlicht."
+    },
     "cta_button": "Partnerschaft starten",
     "cta_subtitle": "Wir arbeiten mit Diaspora-Führungskräften, Institutionen und Unternehmen zusammen, um die Wirkung zu steigern. Lassen",
     "cta_title": "Arbeiten Sie mit uns zusammen",
@@ -2014,7 +2041,7 @@
     "payment_draft": "Vorschlag: Endgültiges Angebot und Zahlungsanweisung direkt mit dem Shop prüfen. Kartenzahlung über Stripe ist geplant, aber noch nicht verfügbar; die Website zieht kein Geld ein. Nur tatsächlich eingegangene Zahlungen mit Referenz erfassen; nach Zahlung und Warenprüfung versenden. Vertragsschluss und Zahlung müssen vor Verkaufsstart freigegeben werden.",
     "returns_draft": "Vorgeschlagener Rücksendekontakt: Onesa UG (haftungsbeschränkt), Diaspora Unlocked, Steinhofweg 47, 69123 Heidelberg, Deutschland; info@diasporaunlocked.com. Für Stornierungen, Probleme oder Rückgaben den Shop mit der Referenz kontaktieren. Widerrufsinformationen und Formular, Kostentragung, anwendbare Ausnahmen und Erstattungsverfahren müssen vor Annahme kommerzieller Bestellungen freigegeben und veröffentlicht werden. Gesetzliche Verbraucherrechte bleiben unberührt.",
     "complaints": "Beschwerden, Stornierungen oder Datenschutzanfragen: info@diasporaunlocked.com mit Referenz. Keine Zahlungskartendaten senden.",
-    "privacy_flows": "Bestellanfragen speichern Kontakt- und Adressdaten, Produkt- und Preisstände, Angebote, Statusverlauf und E-Mail-Versanddaten in einer MySQL-Datenbank bei Aiven. Die API läuft auf Oracle, das Frontend auf Vercel. Resend versendet Transaktionsmails und bestätigte Newsletter. Eine Bestellanfrage ist kein Newsletter-Abonnement.",
+    "privacy_flows": "Bestellanfragen speichern Kontakt- und Adressdaten, Produkt- und Preisstände, Angebote, Statusverlauf und E-Mail-Versanddaten in einer MySQL-Datenbank bei Aiven. Die API läuft auf Render, das Frontend auf Vercel. Resend versendet Transaktionsmails und bestätigte Newsletter. Eine Bestellanfrage ist kein Newsletter-Abonnement.",
     "privacy_ai": "Onesa sendet Gespräche und Reisepräferenzen an konfigurierte KI-Anbieter: Google Gemini sowie Groq, Anthropic und Cerebras als Ausweichziele. Keine sensiblen oder Zahlungsdaten eingeben. AR-Kamerabilder werden lokal verarbeitet und von dieser Funktion nicht hochgeladen. Verträge, Aufbewahrung und internationale Übermittlungen sind vor Verkaufsstart zu prüfen.",
     "privacy_controls": "Notwendiger Speicher unterstützt Einstellungen, Warenkorb und private Belege im Browser-Tab. Optionale Vercel-Telemetrie und anonyme Trichterereignisse benötigen Analyse-Einwilligung. Widerruf über Cookie-Einstellungen. Namen, E-Mails, Adressen, Zugangstoken und Chattexte werden nicht als Trichterereignisse übertragen.",
     "privacy_retention": "Entwurf zur Aufbewahrung: Der Betreiber muss Fristen für Bestellungen und Konten, gesetzliche Pflichten, Auftragsverarbeitungsverträge und Löschabläufe festlegen. Newsletter-Daten umfassen Bestätigung, Abmeldung und Versandnachweise. Abmeldelinks stoppen weitere Kampagnen. Für Auskunft, Berichtigung oder Löschung den Betreiber kontaktieren.",
@@ -2155,6 +2182,9 @@
     "explore": "Entdecken",
     "my-trips": "Meine Reisen",
     "description": "Familie besuchen, in die Heimat reisen oder Neues entdecken? Plane Reisen nach, von und innerhalb von Simbabwe und dem südlichen Afrika und buche direkt bei den Anbietern.",
+    "choose-location": "Wähle einen Ort aus der Liste.",
+    "no-locations": "Kein passender Ort. Versuche es mit einer Stadt, einem Land oder einem Flughafencode.",
+    "clear-confirm": "Reisedaten, Suchen, Budgetposten und ausgewählte Angebote in diesem Browser löschen?",
     "search-intro": "Beginne mit Reisedaten und Reisenden. Die Angaben bleiben beim Wechsel zwischen Reisebereichen erhalten.",
     "origin": "Abflughafen",
     "destination": "Zielflughafen / Umgebung",
@@ -2189,7 +2219,7 @@
     "open-provider": "KAYAK-Suche öffnen ↗",
     "handoff-note": "Öffnet eine öffentliche Suchseite in einem neuen Tab. Daten, Reisende und Orte werden nicht übertragen. Kopiere die Angaben und gib sie bei KAYAK ein. Keine freigegebene Affiliate-Anbindung.",
     "review-trip": "Meine Reisen ansehen",
-    "disclosure": "DU verkauft keine Reisen und nimmt keine Reservierungen an. Anbietersuchen und öffentliche Suchlinks sind getrennt gekennzeichnet. Keine DU-Affiliate-Provision eingerichtet. Anbieter bestätigen endgültige Preise und Bedingungen.",
+    "disclosure": "Der Anbieter übernimmt Buchung, Zahlung und Kundenservice. Kann Diaspora Unlocked über einen Link eine Provision erhalten, kennzeichnen wir ihn, bevor du fortfährst.",
     "guest-draft": "Dein Reiseentwurf",
     "draft-note": "Wird nach Möglichkeit in diesem Browser gespeichert. Keine Reservierung. Gespeicherte Suchen sind Prüfaufträge, keine ausgewählten Anbieterangebote.",
     "searches": "Zu prüfende Suchen",
@@ -2207,7 +2237,7 @@
     "funds-unknown": "Steuern, Gepäck, Pflichtgebühren, Extras und rückzahlbare Kautionen: unbekannt. Diese Planungsbeträge sind kein vollständiger Reisepreis oder Finanzbedarf. Anbieterbeobachtungen stehen separat unten.",
     "onesa-planner": "Simbabwe-Reise mit Onesa entwerfen",
     "private-trips": "Private Reisen und Suchen",
-    "private-note": "Zum geräteübergreifenden Speichern anmelden. Nur dein Konto kann diese Einträge lesen oder löschen. Laden ersetzt den Browserentwurf.",
+    "private-note": "Deine gespeicherten Reisen und Suchen sind nur in deinem Konto sichtbar. Wenn du einen Eintrag lädst, ersetzt er den Entwurf auf diesem Gerät.",
     "sign-in": "Zum privaten Speichern anmelden",
     "trip-name": "Reise- / Suchname",
     "save-trip": "Reise privat speichern",
@@ -2219,6 +2249,10 @@
     "restore": "In Entwurf laden",
     "restored": "Gespeicherte Angaben in Browserentwurf geladen.",
     "delete": "Löschen",
+    "restore-confirm": "Den Entwurf in diesem Browser durch „{{name}}“ ersetzen?",
+    "delete-confirm": "„{{name}}“ aus deinen gespeicherten Reisen und Suchen löschen?",
+    "deleted": "„{{name}}“ wurde gelöscht.",
+    "list-error": "Die Liste konnte nicht geladen werden. Versuche erneut, sie zu laden.",
     "storage-error": "Gespeicherte Reisen nicht erreichbar. Dein Browserentwurf bleibt erhalten. Versuche es später erneut.",
     "alerts": "Preisalarme",
     "alerts-note": "Automatische Überwachung erst nach Anbieterfreigabe und festgelegten Zustellgrenzen. Es werden keine Preise im Hintergrund geprüft.",
@@ -2295,6 +2329,10 @@
       "changed": "Der Anbieterbetrag hat sich geändert. Vor dem Fortfahren den neuen angezeigten Betrag prüfen.",
       "expired": "Diese Option wurde bei der neuen Suche nicht geliefert. Reise bleibt erhalten. Suche nach Alternativen.",
       "continue": "Weiter zu {{provider}}",
+      "checkout-owner": "{{provider}} übernimmt Buchung, Zahlung und Kundenservice. Prüfe dort den Endpreis und die Stornierungsbedingungen.",
+      "affiliate-disclosure": "Awin kann Cookies verwenden, um deine Buchung zuzuordnen. Diaspora Unlocked kann eine Provision erhalten, wenn du den Empfehlungslink wählst. Du kannst auch direkt zu Kiwi.com gehen.",
+      "affiliate-choice": "Empfehlungstracking erlauben und weiter",
+      "referral-failed": "Der Empfehlungslink konnte nicht geöffnet werden. Dein Flug bleibt ausgewählt. Nutze den direkten Anbieterlink oder versuche es erneut.",
       "no-reservation": "DU erstellt keine Reservierung und hält keinen Preis. Buchung und endgültige Preise werden beim Anbieter bestätigt.",
       "nationality": "Nationalität des Gastes (Ländercode mit 2 Buchstaben)",
       "nationality-note": "Zum Beispiel DE, ZW, ZA oder GB. Hotelraten können von der Nationalität abhängen; keine Passnummer eingeben.",
