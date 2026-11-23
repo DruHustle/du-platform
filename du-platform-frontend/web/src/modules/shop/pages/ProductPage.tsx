@@ -1,7 +1,12 @@
+import DeliveryCoverage from "../components/DeliveryCoverage";
 import ProductInterest from "../components/ProductInterest";
 import { canRequestProduct } from "../lib/useShopCatalog";
 import { useEffect, useState } from "react";
 import { Link, useRoute } from "wouter";
+import { useSearch } from "wouter/use-browser-location";
+import { catalogQuery, readCatalogFilters } from "../lib/catalogFilters";
+import { customerLanguage } from "@/domain/customerLanguage";
+import { shopProductDescription } from "../lib/shopContent";
 import Layout from "@/components/Layout";
 import { useShopCatalog } from "../lib/useShopCatalog";
 import { useShopCart } from "../lib/useShopCart";
@@ -23,7 +28,13 @@ export default function ProductPage() {
   const product = products.find(p => p.slug === params?.slug);
   const { cart, add, removeOne } = useShopCart();
   const { currency } = useShopCurrency();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const description = product
+    ? shopProductDescription(product, (key, fallback) => t(key, { defaultValue: fallback }))
+    : "";
+  const search = new URLSearchParams(useSearch());
+  const filters = readCatalogFilters(search);
+  const language = search.has("lng") ? customerLanguage(i18n.language) : undefined;
   const [information, setInformation] = useState<{
     id: number;
     state: "loading" | "ready" | "failed" | "unavailable";
@@ -68,17 +79,17 @@ export default function ProductPage() {
       document.title = `${product.name} | Shop | Diaspora Unlocked`;
       document
         .querySelector('meta[name="description"]')
-        ?.setAttribute("content", product.description);
+        ?.setAttribute("content", description);
     } else
       document
         .querySelector('meta[name="robots"]')
         ?.setAttribute("content", "noindex,follow");
-  }, [product, status, informationState]);
+  }, [product, description, status, informationState]);
   return (
     <Layout>
       <section className="document-section min-h-screen bg-slate-950 text-white">
         <div className="container space-y-6">
-          <Link href="/shop/products" className="text-zim-gold underline">
+          <Link href={`/shop/products${catalogQuery(filters, language)}`} className="inline-flex min-h-11 items-center text-zim-gold underline underline-offset-4">
             {t("pilot.browse_products")}
           </Link>
           <CatalogNotice status={status} source={source} pricingAvailable={pricing !== null} hasProducts={products.length > 0} onRetry={() => void refresh()} />
@@ -92,7 +103,7 @@ export default function ProductPage() {
                 />
                 <div className="space-y-5">
                   <h1 className="page-title">{product.name}</h1>
-                  <p>{product.description}</p>
+                  <p>{description}</p>
                   <p className="text-xl font-semibold">
                     {formatShopMoney(
                       convertShopCents(
@@ -113,9 +124,10 @@ export default function ProductPage() {
                         : "shop.products.stock.out"
                     )}
                   </p>
+                  <DeliveryCoverage />
                   <PilotReadinessNotice />
                   {canRequestProduct(readiness, product) ? (
-                    <div className="flex flex-wrap items-center gap-3">
+                    <div id="interest" tabIndex={-1} className="flex scroll-mt-28 flex-wrap items-center gap-3">
                       <QuantityControl
                         name={product.name}
                         quantity={
@@ -129,13 +141,13 @@ export default function ProductPage() {
                       />
                       <Link
                         className="inline-flex min-h-11 items-center rounded-full bg-zim-gold px-5 font-semibold text-black"
-                        href="/shop/products?cart=1"
+                        href={`/shop/products${catalogQuery(filters, language, true)}`}
                       >
                         {t("shop.products.actions.checkout")}
                       </Link>
                     </div>
                   ) : (
-                    <div id="interest" className="max-w-sm scroll-mt-28">
+                    <div id="interest" tabIndex={-1} className="max-w-sm scroll-mt-28">
                       <ProductInterest product={product} />
                     </div>
                   )}

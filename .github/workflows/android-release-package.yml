@@ -1,0 +1,124 @@
+name: Android release packaging
+
+on:
+  workflow_dispatch:
+    inputs:
+      keep_unsigned_bundle:
+        description: Retain the complete unsigned AAB for signing with the registered Play upload key
+        type: boolean
+        default: false
+  pull_request:
+    paths:
+      - ".github/workflows/android-release-package.yml"
+      - "du-platform-frontend/mobile/android/**"
+      - "du-platform-frontend/mobile/src/**"
+      - "du-platform-frontend/mobile/assets/**"
+      - "du-platform-frontend/mobile/App.tsx"
+      - "du-platform-frontend/mobile/index.ts"
+      - "du-platform-frontend/mobile/app.json"
+      - "du-platform-frontend/mobile/package.json"
+      - "du-platform-frontend/mobile/package-lock.json"
+      - "du-platform-frontend/mobile/plugins/withUnsignedRelease.cjs"
+      - "du-platform-frontend/mobile/scripts/sign-release-apk.sh"
+      - "du-platform-frontend/mobile/scripts/test-release-apk.py"
+      - "du-platform-frontend/mobile/scripts/sign-play-bundle.py"
+      - "du-platform-frontend/mobile/scripts/test-play-bundle.py"
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Verify Android release packaging
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+        working-directory: du-platform-frontend/mobile
+    env:
+      EXPO_PUBLIC_API_URL: https://www.diasporaunlocked.com/api
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: du-platform-frontend/mobile/package-lock.json
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install mobile dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Install Android package tools
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0"'
+      - name: Exercise signature and rejection checks with temporary credentials
+        run: python3 scripts/test-release-apk.py
+      - name: Install the pinned Google bundletool for Play qualification
+        run: |
+          tool="$RUNNER_TEMP/bundletool.jar"
+          curl --fail --location --retry 3 --silent --show-error https://github.com/google/bundletool/releases/download/1.18.3/bundletool-all-1.18.3.jar -o "$tool"
+          echo "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29  $tool" | sha256sum --check
+          echo "BUNDLETOOL_JAR=$tool" >> "$GITHUB_ENV"
+      - name: Exercise Play bundle signing and rejection with temporary credentials
+        run: python3 scripts/test-play-bundle.py
+      - name: Compile the arm64 qualification APK
+        run: bash android/gradlew -p android --no-daemon :app:assembleRelease -PreactNativeArchitectures=arm64-v8a
+      - name: Compile the full unsigned Play bundle
+        run: bash android/gradlew -p android --no-daemon :app:bundleRelease
+      - name: Check that the bundle contains every configured native ABI
+        run: |
+          python3 - <<'PYTHON'
+          import re
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          settings = Path('android/gradle.properties').read_text().splitlines()
+          abis, = [line.split('=', 1)[1] for line in settings if line.startswith('reactNativeArchitectures=')]
+          bundle = Path('android/app/build/outputs/bundle/release/app-release.aab')
+          with ZipFile(bundle) as archive:
+              actual = {name.split('/')[2] for name in archive.namelist()
+                        if re.fullmatch(r'base/lib/[^/]+/libreactnative[.]so', name)}
+          expected = {abi.strip() for abi in abis.split(',')}
+          if actual != expected:
+              raise SystemExit(f'Missing or unexpected React Native libraries: expected {expected}, found {actual}')
+          print('Verified Play bundle ABIs:', ', '.join(sorted(actual)))
+          PYTHON
+      - name: Verify the compiled product through the signing path
+        run: |
+          # The ephemeral QA key and its APK stay in this run and are never uploaded.
+          qa_dir=$(mktemp -d "$RUNNER_TEMP/apk-validation.XXXXXX")
+          trap 'rm -rf -- "$qa_dir"' EXIT
+          export ANDROID_RELEASE_KEYSTORE="$qa_dir/qa.p12" ANDROID_RELEASE_ALIAS=qa
+          ANDROID_RELEASE_STORE_PASSWORD=$(openssl rand -hex 24)
+          export ANDROID_RELEASE_STORE_PASSWORD
+          export ANDROID_RELEASE_KEY_PASSWORD="$ANDROID_RELEASE_STORE_PASSWORD"
+          keytool -genkeypair -keystore "$ANDROID_RELEASE_KEYSTORE" -alias qa \
+            -storepass:env ANDROID_RELEASE_STORE_PASSWORD -keypass:env ANDROID_RELEASE_KEY_PASSWORD \
+            -keyalg RSA -keysize 2048 -dname "CN=Ephemeral packaging QA" -validity 1
+          ANDROID_RELEASE_CERT_SHA256=$(keytool -exportcert -keystore "$ANDROID_RELEASE_KEYSTORE" -alias qa \
+            -storepass:env ANDROID_RELEASE_STORE_PASSWORD | sha256sum | cut -d' ' -f1)
+          export ANDROID_RELEASE_CERT_SHA256
+          scripts/sign-release-apk.sh sign android/app/build/outputs/apk/release/app-release-unsigned.apk "$qa_dir/verified.apk"
+          scripts/sign-release-apk.sh verify "$qa_dir/verified.apk"
+          export PLAY_UPLOAD_KEYSTORE="$ANDROID_RELEASE_KEYSTORE" PLAY_UPLOAD_ALIAS="$ANDROID_RELEASE_ALIAS"
+          export PLAY_UPLOAD_CERT_SHA256="$ANDROID_RELEASE_CERT_SHA256"
+          export PLAY_UPLOAD_STORE_PASSWORD="$ANDROID_RELEASE_STORE_PASSWORD" PLAY_UPLOAD_KEY_PASSWORD="$ANDROID_RELEASE_KEY_PASSWORD"
+          bundle=android/app/build/outputs/bundle/release/app-release.aab
+          version=$(java -jar "$BUNDLETOOL_JAR" dump manifest --bundle="$bundle" --xpath='/manifest/@android:versionCode')
+          python3 scripts/sign-play-bundle.py sign "$bundle" "$qa_dir/verified.aab" --version-code "$version"
+          python3 scripts/sign-play-bundle.py verify "$qa_dir/verified.aab" --version-code "$version"
+      - name: Retain the original unsigned AAB for the release owner
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.keep_unsigned_bundle) ||
+          (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
+          startsWith(github.head_ref, 'release/'))
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: unsigned-play-bundle-${{ github.sha }}
+          path: du-platform-frontend/mobile/android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          retention-days: 2

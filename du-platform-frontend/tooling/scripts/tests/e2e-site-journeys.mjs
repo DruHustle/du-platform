@@ -1,5 +1,11 @@
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
+import { getPublicShopSeedProducts } from "../../../../du-platform-backend/domain/shopCatalog.ts";
+import {
+  readyShop,
+  testPricing,
+  translatedFixture,
+} from "./shop-readiness-fixture.mjs";
 
 const baseUrl = process.env.E2E_BASE_URL || "http://localhost:5001";
 assert(
@@ -85,15 +91,20 @@ try {
   assert(page.url().includes("q=shopping"));
   pass("search updates when only the URL query changes");
 
-  await page.route("**/api/search?**", route =>
+  const offlineSearch = "**/api/search?q=offline";
+  await page.route(offlineSearch, route =>
     route.fulfill({
-      status: 503,
-      contentType: "application/json",
-      body: JSON.stringify({
-        success: false,
-        error: { message: "Temporarily unavailable" },
-      }),
+      json: { success: true, data: { results: [], partial: false } },
     })
+  );
+  await page.route(
+    offlineSearch,
+    route =>
+      route.fulfill({
+        status: 503,
+        json: { success: false, error: { message: "Temporarily unavailable" } },
+      }),
+    { times: 1 }
   );
   await page.getByRole("searchbox").fill("offline");
   await page.getByRole("button", { name: "Search", exact: true }).click();
@@ -105,10 +116,46 @@ try {
     await page.getByRole("heading", { name: /no results found/i }).count(),
     0
   );
-  await page.unroute("**/api/search?**");
   await page.getByRole("button", { name: "Try again", exact: true }).click();
   await page.getByRole("heading", { name: /no results found/i }).waitFor();
+  await page.unroute(offlineSearch);
   pass("failed search has a retry state distinct from empty results");
+
+  let searchAttempts = 0;
+  await page.route("**/api/search?**", route => {
+    searchAttempts += 1;
+    if (searchAttempts === 2) {
+      return route.fulfill({ status: 503, json: { message: "Temporarily unavailable" } });
+    }
+    return route.fulfill({ json: { success: true, data: {
+      partial: searchAttempts < 4,
+      results: searchAttempts === 1
+        ? [{ title: "Travel Southern Africa", category: "Tourism", href: "/travel" }]
+        : [{ title: "Sables Rugby Home Kit", category: "Product", href: "/shop/product/sables-rugby-home-kit" }],
+    } } });
+  });
+  await page.getByRole("searchbox").fill("travel $&");
+  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.getByRole("heading", { name: 'Search Results for "travel $&"' }).waitFor();
+  await page.getByRole("status").filter({ hasText: "Some search results" }).waitFor();
+  await page.locator('main a[href="/travel"]').waitFor();
+  const retrySearch = page.getByRole("button", { name: "Try again", exact: true });
+  const retryFailure = page.waitForResponse(response =>
+    new URL(response.url()).pathname === "/api/search" && response.status() === 503
+  );
+  await retrySearch.click();
+  await retryFailure;
+  await page.getByRole("heading", { name: "Travel Southern Africa", exact: true }).waitFor();
+  await retrySearch.click();
+  await page.getByRole("heading", { name: "Sables Rugby Home Kit", exact: true }).waitFor();
+  assert(await page.getByRole("heading", { name: "Travel Southern Africa", exact: true }).isVisible());
+  await retrySearch.click();
+  await page.getByRole("status").filter({ hasText: "Some search results" }).waitFor({ state: "hidden" });
+  assert.equal(searchAttempts, 4);
+  assert.equal(await page.getByRole("heading", { name: "Travel Southern Africa", exact: true }).count(), 0);
+  assert.equal(await page.getByText("Some search results are temporarily unavailable.").count(), 0);
+  await page.unroute("**/api/search?**");
+  pass("partial search keeps usable links and retries the same query");
 
   await page.route("**/api/search?**", async route => {
     const q = new URL(route.request().url()).searchParams.get("q");
@@ -182,8 +229,12 @@ try {
     await page.getByRole("heading", { name: "slow", exact: true }).count(),
     0
   );
+  assert.equal(new URL(page.url()).searchParams.get("q"), "Latest entity");
+  await page.reload();
+  await page.getByRole("heading", { name: "Latest entity", exact: true }).waitFor();
+  assert.equal(await page.locator("#ntir-search").inputValue(), "Latest entity");
   await page.unroute("**/api/investment/ntir/search?**");
-  pass("registry searches keep the latest response and announce loading");
+  pass("registry searches retain their query and results on refresh and reject late responses");
 
   await page.goto(`${baseUrl}/onesa-ai-book-trip`);
   const startDate = page.locator('input[type="date"]').first();
@@ -283,7 +334,35 @@ try {
     "reset tokens leave history and reset completion cannot redirect a later journey"
   );
 
-  await page.goto(`${baseUrl}/register`);
+  for (const token of ["", "#token=expired-local-token"]) {
+    await page.goto(`${baseUrl}/reset-password${token}`);
+    if (token) {
+      await page.route("**/api/auth/reset-password", route =>
+        route.fulfill({
+          status: 400,
+          json: { success: false, error: { code: "AUTH_INVALID_RESET_TOKEN" } },
+        })
+      );
+      await page.locator("#ResetPasswordPage-password").fill("StrongLocal123!");
+      await page
+        .locator("#ResetPasswordPage-confirmPassword")
+        .fill("StrongLocal123!");
+      await page
+        .getByRole("button", { name: "Reset Password", exact: true })
+        .click();
+    }
+    await page.getByRole("link", { name: "Request a new reset link" }).click();
+    await page.locator("#ForgotPasswordPage-email").waitFor();
+    await page.unroute("**/api/auth/reset-password");
+  }
+  pass("missing and expired reset links lead directly to a new reset request");
+
+  const returnPath = "/travel/my-trips?city=Victoria%20Falls#saved";
+  const nextQuery = `?next=${encodeURIComponent(returnPath)}`;
+  await page.goto(`${baseUrl}/login${nextQuery}`);
+  await page.locator(`a[href="/forgot-password${nextQuery}"]`).click();
+  await page.locator(`a[href="/login${nextQuery}"]`).click();
+  await page.locator(`a[href="/register${nextQuery}"]`).click();
   const email = `audit-${Date.now()}@example.com`;
   const password = "Audit-Local-Password-123!";
   await page.getByLabel("First Name", { exact: true }).fill("Local");
@@ -307,11 +386,30 @@ try {
   await page.locator("#RegisterPage-confirmPassword").fill(password);
   await page.locator("#terms").check();
   await page.getByRole("button", { name: /register/i }).click();
-  await page.waitForURL(`${baseUrl}/`);
+  await page.waitForURL(`${baseUrl}${returnPath}`);
   assert.equal(await page.evaluate(() => localStorage.getItem("du_jwt")), null);
   pass(
-    "registration succeeds in the local sandbox without persisting bearer tokens"
+    "registration returns to the requested trip after switching account forms without persisting bearer tokens"
   );
+  await page.goto(`${baseUrl}/privacy-policy`);
+  await page.getByRole("link", { name: "Request account deletion", exact: true }).click();
+  await page.getByLabel("Current password", { exact: true }).fill(password);
+  let deletionAttempts = 0;
+  await page.route("**/api/auth/deletion-request", async route => {
+    const input = route.request().postDataJSON();
+    assert(input.accountId > 0 && input.confirm === true && input.password === password);
+    deletionAttempts++;
+    if (deletionAttempts === 1) return route.fulfill({ status: 503, json: { success: false, error: { code: "DELETION_UNAVAILABLE" } } });
+    return route.fulfill({ json: { success: true, data: { status: "requested", requestId: "synthetic-deletion-reference" } } });
+  });
+  await page.getByRole("button", { name: "Confirm deletion request" }).click();
+  await page.getByRole("alert").filter({ hasText: "Retry to recover" }).waitFor();
+  assert.equal(await page.getByLabel("Current password", { exact: true }).inputValue(), password);
+  await page.getByRole("button", { name: "Confirm deletion request" }).click();
+  await page.getByRole("status").filter({ hasText: "synthetic-deletion-reference" }).waitFor();
+  await page.unroute("**/api/auth/deletion-request");
+  await page.goto(`${baseUrl}${returnPath}`);
+  pass("account deletion clearly distinguishes a retry from a durable request receipt");
   const crossSiteLogout = await context.request.post(
     `${baseUrl}/api/auth/logout`,
     { headers: { Origin: "https://evil.example" } }
@@ -354,6 +452,7 @@ try {
   );
   await page.getByRole("button", { name: "Account", exact: true }).click();
   await page.getByRole("menuitem", { name: "Logout", exact: true }).click();
+  await page.waitForURL(`${baseUrl}/`);
   await page.goto(`${baseUrl}/login?next=%2Fshop%2Fproducts`);
   await page.locator("#LoginPage-email").fill("invalid-email");
   await page.locator("#LoginPage-password").fill(password);
@@ -385,22 +484,33 @@ try {
     .waitFor();
   await page.unroute("**/api/auth/login");
   pass("failed sign-in shows an accessible error and allows retry");
+
+  // Exercise an approved basket in this browser only. The local service may
+  // legitimately be in prelaunch or have no persistent catalogue.
+  const products = getPublicShopSeedProducts().map(product => ({
+    ...translatedFixture(product),
+    stock_qty: product.slug === "sables-rugby-home-kit" ? 5 : 0,
+  }));
+  await page.route("**/api/shop/products", route =>
+    route.fulfill({
+      json: {
+        products,
+        pricing: testPricing,
+        readiness: readyShop(products.map(product => product.id)),
+      },
+    })
+  );
   await page.getByRole("button", { name: /^login$/i }).click();
   await page.waitForURL("**/shop/products");
-  await page.getByRole("heading", { name: /cart & order request/i }).waitFor();
-  // The real seed catalog intentionally has zero stock. Use a browser-only fixture
-  // to verify cart behavior without changing inventory or creating an order.
-  await page.route("**/api/shop/products", async route => {
-    const response = await route.fetch();
-    const payload = await response.json();
-    const data = payload.success ? payload.data : payload;
-    data.products[0].stock_qty = 5;
-    await route.fulfill({ response, json: payload });
-  });
-  await page.reload();
-  const card = page.locator('[data-stock-state="in"]').first();
-  await card.getByRole("button", { name: /add to cart/i }).click();
-  await page.getByText(/your cart is empty/i).waitFor({ state: "hidden" });
+  const productName = "Sables Rugby Home Kit";
+  const card = page.locator('[data-shop-product-card="sables-rugby-home-kit"]');
+  await card
+    .getByRole("button", { name: `Add ${productName} to cart`, exact: true })
+    .click();
+  await page
+    .getByRole("form", { name: /cart & order request/i })
+    .getByText(productName, { exact: true })
+    .waitFor();
   pass(
     "logout and sign-in return path work; cart works with a browser-only stock fixture"
   );
@@ -488,12 +598,34 @@ try {
     .click();
   await page
     .getByRole("status")
-    .filter({ hasText: /If this address needs confirmation/i })
+    .filter({ hasText: /check your email for a confirmation link/i })
     .waitFor();
   await page.unroute("**/api/notifications/newsletter");
   pass(
     "newsletter feedback handles failure and success using local test responses"
   );
+
+  const impactSection = page.locator("#impact-stories");
+  const publicStory = { id: 1, is_published: 1, title: "Community harvest", category: "Agriculture", author: "Community growers", story: "The growers delivered their first harvest." };
+  const draftStory = { ...publicStory, id: 2, is_published: 0, title: "Unpublished editorial draft" };
+  let impactAvailable = false;
+  let impactStories = [publicStory, draftStory];
+  await page.route("**/api/impact/stories", route => route.fulfill(impactAvailable
+    ? { json: { success: true, data: { stories: impactStories } } }
+    : { status: 503, json: { success: false } }));
+  await page.goto(`${baseUrl}/investment#impact-stories`);
+  await impactSection.getByRole("status").filter({ hasText: "could not be loaded" }).waitFor();
+  impactAvailable = true;
+  await impactSection.getByRole("button", { name: "Try again" }).click();
+  await impactSection.getByRole("heading", { name: publicStory.title }).waitFor();
+  await impactSection.getByText(publicStory.story).waitFor();
+  assert.equal(await impactSection.getByText(draftStory.title).count(), 0);
+  impactStories = [draftStory];
+  await page.reload();
+  await impactSection.getByRole("status").filter({ hasText: "No impact stories" }).waitFor();
+  assert.equal(await impactSection.locator("article").count(), 0);
+  await page.unroute("**/api/impact/stories");
+  pass("Investment recovers a failed impact feed, shows published stories, and distinguishes an empty feed from an outage");
 
   const anonymous = await browser.newContext();
   const response = await anonymous.request.get(`${baseUrl}/api/admin/overview`);

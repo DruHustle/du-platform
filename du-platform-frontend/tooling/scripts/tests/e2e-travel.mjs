@@ -31,6 +31,7 @@ try {
   for (const width of [375, 768, 1440]) {
     const context = await browser.newContext({
       viewport: { width, height: 950 },
+      hasTouch: width === 375,
       reducedMotion: "reduce",
     });
     await context.addInitScript(() => {
@@ -49,9 +50,18 @@ try {
         body: "<h1>Synthetic supplier handoff</h1>",
       })
     );
+    await context.route("https://www.awin1.com/**", r =>
+      r.fulfill({ contentType: "text/html", body: "<h1>Simulated referral network</h1>" })
+    );
+    let referralFails = true;
+    let approvedPlacement = false;
+    let referralRequests = 0;
     let privateMode = false;
     let storageFails = false;
     let malformedSavedResponse = false;
+    let savedListFails = false;
+    let saves = 0;
+    let deletions = 0;
     let supplierFails = false;
     let supplierEmpty = false;
     let offerExpires = false;
@@ -135,6 +145,16 @@ try {
           },
         });
       }
+      if (p === "/api/travel/referrals/awin") {
+        const { quote, channel, consent } = r.request().postDataJSON();
+        referralRequests++;
+        assert.equal(channel, "web");
+        assert.equal(consent, true);
+        if (referralFails) return r.fulfill({ status: 503, json: { error: { code: "TRAVEL_REFERRAL_UNAVAILABLE" } } });
+        const url = new URL("https://www.awin1.com/cread.php");
+        url.search = new URLSearchParams({ awinmid: "34", awinaffid: "12", cons: "1", clickref: quote.id, ued: quote.bookingUrl }).toString();
+        return r.fulfill({json:{success:true,data:{url:url.href}}});
+      }
       if (p === "/api/travel/revalidate") {
         if (offerExpires)
           return r.fulfill({
@@ -153,6 +173,7 @@ try {
                 reviewAfter: new Date(Date.now() + 300000).toISOString(),
               },
               changed: true,
+              referralAvailable: approvedPlacement,
             },
           },
         });
@@ -160,12 +181,14 @@ try {
       if (privateMode && p.startsWith("/api/travel/saved")) {
         if (malformedSavedResponse)
           return r.fulfill({ json: { success: true, data: [{}] } });
-        if (storageFails)
+        const method = r.request().method();
+        if (method === "POST") saves++;
+        if (method === "DELETE") deletions++;
+        if (storageFails || (savedListFails && method === "GET"))
           return r.fulfill({
             status: 503,
             json: { error: { code: "TRAVEL_STORAGE_UNAVAILABLE" } },
           });
-        const method = r.request().method();
         if (method === "POST") {
           const input = r.request().postDataJSON();
           const id = crypto.randomUUID();
@@ -187,7 +210,8 @@ try {
         }
         return r.fulfill({ json: { success: true, data: savedRecords } });
       }
-      if (p.startsWith("/api/travel/")) return r.continue();
+      if (p === "/api/search" || p.startsWith("/api/travel/"))
+        return r.continue();
       if (p === "/api/auth/me" && privateMode)
         return r.fulfill({
           json: {
@@ -257,9 +281,45 @@ try {
       );
       checks.push(`${width}: ${name}`);
     }
+    await goto("/search?q=hotels%20in%20Windhoek");
+    await page
+      .locator('main a[href="/travel/stays"]')
+      .filter({
+        has: page.getByRole("heading", { name: "Stays", exact: true }),
+      })
+      .click();
+    await page
+      .getByRole("combobox", { name: "Destination area", exact: true })
+      .waitFor();
+    checks.push(
+      `${width}: site search finds accommodation planning through the real search API`
+    );
+    await goto("/travel/my-trips");
+    const start = page.locator(".travel-start-searches");
+    await start.waitFor();
+    assert.equal(
+      await page.getByRole("button", { name: "Clear browser draft" }).count(),
+      0
+    );
+    assert.deepEqual(
+      await start
+        .getByRole("link")
+        .evaluateAll(links => links.map(link => link.getAttribute("href"))),
+      ["/travel/flights", "/travel/stays", "/travel/car-hire"]
+    );
+    await start.getByRole("link", { name: "Stays", exact: true }).click();
+    await page
+      .getByRole("heading", { name: "Stays", level: 1, exact: true })
+      .waitFor();
+    checks.push(`${width}: start an accommodation search from an empty trip`);
     await goto("/travel");
     await page
-      .getByRole("heading", { name: "Travel Southern Africa", exact: true })
+      .locator("#hero")
+      .getByRole("heading", {
+        name: "Travel Southern Africa",
+        level: 1,
+        exact: true,
+      })
       .waitFor();
     assert.equal(
       await page.locator("#hero .discovery-eyebrow").textContent(),
@@ -319,6 +379,33 @@ try {
     const dest = page.getByRole("combobox", {
       name: "Destination airport / area",
     });
+    await dest.fill("zimbabwe");
+    await page
+      .getByRole("option", { name: /Victoria Falls.*Zimbabwe/ })
+      .waitFor();
+    if (width === 375) {
+      await page.getByRole("option", { name: /Harare.*HRE/ }).tap();
+      assert.match(await dest.inputValue(), /Harare.*HRE/);
+      assert.equal(await dest.getAttribute("aria-expanded"), "false");
+    }
+    await dest.fill("Unknown city");
+    await page
+      .getByRole("status")
+      .filter({ hasText: "No matching locations" })
+      .waitFor();
+    await dest.press("Tab");
+    assert.equal(await dest.inputValue(), "Unknown city");
+    assert.equal(await dest.evaluate(input => input.validity.valid), false);
+    await dest.focus();
+    await dest.press("Escape");
+    assert.match(await dest.inputValue(), /HRE/);
+    assert.equal(await dest.evaluate(input => input.validity.valid), true);
+    await dest.fill("vfa");
+    await dest.press("Tab");
+    assert.match(await dest.inputValue(), /Victoria Falls.*VFA/);
+    checks.push(
+      `${width}: country lookup, unmatched text, cancelled edit and exact airport code`
+    );
     await dest.fill("Victoria");
     await page.getByRole("option", { name: /Victoria Falls/ }).waitFor();
     await dest.press("Enter");
@@ -370,6 +457,18 @@ try {
     await page
       .getByText("The supplier amount has changed.", { exact: false })
       .waitFor();
+    const referralButton = page.getByRole("button", { name: "Allow referral tracking and continue" });
+    await page.getByText("If a link can earn Diaspora Unlocked a commission", { exact: false }).waitFor();
+    await page.getByRole("link", { name: "Continue to Kiwi.com ↗", exact: true }).waitFor();
+    assert.equal(await referralButton.count(), 0);
+    assert.equal(await page.getByText("Awin can use cookies", { exact: false }).count(), 0);
+    approvedPlacement = true;
+    await page.getByRole("button", { name: "Check current price", exact: true }).click();
+    await page.getByText("Awin can use cookies", { exact: false }).waitFor();
+    assert.equal(referralRequests, 0);
+    await referralButton.click();
+    await page.getByText("The referral link could not open.", { exact: false }).waitFor();
+    assert.equal(referralRequests, 1);
     const supplierPopupPromise = context.waitForEvent("page");
     await page
       .getByRole("link", { name: "Continue to Kiwi.com ↗", exact: true })
@@ -378,6 +477,8 @@ try {
     await supplierPopup.waitForLoadState();
     assert.equal(supplierPopup.url(), "https://kiwi.com/u/synthetic");
     await supplierPopup.close();
+    assert.equal(referralRequests, 1);
+    referralFails = false;
     await fit("supplier result cards and revalidation contrast");
     await page
       .locator(".travel-supplier-results")
@@ -424,6 +525,14 @@ try {
         .locator(".travel-nav")
         .getByRole("link", { name, exact: true })
         .click();
+      await page
+        .getByRole("heading", { name, exact: true, level: 1 })
+        .waitFor();
+      assert.equal(
+        await page.locator(".travel-review").count(),
+        0,
+        "Reviews belong to their travel category"
+      );
       assert.equal(
         await page
           .getByRole("combobox", { name: "Currency", exact: true })
@@ -509,6 +618,26 @@ try {
           `${width}: hotel pricing basis stays unknown and supplier failure preserves previous options`
         );
       }
+      if (path === "car-hire") {
+        await page.evaluate(() => {
+          Object.defineProperty(navigator, "clipboard", {
+            configurable: true,
+            value: {
+              writeText: async () => { throw new DOMException("Denied", "NotAllowedError"); },
+            },
+          });
+        });
+        await page.getByRole("button", { name: "Copy search details" }).click();
+        const manualBrief = page.getByRole("textbox", { name: "Your search brief" });
+        await manualBrief.waitFor();
+        assert.match(await manualBrief.inputValue(), /VFA 14:00/);
+        assert.match(await manualBrief.inputValue(), /GBP/);
+        assert.equal(await manualBrief.evaluate(el =>
+          document.activeElement === el && el.selectionStart === 0 && el.selectionEnd === el.value.length
+        ), true);
+        await page.evaluate(() => Reflect.deleteProperty(navigator, "clipboard"));
+        checks.push(`${width}: clipboard denial selects the complete car search brief for manual copying`);
+      }
       await page.getByRole("button", { name: "Add search to trip" }).click();
       await fit(path + " shared context");
       await page.screenshot({
@@ -533,6 +662,17 @@ try {
     await selectedFlight
       .getByText("The supplier amount has changed.", { exact: false })
       .waitFor();
+    await selectedFlight.getByRole("button", { name: "Allow referral tracking and continue" }).click();
+    await page.getByRole("heading", { name: "Simulated referral network" }).waitFor();
+    const landing = new URL(page.url());
+    assert.equal(landing.origin, "https://www.awin1.com");
+    assert.equal(landing.searchParams.get("ued"), "https://kiwi.com/u/synthetic");
+    assert.equal(landing.searchParams.get("cons"), "1");
+    assert.match(landing.searchParams.get("clickref"), /^[a-f0-9-]{36}$/);
+    assert.equal(referralRequests, 2);
+    checks.push(`${width}: affiliate opt-in, recoverable partner failure, direct link and exact referral destination (fixture)`);
+    await page.goto(base + "/travel/my-trips?lng=en");
+    await selectedFlight.waitFor();
     offerExpires = true;
     await selectedFlight
       .getByRole("button", { name: "Check current price", exact: true })
@@ -628,6 +768,11 @@ try {
       .first()
       .getByText("Child ages: 7 · Date flexibility: ±0", { exact: true })
       .waitFor();
+    page.once("dialog", dialog => dialog.dismiss());
+    await page
+      .getByRole("button", { name: "Clear browser draft", exact: true })
+      .click();
+    assert.equal(await page.locator(".travel-saved-search").count(), 3);
     await fit("guest draft survives refresh and separates currencies");
     await page.screenshot({
       path: `${output}/${width}-my-trips.png`,
@@ -658,50 +803,136 @@ try {
     privateMode = true;
     await page.evaluate(() => localStorage.setItem("du_has_logged_in", "1"));
     await goto("/travel/my-trips");
-    await page
-      .getByLabel("Trip / search name", { exact: true })
-      .fill("Synthetic family trip");
-    await page
-      .getByRole("button", { name: "Save private trip", exact: true })
-      .click();
+    const nameField = page.getByLabel("Trip / search name", { exact: true });
+    const saveTrip = page.getByRole("button", {
+      name: "Save private trip",
+      exact: true,
+    });
+    const savedCard = name =>
+      page.locator(".travel-trip-grid article").filter({
+        has: page.getByRole("heading", { name, exact: true }),
+      });
+    const tripName = "Synthetic family trip";
+    const searchName = "Family flight searches";
+    const listError = page
+      .getByRole("alert")
+      .filter({ hasText: "Could not load your saved list." });
+    const retryList = listError.getByRole("button", {
+      name: "Try again",
+      exact: true,
+    });
+    const withConfirmation = async (button, choice, recordName) => {
+      const dialogSeen = page.waitForEvent("dialog").then(async dialog => {
+        const kind = dialog.type();
+        const message = dialog.message();
+        await dialog[choice]();
+        assert.equal(kind, "confirm");
+        assert(message.includes(recordName));
+      });
+      await Promise.all([dialogSeen, button.click()]);
+    };
+
+    if (width <= 768) {
+      await page
+        .getByRole("link", {
+          name: "Private saved trips & searches",
+          exact: true,
+        })
+        .click();
+      assert.equal(
+        await page.evaluate(() => document.activeElement?.id),
+        "private-trips"
+      );
+    }
+    await nameField.fill(tripName);
+    savedListFails = true;
+    await saveTrip.click();
     await page.getByText("Saved privately.", { exact: true }).waitFor();
+    await listError.waitFor();
+    assert.equal(await nameField.inputValue(), "");
+    assert(await saveTrip.isDisabled());
     assert.equal(savedRecords.length, 1);
     assert.equal(savedRecords[0].draft.quotes.length, 2);
-    await page
-      .getByRole("button", { name: "Load into draft", exact: true })
-      .click();
+    savedListFails = false;
+    await retryList.click();
+    const restore = savedCard(tripName).getByRole("button", {
+      name: "Load into draft",
+      exact: true,
+    });
+    await restore.waitFor();
+    assert.equal(
+      saves,
+      1,
+      "Retrying the list must not create a duplicate trip"
+    );
+    await withConfirmation(restore, "accept", tripName);
     await page
       .getByText("Saved details loaded into this browser draft.", {
         exact: true,
       })
       .waitFor();
+    await nameField.fill(searchName);
     await page
       .getByRole("button", { name: "Save searches", exact: true })
       .click();
-    await page.getByText("Saved privately.", { exact: true }).waitFor();
+    const searchCard = savedCard(searchName);
+    await searchCard.waitFor();
     assert.equal(savedRecords.length, 2);
     assert.equal(savedRecords[1].draft.quotes.length, 0);
     assert.equal(savedRecords[1].draft.estimates.length, 0);
-    await page
-      .getByRole("button", { name: "Delete", exact: true })
-      .last()
-      .click();
-    await page.waitForFunction(
-      () =>
-        document.querySelectorAll(
-          ".travel-trip-grid section:nth-child(2) article"
-        ).length === 1
+    const currentDraft = () =>
+      page.evaluate(() => localStorage.getItem("du_travel_draft_v1"));
+    const fullDraft = await currentDraft();
+    await withConfirmation(
+      searchCard.getByRole("button", { name: "Load into draft" }),
+      "dismiss",
+      searchName
     );
+    assert.equal(
+      await currentDraft(),
+      fullDraft,
+      "Cancel must preserve selections and allowances"
+    );
+    const removeSearch = searchCard.getByRole("button", {
+      name: "Delete",
+      exact: true,
+    });
+    await withConfirmation(removeSearch, "dismiss", searchName);
+    assert.equal(deletions, 0);
+    await searchCard.waitFor();
+    savedListFails = true;
+    await withConfirmation(removeSearch, "accept", searchName);
+    await listError.waitFor();
+    await page.getByRole("status").filter({ hasText: searchName }).waitFor();
+    await searchCard.waitFor({ state: "detached" });
+    await savedCard(tripName).waitFor();
+    savedListFails = false;
+    await retryList.click();
+    await listError.waitFor({ state: "detached" });
+    assert.equal(
+      deletions,
+      1,
+      "Retrying the list must not repeat the deletion"
+    );
+    assert.equal(saves, 2);
+    assert.deepEqual(
+      savedRecords.map(row => row.name),
+      [tripName]
+    );
+    await fit(
+      "acknowledged saves and deletes survive a list outage; retry only reads"
+    );
+
     storageFails = true;
-    await page
-      .getByRole("button", { name: "Save private trip", exact: true })
-      .click();
+    await nameField.fill("Keep my draft");
+    await saveTrip.click();
     await page
       .getByText(
         "Could not access saved trips. Your browser draft is still here. Try again later.",
         { exact: true }
       )
       .waitFor();
+    assert.equal(await nameField.inputValue(), "Keep my draft");
     assert.equal(await page.locator(".travel-saved-search").count(), 3);
     assert.equal(savedRecords.length, 1);
     await fit(
@@ -713,18 +944,11 @@ try {
     });
     storageFails = false;
     malformedSavedResponse = true;
-    const draftBeforeMalformedResponse = await page.evaluate(() =>
-      localStorage.getItem("du_travel_draft_v1")
-    );
+    const draftBeforeMalformedResponse = await currentDraft();
     await page.reload();
-    await page
-      .getByText(
-        "Could not access saved trips. Your browser draft is still here. Try again later.",
-        { exact: true }
-      )
-      .waitFor();
+    await listError.waitFor();
     assert.equal(
-      await page.evaluate(() => localStorage.getItem("du_travel_draft_v1")),
+      await currentDraft(),
       draftBeforeMalformedResponse,
       "Malformed private data must not replace the guest draft"
     );
@@ -739,23 +963,9 @@ try {
       "malformed successful response preserves draft without rendering unsafe records"
     );
     malformedSavedResponse = false;
-    await page
-      .getByRole("alert")
-      .getByRole("button", { name: "Try again" })
-      .click();
-    await page
-      .getByRole("button", { name: "Load into draft", exact: true })
-      .waitFor();
-    assert.equal(
-      await page
-        .getByText(
-          "Could not access saved trips. Your browser draft is still here. Try again later.",
-          { exact: true }
-        )
-        .count(),
-      0,
-      "Retry should clear the failure and show the recovered records"
-    );
+    await retryList.click();
+    await restore.waitFor();
+    await listError.waitFor({ state: "detached" });
     await page
       .getByRole("button", { name: "Ask Onesa about this option", exact: true })
       .first()
@@ -794,7 +1004,30 @@ try {
     for (const [old, target] of Object.entries(travelRedirects).filter(
       ([source]) => !source.endsWith("/") && !source.endsWith(".html")
     )) {
-      await page.goto(base + old + "?lng=en#attractions");
+      // The generated document already contains <main> before React starts its
+      // requests. Finish the destination's bootstrap reads before navigating
+      // again, rather than aborting them during WebKit's document teardown.
+      const bootstrapPaths = ["/api/auth/me"];
+      if (target === "/travel") bootstrapPaths.push("/api/travel/capabilities");
+      const bootstrap = Promise.all(
+        bootstrapPaths.map(async path => {
+          const response = await page.waitForResponse(
+            response =>
+              response.url() === base + path &&
+              response.request().method() === "GET"
+          );
+          assert.equal(response.status(), path === "/api/auth/me" ? 401 : 200);
+          assert.equal(
+            await response.finished(),
+            null,
+            path + " did not finish"
+          );
+        })
+      );
+      await Promise.all([
+        bootstrap,
+        page.goto(base + old + "?lng=en#attractions"),
+      ]);
       await page.waitForURL(base + target + "?lng=en#attractions");
       await page.locator("main").waitFor();
     }

@@ -72,3 +72,5 @@ open their web equivalents in the platform browser view. A website handoff can
 require a separate sign-in; iOS browser views do not share Safari's cookies.
 See `../docs/mobile-first-review.md` for the
 feature matrix, verification results and remaining device/release checks.
+
+See [mobile distribution](DISTRIBUTION.md) for owner-signed Android APKs and physical-device App Store Connect archives.

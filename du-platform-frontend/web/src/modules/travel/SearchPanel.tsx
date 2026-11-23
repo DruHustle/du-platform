@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import {
@@ -12,105 +12,163 @@ import { Button } from "@/components/ui/button";
 import SupplierResults from "./SupplierResults";
 import { loadTravelReference, type TravelReference } from "./api";
 
-export function LocationField({
+function LocationField({
   label,
   value,
   onChange,
+  onEdit,
   id,
   locations,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
+  onEdit: () => void;
   id: string;
   locations: TravelReference["locations"];
 }) {
+  const { t, i18n } = useTranslation();
   const [query, setQuery] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const [index, setIndex] = useState(-1);
+  const input = useRef<HTMLInputElement>(null);
+  const countries = useMemo(
+    () => typeof Intl.DisplayNames === "function"
+      ? new Intl.DisplayNames([i18n.language], { type: "region" })
+      : undefined,
+    [i18n.language]
+  );
+  const term = (query ?? "").trim().toLowerCase();
   const matches = locations
-    .filter(l =>
-      `${l.id} ${l.name} ${l.country}`
-        .toLowerCase()
-        .includes((query ?? "").toLowerCase())
+    .filter(location =>
+      [
+        location.name,
+        location.id,
+        location.country,
+        countries?.of(location.country),
+      ].some(part => part?.toLowerCase().includes(term))
     )
     .slice(0, 24);
-  const [index, setIndex] = useState(0);
-  const chosen = locations.find(l => l.id === value);
-  function select(id: string) {
-    onChange(id);
+  const chosen = locations.find(location => location.id === value);
+  const activeOption = open && matches[index];
+  const expanded = open && matches.length > 0;
+  const selectMessage = t("travel.choose-location");
+  const feedback =
+    query === null
+      ? ""
+      : !matches.length
+        ? t("travel.no-locations")
+        : !open
+          ? selectMessage
+          : "";
+  useEffect(() => {
+    input.current?.setCustomValidity(query === null ? "" : selectMessage);
+  }, [query, selectMessage]);
+
+  function select(locationId: string) {
+    input.current?.setCustomValidity("");
+    onChange(locationId);
     setQuery(null);
     setOpen(false);
   }
+
   return (
     <div className="travel-location">
       <label htmlFor={id}>{label}</label>
       <input
+        ref={input}
         id={id}
         role="combobox"
-        aria-expanded={open}
-        aria-controls={`${id}-options`}
+        required
+        disabled={!locations.length}
+        aria-expanded={expanded}
+        aria-controls={expanded ? `${id}-options` : undefined}
         aria-autocomplete="list"
         aria-activedescendant={
-          open && matches[index] ? `${id}-${matches[index].id}` : undefined
+          activeOption ? `${id}-${activeOption.id}` : undefined
         }
+        aria-invalid={feedback ? true : undefined}
+        aria-describedby={feedback ? `${id}-feedback` : undefined}
         autoComplete="off"
         value={query ?? (chosen ? `${chosen.name} (${chosen.id})` : value)}
-        onFocus={() => {
-          setQuery("");
+        onFocus={e => {
+          if (query === null) e.currentTarget.select();
           setOpen(true);
-          setIndex(0);
+          setIndex(-1);
         }}
         onBlur={() => {
           setOpen(false);
-          setQuery(null);
+          if (query === null) return;
+          const exact = matches.filter(
+            location =>
+              location.id.toLowerCase() === term ||
+              location.name.toLowerCase() === term
+          );
+          if (exact.length === 1) select(exact[0].id);
         }}
         onChange={e => {
+          e.currentTarget.setCustomValidity(selectMessage);
           setQuery(e.target.value);
           setOpen(true);
           setIndex(0);
-          onChange("");
+          onEdit();
         }}
         onKeyDown={e => {
           if (e.key === "Escape") {
+            e.preventDefault();
+            e.currentTarget.setCustomValidity("");
             setOpen(false);
             setQuery(null);
+            setIndex(-1);
           }
           if (e.key === "ArrowDown" || e.key === "ArrowUp") {
             e.preventDefault();
+            const next =
+              e.key === "ArrowDown"
+                ? index + 1
+                : index < 0
+                  ? matches.length - 1
+                  : index - 1;
+            const position = Math.max(0, Math.min(matches.length - 1, next));
             setOpen(true);
-            setIndex(i =>
-              Math.max(
-                0,
-                Math.min(
-                  matches.length - 1,
-                  i + (e.key === "ArrowDown" ? 1 : -1)
-                )
-              )
-            );
+            setIndex(position);
+            const option = matches[position];
+            if (option)
+              document
+                .getElementById(`${id}-${option.id}`)
+                ?.scrollIntoView({ block: "nearest" });
           }
-          if (e.key === "Enter" && open) {
+          if (e.key === "Enter" && open && !e.nativeEvent.isComposing) {
             e.preventDefault();
-            if (matches[index]) select(matches[index].id);
+            if (activeOption) select(activeOption.id);
+            else if (query === null) setOpen(false);
           }
         }}
       />
-      {open && (
-        <ul id={`${id}-options`} role="listbox">
-          {matches.map((l, i) => (
+      {expanded && (
+        <ul id={`${id}-options`} role="listbox" aria-label={label}>
+          {matches.map((location, i) => (
             <li
-              key={l.id}
-              id={`${id}-${l.id}`}
+              key={location.id}
+              id={`${id}-${location.id}`}
               role="option"
               aria-selected={index === i}
-              onPointerDown={e => {
-                e.preventDefault();
-                select(l.id);
-              }}
+              onMouseDown={e => e.preventDefault()}
+              onClick={() => select(location.id)}
             >
-              {l.name} · {l.id} · {l.country}
+              {location.name} · {location.id} · {countries?.of(location.country) ?? location.country}
             </li>
           ))}
         </ul>
+      )}
+      {feedback && (
+        <p
+          id={`${id}-feedback`}
+          className="travel-location-feedback"
+          role="status"
+        >
+          {feedback}
+        </p>
       )}
     </div>
   );
@@ -125,7 +183,8 @@ export default function SearchPanel({
   const c = draft.criteria;
   const [error, setError] = useState("");
   const [reviewed, setReviewed] = useState<TravelCriteria | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [copyState, setCopyState] = useState<"ready" | "copied" | "manual">("ready");
+  const manualBrief = useRef<HTMLTextAreaElement>(null);
   const [notice, setNotice] = useState("");
   const [reference, setReference] = useState<TravelReference | null>(null);
   const [referenceError, setReferenceError] = useState(false);
@@ -142,7 +201,7 @@ export default function SearchPanel({
     setError("");
     setNotice("");
     setReviewed(null);
-    setCopied(false);
+    setCopyState("ready");
   }
   function set<K extends keyof TravelCriteria>(
     key: K,
@@ -206,6 +265,7 @@ export default function SearchPanel({
       <form onSubmit={submit} className="travel-form">
         {category === "flights" && (
           <LocationField
+            onEdit={resetReview}
             locations={reference?.locations ?? []}
             id="travel-origin"
             label={t("travel.origin")}
@@ -215,6 +275,7 @@ export default function SearchPanel({
         )}
         {category !== "car-hire" && (
           <LocationField
+            onEdit={resetReview}
             locations={reference?.locations ?? []}
             id="travel-destination"
             label={t(
@@ -371,6 +432,7 @@ export default function SearchPanel({
         {category === "car-hire" && (
           <>
             <LocationField
+              onEdit={resetReview}
               locations={reference?.locations ?? []}
               id="travel-pickup"
               label={t("travel.pickup")}
@@ -378,6 +440,7 @@ export default function SearchPanel({
               onChange={v => set("pickup", v)}
             />
             <LocationField
+              onEdit={resetReview}
               locations={reference?.locations ?? []}
               id="travel-dropoff"
               label={t("travel.dropoff")}
@@ -421,8 +484,25 @@ export default function SearchPanel({
       {notice && <p role="status">{notice}</p>}
       {reviewed && (
         <div className="travel-review surface-card">
-          <h3 role="status">{t("travel.search-ready")}</h3>
-          <p>{searchBrief(reviewed)}</p>
+          <h3 id="travel-reviewed-title" role="status">{t("travel.search-ready")}</h3>
+          {copyState === "manual" ? (
+            <>
+              <textarea
+                aria-labelledby="travel-reviewed-title"
+                aria-describedby="travel-manual-copy"
+                className="w-full"
+                ref={manualBrief}
+                readOnly
+                autoFocus
+                rows={4}
+                value={searchBrief(reviewed)}
+                onFocus={event => event.currentTarget.select()}
+              />
+              <p id="travel-manual-copy" role="status">{t("travel.copy-error")}</p>
+            </>
+          ) : (
+            <p>{searchBrief(reviewed)}</p>
+          )}
           {category === "car-hire" && <p>{t("travel.no-results")}</p>}
           {category !== "car-hire" && (
             <SupplierResults
@@ -442,7 +522,7 @@ export default function SearchPanel({
                     { category, criteria: reviewed },
                   ],
                 }));
-                setCopied(false);
+                setCopyState("ready");
                 setNotice(t("travel.added"));
               }}
             >
@@ -453,13 +533,14 @@ export default function SearchPanel({
               onClick={async () => {
                 try {
                   await navigator.clipboard.writeText(searchBrief(reviewed));
-                  setCopied(true);
+                  setCopyState("copied");
                 } catch {
-                  setError(t("travel.copy-error"));
+                  setCopyState("manual");
+                  manualBrief.current?.focus();
                 }
               }}
             >
-              {t(copied ? "travel.copied" : "travel.copy-search")}
+              {t(copyState === "copied" ? "travel.copied" : "travel.copy-search")}
             </Button>
             {reference && <Button variant="outline" asChild>
               <a

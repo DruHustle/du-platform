@@ -1,9 +1,12 @@
 # CI/CD and production operations
 
-Diaspora Unlocked uses Vercel for the frontend and the shared Oracle VM
-**Software Engineering Backend** for its API. The managed database and provider
-integrations remain unchanged. See [Oracle operations](../../du-platform-backend/deploy/oracle/README.md)
-for image releases, ingress, runtime configuration and rollback.
+Diaspora Unlocked uses Vercel for the frontend and the existing free Render web
+service for its API and embedded delivery consumers. The managed database and
+provider integrations remain unchanged. See
+[Render operations](../../du-platform-backend/deploy/render/README.md) for the
+tested-source release contract and
+[the backend handoff](../../du-platform-backend/deploy/render/retirement.md) for
+consumer and backup continuity. Production releases have no Oracle/VM fallback.
 
 ## Application releases
 
@@ -13,11 +16,13 @@ frontend/backend type checks, module and frontend tests, guardrails, production
 build, initial HTML/SEO checks, and navigation, shop and discovery browser tests.
 Formatting is reported separately.
 
-After that gate passes, a push to `main` deploys Vercel production. Pull requests
-receive previews. Deploy from source; do not use stale prebuilt artifacts. The
+After that gate passes, a push to `main` deploys the exact tested backend source
+to Render and verifies its source, database and AI readiness before deploying
+Vercel production. Pull requests receive isolated previews. Deploy from source;
+do not use stale prebuilt artifacts. The
 source-controlled Vercel build explicitly sets `VITE_API_URL=/api`, builds and
 checks the output before publishing. `/api/*` proxies to
-`https://du-api.152-70-22-84.sslip.io/api/*`. This keeps sessions first-party and
+`https://du-platform-api.onrender.com/api/*`. This keeps sessions first-party and
 prevents dashboard API settings from overriding the tested routing.
 
 The production job also checks the published HTML, canonical URLs, API proxy and
@@ -28,11 +33,11 @@ chunk may reference a retired backend. Run the same check with
 the repository connected. PR previews and production releases still run after
 the complete CI gate.
 
-Oracle backend releases are independent, manual container updates using a tested
-source commit. They do not run automatically when the frontend is published.
-The Dockerfile embeds `APP_REVISION`; `/api/ping` reports it as `commit`.
-Retired deployment manifests and workflows have been removed. Historical
-configuration remains in Git history and the private migration backup.
+The backend remains independently deployable. Its normal production job uses
+the selected Render service and workspace, and fails if the live source differs
+from the tested commit. The Dockerfile embeds `APP_REVISION`; `/api/ping` reports
+it as `commit`. Historical VM operations are retained for existing recovery
+custody, not as a production deployment option.
 
 ## GitHub configuration
 
@@ -45,10 +50,15 @@ Vercel deployments need these existing repository secrets:
 Use the existing project and account. Keep credentials in GitHub secrets, never
 in source, logs, build artifacts or browser environment variables.
 
-## Oracle readiness checks
+The Render backend release uses the existing `RENDER_API_KEY` secret and the
+`DU_RENDER_SERVICE_ID`, `DU_RENDER_WORKSPACE_ID` and `DU_RENDER_API_ORIGIN`
+repository variables. `DU_BACKEND_HOST` may be unset or `render`; other values
+are rejected. Preserve these explicit identities and the release checks.
+
+## Backend readiness checks
 
 There is no scheduled infrastructure-monitoring workflow or automated health
-alert email. Docker retains its container health check, and the API keeps
+alert email. Render uses its configured health check, and the API keeps
 `/api/ping`, `/api/health/db` and `/api/ai/ready` for manual release verification
 and troubleshooting. No repository monitoring variables or SMTP alert secrets
 are required. The application's newsletter email configuration is separate.
@@ -60,13 +70,14 @@ Run `pnpm --dir du-platform-frontend/tooling check`, `pnpm --dir du-platform-fro
 before a release. `pnpm --dir du-platform-frontend/tooling test:seo:live` checks the published site after deployment.
 
 Inspect GitHub Actions and Vercel build logs for frontend failures. For API
-failures, inspect Oracle container status and logs, then check liveness, database
+failures, inspect the selected Render deployment status and logs, then check liveness, database
 and AI readiness directly and through the public frontend proxy. A healthy proxy
 alone does not prove the compiled browser uses it; inspect all published chunks.
 
 Keep authentication, CORS, CSRF and TLS checks enabled. Backend rollback restores
-the previous tested Oracle image and repeats readiness checks, without changing
-managed production data or restarting sibling applications.
+the previous tested Render release and repeats readiness checks, without
+changing managed production data. A consumer handoff must preserve the documented
+pause and no-overlap sequence; do not start a second sending service.
 
 ## Deployment storage
 
@@ -77,7 +88,7 @@ JPEGs are encoded efficiently at their original dimensions, and unused originals
 and retired-feature images are excluded. Keep media source backups outside the
 public directory; every public file is copied into every deployment.
 
-Vercel builds only the frontend. `.vercelignore` excludes the Oracle backend,
+Vercel builds only the frontend. `.vercelignore` excludes the independent backend,
 deployment tools, local output, private environment files and dependencies from
 source uploads. Full backend/frontend checks still run in GitHub Actions.
 

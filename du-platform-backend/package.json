@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "node --env-file-if-exists=.env --watch --import tsx server.ts",
-    "build": "esbuild server.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "build": "esbuild server.ts modules/travel/reconcileAwin.ts --outbase=. --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "start": "node dist/server.js",
+    "travel:reconcile": "node dist/modules/travel/reconcileAwin.js",
     "check": "tsc --noEmit",
     "lint": "tsc --noEmit",
     "test": "vitest run --config vitest.config.ts"

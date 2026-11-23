@@ -42,6 +42,7 @@ export const registerSchema = z
 export const forgotPasswordSchema = z.object({
   email: z.string().trim().max(254).email(),
   language: z.enum(["en", "de", "sn", "nd"]).optional(),
+  next: z.string().optional(),
 });
 
 export const resetPasswordSchema = z

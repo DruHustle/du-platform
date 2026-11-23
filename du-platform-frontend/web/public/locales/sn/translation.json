@@ -1,4 +1,16 @@
 {
+  "deletion": {
+    "title": "Kumbira kudzima akaundi",
+    "details": "Kumbira kuti akaundi yako yeDiaspora Unlocked, nzendo dzakachengetwa nemashoko ako ane chekuita nayo zvidzimwe zvachose. Anotungamirira sevhisi anoongorora mashoko akachengetwa kumwe uye anofanira kuramba achichengetwa asati avhara akaundi.",
+    "password": "Pasiwedhi yaunoshandisa iye zvino",
+    "confirm": "Simbisa chikumbiro chekudzima",
+    "receipt": "Chikumbiro chagamuchirwa. Nhamba yacho: {{reference}}. Anotungamirira sevhisi achakuzivisa kana zvapera.",
+    "sign_in": "Pinda kuti ukumbire kudzima akaundi",
+    "password_error": "Tarisa pasiwedhi yako woedza zvakare.",
+    "retry": "Hatina kukwanisa kusimbisa chikumbiro. Edza zvakare kuti uwane nhamba yacho.",
+    "again": "Edza zvakare",
+    "loading": "Tiri kutarisa akaundi…"
+  },
   "appearance": {
     "label": "Chitarisiko",
     "system": "Tevera mudziyo (otomatiki)",
@@ -30,6 +42,13 @@
   "partners": "Vatishandi",
   "contact": "Taura Nesu",
   "footer": {
+    "mobile_apps": {
+      "apk": "Dhaunirodha APK yakasainwa",
+      "play": "Dhaunirodha paGoogle Play",
+      "title": "Maapp enharembozha",
+      "available": "Vhura peji rekudhaunirodha",
+      "unavailable": "Haisati yawanikwa"
+    },
     "about": {
       "title": "Nezvedu",
       "vision_label": "Chiratidzo Chedu",
@@ -99,6 +118,8 @@
     "reset": {
       "title": "Gadzirisazve pasiwedhi",
       "subtitle": "Isa pasiwedhi itsva yeaccount yako.",
+      "invalid_link": "Link iyi yekugadzirisazve pasiwedhi haisi kushanda kana kuti yapera.",
+      "request_link": "Kumbira link itsva yekugadzirisazve pasiwedhi",
       "missing_token": "Link yekugadzirisazve haipo kana kuti yapera.",
       "new_password": "Pasiwedhi itsva",
       "show_password": "Ratidza pasiwedhi",
@@ -1259,7 +1280,7 @@
       "markets_placeholder": "Misika (semuenzaniso EU, UK)",
       "story_placeholder": "Zviri munyaya",
       "testimonial_placeholder": "Uchapupu",
-      "display_label": "Ratidzai papeji reshanduko",
+      "display_label": "Ratidza papeji rekudyara mari",
       "add_story": "Wedzerai nyaya yeshanduko",
       "badge_display": "Ratidzai",
       "badge_hide": "Musaratidze",
@@ -1375,7 +1396,12 @@
         "crafts": "Unyanzvi nemabasa emaoko",
         "food": "Chikafu & Nostalgia",
         "all_segments": "Mhando dzose dzezvigadzirwa",
-        "select_segment": "Sarudza mhando yechigadzirwa"
+        "select_segment": "Sarudza mhando yechigadzirwa",
+        "search": "Tsvaga zvigadzirwa",
+        "category": "Chikamu",
+        "result_count_one": "Chigadzirwa chawanikwa ({{count}})",
+        "result_count_other": "Zvigadzirwa zvawanikwa ({{count}})",
+        "no_matches": "Hapana zvigadzirwa zvinoenderana nezvawasarudza"
       },
       "loading": "Kurodha zvigadzirwa...",
       "empty_state": "Parizvino hapana zvigadzirwa.",
@@ -1540,11 +1566,13 @@
       "caption": "Chikafu · Mabasa emaoko · Mbatya dzevatsigiri",
       "collections_cta": "Ongorora zvikamu"
     },
+    "delivery_coverage": "Nyika dzinotenderwa kutumirwa zvinhu: {{countries}}.",
+    "no_delivery_destinations": "Parizvino hapana nyika yatiri kutumira zvinhu kwairi.",
     "currency": {
       "label": "Mari yechitoro",
-      "EUR": "EUR · KuEurope",
-      "USD": "USD · MuZimbabwe",
-      "ZAR": "ZAR · MuSouth Africa",
+      "EUR": "EUR · Yuro",
+      "USD": "USD · Dhora reUS",
+      "ZAR": "ZAR · Randi reSouth Africa",
       "note": "Mitengo iyi ndeyekufungidzira; mutengo wekupedzisira wezvinhu nekuendeswa neDHL zvinosimbiswa usati wabhadhara. Kushandurwa kwemari kunobva pa15 Gumiguru 2026."
     }
   },
@@ -1681,6 +1709,7 @@
     }
   },
   "search": {
+    "partial": "Mimwe mhinduro yetsvakiridzo haisi kuwanikwa pari zvino.",
     "categories": {
       "tourism": "Kufamba",
       "investment": "Kudyara mari",
@@ -1697,14 +1726,14 @@
     },
     "no_results": {
       "title": "Hapana zvawanikwa",
-      "message": "Hatina kuwana chinoenderana ne\"{{query}}\". Edza kutsvaga mazwi akadai se \"Investment\", \"Tourism\", kana \"Onesa\".",
+      "message": "Hatina kuwana zvinoenderana ne“{{query}}”. Edza izwi pfupi rakaita sekuti “ndege” kana “pekugara”.",
       "return_home": "Dzoka Kumba"
     },
     "submit": "Tsvaga",
     "loading": "Tiri kutsvaga…",
     "failed": "Kutsvaga hakusi kushanda pari zvino. Ndapota edza zvakare.",
     "retry": "Edza zvakare",
-    "prompt": "Tsvaga zvekushanya, kuisa mari, kutenga, kana Onesa AI.",
+    "prompt": "Tsvaga ndege, pekugara, zvigadzirwa kana Onesa AI.",
     "description": "Tsvaga zvigadzirwa, nzvimbo dzekushanyira, pfungwa dzebhizinesi nematurusi eOnesa."
   },
   "error_boundary": {
@@ -1718,6 +1747,12 @@
   "cancel": "Kanzura",
   "close": "Vharai",
   "impact": {
+    "feed": {
+      "loading": "Nyaya dzeshanduko dziri kuiswa…",
+      "unavailable": "Nyaya dzeshanduko hadzina kukwanisa kuiswa.",
+      "retry": "Edza zvakare",
+      "empty": "Hapana nyaya dzeshanduko dzakaburitswa parizvino."
+    },
     "cta_button": "Tanga Kudyidzana",
     "cta_subtitle": "Isu tinodyidzana nevatungamiriri vediaspora, masangano, uye mabhizinesi kuti tiwedzere maitiro. Regai",
     "cta_title": "Shamwaridzana nesu",
@@ -2010,7 +2045,7 @@
     "payment_draft": "Zvarongwa: simbisa mutengo wekupedzisira nemirayiridzo yekubhadhara nechitoro. Kubhadhara nekadhi kuburikidza neStripe kuri kurongwa asi hakusati kwawanikwa; hapana mari inotorwa pano. Nyora mari yagamuchirwa chete nenhamba yayo; tumira mushure mekuongorora mari nechigadzirwa. Maitiro echibvumirano nekubhadhara anofanira kubvumirwa kutengesa kusati kwatanga.",
     "returns_draft": "Kero iri kurongwa yekudzorera: Onesa UG (haftungsbeschränkt), Diaspora Unlocked, Steinhofweg 47, 69123 Heidelberg, Germany; info@diasporaunlocked.com. Bata chitoro nenhamba yechikumbiro kuti ukumbire kukanzura, utaure dambudziko kana kuronga kudzosa zvinhu. Mashoko nefomu rekukanzura, anobhadhara kutumira, zvinosiyiwa zvinoshanda nemaitiro ekudzorera mari zvinofanira kubvumirwa nekuburitswa kutengeserana kusati kwagamuchirwa. Kodzero dzemutengi dziri mumutemo hadzichinjwi.",
     "complaints": "Zvichemo, kukanzura kana kuvanzika: info@diasporaunlocked.com nenhamba yechikumbiro. Usatumira mashoko ekadhi rekubhadhara.",
-    "privacy_flows": "Zvikumbiro zvinochengeta zita, email, kero, zvigadzirwa nemitengo panguva yechikumbiro, mitengo yekupedzisira, nhoroondo nekutumirwa kweemail muMySQL iri paAiven. API iri paOracle uye peji riri paVercel. Resend inotumira email dzeodha netsamba dzakasimbiswa. Kukumbira odha hakukunyoresi kutsamba dzenhau.",
+    "privacy_flows": "Zvikumbiro zvinochengeta zita, email, kero, zvigadzirwa nemitengo panguva yechikumbiro, mitengo yekupedzisira, nhoroondo nekutumirwa kweemail muMySQL iri paAiven. API iri paRender uye peji riri paVercel. Resend inotumira email dzeodha netsamba dzakasimbiswa. Kukumbira odha hakukunyoresi kutsamba dzenhau.",
     "privacy_ai": "Onesa inotumira hurukuro nezvaunoda murwendo kuGoogle Gemini; Groq, Anthropic neCerebras dzinogona kushandiswa kana zvichidiwa. Usaisa mashoko akavanzika kana ekubhadhara. Mifananidzo yekamera yeAR inogadziriswa pamudziyo; haitumirwi neAR. Muridzi anofanira kuongorora zvibvumirano, kuchengetwa nekuendeswa kwemashoko kune dzimwe nyika kutengesa kusati kwatanga.",
     "privacy_controls": "Kuchengetwa kunodiwa kunobatsira sarudzo, bhasikiti nereceipt yakavanzika mutab. Ongororo yeVercel nezviitiko zvisina mazita zvinoda mvumo. Bvisa mvumo muCookie settings. Mazita, email, kero, token nehurukuro hazviendeswi muzviitiko zvekuongorora.",
     "privacy_retention": "Gwaro rekutanga: muridzi anofanira kusarudza nguva yekuchengeta maodha nemaakaundi, zvinodiwa nemutemo, zvibvumirano nevanochengeta data nekudzima. Tsamba dzinochengeta kusimbisa, kubuda nenhoroondo yekutumira. Link yekubuda inomisa dzimwe tsamba. Bata muridzi kuti uone, ugadzirise kana kudzima mashoko.",
@@ -2151,6 +2186,9 @@
     "explore": "Ongorora",
     "my-trips": "Nzendo dzangu",
     "description": "Munoshanyira mhuri, kudzokera kumusha kana kuona nzvimbo itsva here? Rongai nzendo kuenda, kubva uye mukati meZimbabwe nekumaodzanyemba kweAfrica, mozobhuka zvakananga nevapi vemabasa.",
+    "choose-location": "Sarudza nzvimbo kubva pane dzakarongwa.",
+    "no-locations": "Hapana nzvimbo inoenderana nezvawanyora. Edza zita reguta, nyika kana kodhi yenhandare yendege.",
+    "clear-confirm": "Unoda kudzima mashoko erwendo, zvawakatsvaga, mari yawakaronga uye zvawakasarudza mubhurawuza rino here?",
     "search-intro": "Tanga nemazuva nevafambi. Mashoko aya anoenderera kune zvimwe zvikamu.",
     "origin": "Nhandare yekubva",
     "destination": "Nhandare yekusvika / nzvimbo",
@@ -2185,7 +2223,7 @@
     "open-provider": "Vhura kutsvaga paKAYAK ↗",
     "handoff-note": "Inovhura peji yekutsvaga mune imwe tab. Mazuva, vafambi nenzvimbo hazviendeswi. Kopa mashoko aya woaisa paKAYAK. Haisi affiliate yakatenderwa.",
     "review-trip": "Ona nzendo dzangu",
-    "disclosure": "DU haitengesi mafambiro kana kubhuka. Kutsvaga kumupi nezvinongedzo zveruzhinji zvakaratidzwa zvakasiyana. Hapana komisheni yeDU yakagadzirirwa. Vapi vanosimbisa mari nemitemo yekupedzisira.",
+    "disclosure": "Mupi ndiye anoita zvekubhuka, kubhadhara uye kukubatsira. Kana chinongedzo chichigona kuwanisa Diaspora Unlocked komisheni, tinokuzivisa usati waenderera.",
     "guest-draft": "Chirongwa cherwendo",
     "draft-note": "Zvinochengetwa mubrowser ino kana zvichibvira. Hapana bhukisheni. Kutsvaga kwakachengetwa zvirongwa zvekuongorora, kwete maoffer evapi.",
     "searches": "Kutsvaga kwekuongorora",
@@ -2203,7 +2241,7 @@
     "funds-unknown": "Mitero, mabhegi, mari dzinosungirwa, wedzero nemadhipoziti anodzoserwa: hazvizivikanwi. Mari dzekuronga idzi hadzisi mari yose yerwendo kana inodiwa. Mashoko emupi akanyorwa oga pazasi.",
     "onesa-planner": "Ronga rwendo rweZimbabwe naOnesa",
     "private-trips": "Nzendo nekutsvaga zvakachengetwa zvakavanzika",
-    "private-note": "Pinda kuchengeta pamidziyo yakasiyana. Akaunti yako chete ndiyo inoverenga kana kubvisa. Kuvhura kwakachengetwa kunotsiva chirongwa chemubrowser.",
+    "private-note": "Nzendo nezvawakatsvaga zvawakachengeta zvinoonekwa muakaundi yako chete. Kana ukavhura chimwe chazvo, chinotsiva chirongwa chiri pamudziyo uno.",
     "sign-in": "Pinda uchengete zvakavanzika",
     "trip-name": "Zita rerwendo / kutsvaga",
     "save-trip": "Chengeta rwendo rwakavanzika",
@@ -2215,6 +2253,10 @@
     "restore": "Vhura muchirongwa",
     "restored": "Mashoko akachengetwa avhurwa muchirongwa.",
     "delete": "Dzima",
+    "restore-confirm": "Unoda kutsiva chirongwa chiri mubhurawuza rino ne“{{name}}” here?",
+    "delete-confirm": "Unoda kudzima “{{name}}” panzendo nezvawakatsvaga zvawakachengeta here?",
+    "deleted": "“{{name}}” zvadzimwa.",
+    "list-error": "Hatina kukwanisa kuvhura rondedzero yezvawakachengeta. Edza zvakare.",
     "storage-error": "Hatina kukwanisa kuvhura nzendo dzakachengetwa. Chirongwa chako chiripo. Edza gare gare.",
     "alerts": "Zviziviso zvemitengo",
     "alerts-note": "Kuongorora otomatiki hakuwaniki kusvikira mupi atendera nemiganhu yekutumira. Hapana mitengo iri kuongororwa kumashure.",
@@ -2291,6 +2333,10 @@
       "changed": "Mari yemupi yachinja. Ongorora mari itsva yaratidzwa usati waenderera.",
       "expired": "Sarudzo iyi haina kudzoka pakutsvaga kutsva. Rwendo rwako rwachengetwa. Tsvaga dzimwe sarudzo.",
       "continue": "Enderera ku{{provider}}",
+      "checkout-owner": "{{provider}} ndiye anoita zvekubhuka, kubhadhara uye kukubatsira pabhuku rako. Tarisa mutengo wose nemitemo yokukanzura ikoko.",
+      "affiliate-disclosure": "Awin inogona kushandisa makuki kuona kuti wasvika sei pakubhuka. Diaspora Unlocked inogona kuwana komisheni kana ukashandisa chinongedzo ichi. Unogonawo kuenda kuKiwi.com zvakananga.",
+      "affiliate-choice": "Bvumira kuteverwa kwechinongedzo woenderera",
+      "referral-failed": "Chinongedzo chekomisheni hachina kuvhurika. Ndege yako ichakasarudzwa. Enda kumupi zvakananga kana kuedza zvakare.",
       "no-reservation": "DU haibhuki kana kubata mari. Kubhuka nemari yekupedzisira zvinosimbiswa pamupi.",
       "nationality": "Nyika yeugari yemuenzi (mavara maviri)",
       "nationality-note": "Somuenzaniso DE, ZW, ZA kana GB. Mari yehotera inogona kuenderana neugari; usanyora nhamba yepasipoti.",

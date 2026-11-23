@@ -48,6 +48,17 @@ describe("Onesa chat requests", () => {
     expect(response.data).toEqual({ reply: "I am Onesa.", truncated: false });
   });
 
+  it("keeps the visible conversation intact and sends only the server's context window", async () => {
+    const messages = Array.from({ length: 29 }, (_, index) => ({
+      role: index % 2 === 0 ? "user" as const : "assistant" as const,
+      content: String(index),
+    }));
+    post.mockResolvedValueOnce({ data: { reply: "Next answer" } });
+    await sendOnesaChatMessage({ messages, language: "en" });
+    expect(post.mock.calls[0][1]).toMatchObject({ messages: messages.slice(-20) });
+    expect(messages).toHaveLength(29);
+  });
+
   it("forwards cancellation and ignores a response arriving after cancellation", async () => {
     const controller = new AbortController();
     let finish!: (response: unknown) => void;

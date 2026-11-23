@@ -17,6 +17,7 @@ import {
   TravelProviderError,
   verifyTravelQuote,
 } from "./providers";
+import { awinPlacement, issueAwinReferral } from "./awinReferral";
 import { TravelRepository } from "./repository";
 import { ok, error } from "../../shared/responseFormatter";
 
@@ -69,10 +70,11 @@ export function createTravelRouter() {
                 const input = travelQuoteSchema.safeParse(req.body);
                 if (!input.success)
                   throw new TravelProviderError("TRAVEL_INVALID");
-                return publicTravelSearch.revalidate(
-                  input.data,
-                  controller.signal
-                );
+                const result = await publicTravelSearch.revalidate(input.data, controller.signal);
+                // Older clients require the original strict response shape.
+                if (!req.query.channel) return result;
+                return { ...result, referralAvailable: !!db && result.quote.provider === "Kiwi.com" &&
+                  !!awinPlacement(req.query.channel) };
               })();
         if (!controller.signal.aborted) res.json(ok(result));
       } catch (e) {
@@ -103,6 +105,22 @@ export function createTravelRouter() {
       }
     });
   }
+  router.post("/referrals/awin", ...searchLimits, async (req, res) => {
+    const parsed = z.object({
+      quote: travelQuoteSchema, channel: z.enum(["web", "android"]), consent: z.literal(true),
+    }).strict().safeParse(req.body);
+    if (!parsed.success || !verifyTravelQuote(parsed.data.quote))
+      return res.status(400).json(error("TRAVEL_INVALID", "Check the selected flight again."));
+    const { quote, channel } = parsed.data;
+    if (Date.parse(quote.reviewAfter) <= Date.now())
+      return res.status(410).json(error("TRAVEL_OFFER_EXPIRED", "Check the current price again."));
+    try {
+      return res.json(ok({ url: await issueAwinReferral(quote, channel, db) }));
+    } catch {
+      return res.status(503).json(error("TRAVEL_REFERRAL_UNAVAILABLE",
+        "The referral link is unavailable. You can still continue directly to the provider."));
+    }
+  });
   // No monitoring, consent records or queued messages can be created while access
   // is pending, including during recovery holds. No env flag bypasses this gate.
   router.post("/alerts", (_req, res) =>

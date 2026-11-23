@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { ApiError, request, validateApiUrl } from "../src/api";
+import { ApiError, request, requestOnesaReply, validateApiUrl, type ChatMessage } from "../src/api";
 
 afterEach(() => vi.unstubAllGlobals());
 describe("mobile API boundary", () => {
@@ -22,6 +22,33 @@ describe("mobile API boundary", () => {
     vi.stubGlobal("fetch",vi.fn().mockRejectedValue(new Error("offline")));
     await expect(request("/test")).rejects.toBeInstanceOf(ApiError);
     await expect(request("/test")).rejects.toMatchObject({status:0,code:"NETWORK_ERROR"});
+  });
+  it("sends the latest 20 Onesa messages while retaining the complete conversation", async () => {
+    const conversation: ChatMessage[] = Array.from({ length: 23 }, (_, i) => ({
+      role: i % 2 === 0 ? "user" : "assistant", content: `Message ${i}`,
+    }));
+    const post = vi.fn().mockResolvedValue(new Response(JSON.stringify({ success: true, data: { reply: "Ready" } })));
+    vi.stubGlobal("fetch", post);
+    await expect(requestOnesaReply(conversation, new AbortController().signal)).resolves.toBe("Ready");
+    expect(JSON.parse(post.mock.calls[0][1].body).messages).toEqual(conversation.slice(3));
+    expect(conversation).toHaveLength(23);
+  });
+  it("times out a stalled response body after headers arrive", async () => {
+    vi.stubGlobal("fetch", vi.fn(async (_url, { signal }) => ({
+      ok: true, status: 200,
+      json: () => new Promise((_resolve, reject) => signal.addEventListener("abort", () => reject(new Error("aborted")))),
+    })));
+    await expect(request("/test", { timeoutMs: 20 })).rejects.toMatchObject({ status: 0, message: "The request timed out. Please try again." });
+  });
+  it("accepts a successful no-content action and rejects a failed JSON envelope", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(new Response(null, { status: 204 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ success: false, error: { code: "UNCONFIRMED", message: "Try again" } }))));
+    await expect(request("/test")).resolves.toBeNull();
+    await expect(request("/test")).rejects.toMatchObject({ code: "UNCONFIRMED", message: "Try again" });
+  });
+  it("does not interpret an HTML success page as a completed API operation", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("<html>Unavailable</html>")));
+    await expect(request("/test")).rejects.toMatchObject({ code: "INVALID_RESPONSE" });
   });
   it("does not accept an absolute URL as an API path", async () => {
     await expect(request("//evil.test/path")).rejects.toThrow("Invalid API path");

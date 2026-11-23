@@ -3,7 +3,8 @@ import {
   PASSWORD_ERROR_MESSAGES,
 } from "@/domain/passwordPolicy";
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "wouter";
+import { authPageLink, returnPathFromSearch } from "@/lib/safeRedirect";
+import { Link, useLocation, useSearch } from "wouter";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +27,10 @@ export default function ResetPassword() {
   const tr = (key: string, fallback: string) =>
     t(key, { defaultValue: fallback });
   const [, setLocation] = useLocation();
+  const nextPath = returnPathFromSearch(useSearch());
+  const loginPath = authPageLink("/login", nextPath);
   const [token] = useState(getTokenFromUrl);
+  const [invalidToken, setInvalidToken] = useState(false);
   const resetRequest = useRef<AbortController | null>(null);
   const redirectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
@@ -92,9 +96,15 @@ export default function ResetPassword() {
       setStatus(
         data.message ?? tr("auth.reset.success", "Password reset successful.")
       );
-      redirectTimer.current = setTimeout(() => setLocation("/login"), 900);
+      redirectTimer.current = setTimeout(() => setLocation(loginPath), 900);
     } catch (err: any) {
       if (request.signal.aborted) return;
+      if (err?.response?.data?.error?.code === "AUTH_INVALID_RESET_TOKEN") {
+        setInvalidToken(true);
+        setPassword("");
+        setConfirmPassword("");
+        return;
+      }
       setError(
         getApiErrorMessage(
           err,
@@ -122,13 +132,26 @@ export default function ResetPassword() {
             </p>
           </div>
 
-          {!token ? (
-            <p className="mt-6 text-sm text-red-400">
-              {tr(
-                "auth.reset.missing_token",
-                "Missing reset token. Please use the link sent to your email."
-              )}
-            </p>
+          {!token || invalidToken ? (
+            <div className="mt-6 space-y-3">
+              <p role="alert" className="text-sm text-red-400">
+                {invalidToken
+                  ? tr(
+                      "auth.reset.invalid_link",
+                      "This reset link is invalid or has expired."
+                    )
+                  : tr(
+                      "auth.reset.missing_token",
+                      "Missing reset token. Please use the link sent to your email."
+                    )}
+              </p>
+              <Link
+                href={authPageLink("/forgot-password", nextPath)}
+                className="inline-flex min-h-11 items-center font-semibold text-zim-gold hover:underline"
+              >
+                {tr("auth.reset.request_link", "Request a new reset link")}
+              </Link>
+            </div>
           ) : (
             <form className="mt-8 space-y-6" onSubmit={onSubmit}>
               <div className="space-y-2">
@@ -229,7 +252,7 @@ export default function ResetPassword() {
 
           <div className="mt-6 border-t border-white/10 pt-4 text-center text-sm text-white/75">
             <Link
-              href="/login"
+              href={loginPath}
               className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-white/70 hover:text-zim-gold"
             >
               <ArrowLeft className="h-3.5 w-3.5 mr-2" />

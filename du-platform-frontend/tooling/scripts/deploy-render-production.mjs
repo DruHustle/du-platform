@@ -41,7 +41,7 @@ export async function deployRender({
   const target = backendTarget(env);
   requireCondition(
     target.provider === "render",
-    "Render deployment requires explicit DU_BACKEND_HOST=render."
+    "Render deployment requires the Render-only backend configuration."
   );
   const revision = testedRevision(env.EXPECTED_REVISION);
   requireCondition(

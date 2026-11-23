@@ -20,6 +20,7 @@ const endpoints = {
   "Kiwi.com": "https://mcp.kiwi.com",
   Pilot: "https://mcp.pilotplans.com/mcp",
 } as const;
+const maxSupplierRows = 100;
 export class TravelProviderError extends Error {
   constructor(
     public code:
@@ -101,39 +102,85 @@ const hotel = z.object({
   rating: z.number().min(0).max(10).nullish(),
   reviewCount: z.number().int().nonnegative().max(10000000).nullish(),
 });
-function payload(raw: string, requestId: number): unknown {
-  let envelope: any;
+function parseProviderJson(text: string) {
   try {
-    if (raw.trimStart().startsWith("{")) envelope = JSON.parse(raw);
-    else {
-      const frames = raw.replace(/\r\n/g, "\n").split("\n\n");
-      for (const frame of frames) {
-        const lines = frame
-          .split("\n")
-          .filter(line => line.startsWith("data:"));
-        if (!lines.length) continue;
-        const item = JSON.parse(
-          lines.map(line => line.slice(5).trimStart()).join("\n")
-        );
-        if (item.id === requestId) envelope = item;
-      }
-    }
-    if (
-      !envelope ||
-      envelope.id !== requestId ||
-      envelope.error ||
-      envelope.result?.isError
-    )
-      throw new Error();
-    const result = envelope.result;
-    if (result.structuredContent) return result.structuredContent;
-    const block = result.content?.find(
-      (item: any) => item.type === "text" || typeof item.text === "string"
-    );
-    return JSON.parse(block.text);
+    return JSON.parse(text);
   } catch {
     throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
   }
+}
+
+function eventEnvelope(frame: string, requestId: number) {
+  const lines = frame
+    .split(/\r\n|\r|\n/)
+    .filter(line => line.startsWith("data:"));
+  if (!lines.length) return;
+  const event = parseProviderJson(
+    lines.map(line => line.slice(5).trimStart()).join("\n")
+  );
+  if (event?.id === requestId) return event;
+}
+
+async function readEnvelope(response: Response, requestId: number) {
+  const reader = response.body!.getReader();
+  const decoder = new TextDecoder();
+  const eventStream =
+    response.headers.get("Content-Type")?.split(";")[0].trim().toLowerCase() ===
+    "text/event-stream";
+  const eventEnd = /\r?\n\r?\n|\r\r/g;
+  let pending = "";
+  let size = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > 1048576)
+        throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
+      // A frame delimiter can be split across reads.
+      eventEnd.lastIndex = Math.max(0, pending.length - 3);
+      pending += decoder.decode(value, { stream: true });
+      if (eventStream) {
+        for (let end; (end = eventEnd.exec(pending)); ) {
+          const envelope = eventEnvelope(
+            pending.slice(0, end.index),
+            requestId
+          );
+          if (envelope) return envelope;
+          pending = pending.slice(eventEnd.lastIndex);
+          eventEnd.lastIndex = 0;
+        }
+      }
+    }
+    pending += decoder.decode();
+    if (!eventStream && pending.trimStart().startsWith("{"))
+      return parseProviderJson(pending);
+    // Some providers return SSE without a content type, or end the final frame at EOF.
+    for (const frame of pending.split(eventEnd)) {
+      const envelope = eventEnvelope(frame, requestId);
+      if (envelope) return envelope;
+    }
+    throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
+  } finally {
+    await reader.cancel().catch(() => {});
+  }
+}
+
+function payload(envelope: any, requestId: number): unknown {
+  if (
+    !envelope ||
+    envelope.id !== requestId ||
+    envelope.error ||
+    envelope.result?.isError
+  )
+    throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
+  const result = envelope.result;
+  if (result?.structuredContent) return result.structuredContent;
+  const block = Array.isArray(result?.content)
+    ? result.content.find((item: any) => typeof item?.text === "string")
+    : undefined;
+  if (!block) throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
+  return parseProviderJson(block.text);
 }
 
 // Fixed, read-only tools on explicitly public vendor endpoints. No generic MCP
@@ -182,24 +229,7 @@ export class PublicTravelSearch {
       });
       if (!response.ok || !response.body)
         throw new TravelProviderError("TRAVEL_PROVIDER_UNAVAILABLE");
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let size = 0,
-        body = "";
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          size += value.byteLength;
-          if (size > 1048576)
-            throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
-          body += decoder.decode(value, { stream: true });
-        }
-        body += decoder.decode();
-      } finally {
-        await reader.cancel().catch(() => {});
-      }
-      const data: any = payload(body, 1);
+      const data: any = payload(await readEnvelope(response, 1), 1);
       if (!data || data.error)
         throw new TravelProviderError("TRAVEL_PROVIDER_UNAVAILABLE");
       return data;
@@ -215,6 +245,20 @@ export class PublicTravelSearch {
     criteria: TravelCriteria,
     signal?: AbortSignal
   ): Promise<TravelResults> {
+    const page = await this.fetchOffers(category, criteria, "search", signal);
+    return page.results;
+  }
+  private async fetchOffers(
+    category: "flights" | "stays",
+    criteria: TravelCriteria,
+    purpose: "search" | "revalidate",
+    signal?: AbortSignal,
+    hotelOffset?: number
+  ): Promise<{
+    results: TravelResults;
+    moreHotels: boolean;
+    nextHotelOffset?: number;
+  }> {
     if (
       !validateTravel(
         criteria,
@@ -293,18 +337,21 @@ export class PublicTravelSearch {
           children_ages: criteria.childAges,
           currency: criteria.currency,
           guest_nationality: criteria.guestNationality,
-          limit: 10,
+          // Preserve the original query on recheck. Changing its limit can
+          // change which properties Pilot returns on the first page.
+          limit: hotelOffset === undefined ? 10 : 40,
+          ...(hotelOffset !== undefined && { offset: hotelOffset }),
         },
         signal
       );
       rows = data.hotels;
     }
-    if (!Array.isArray(rows) || rows.length > 100)
+    if (!Array.isArray(rows) || rows.length > maxSupplierRows)
       throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
     const quotes: TravelQuote[] = [];
-    let rejectedCount = 0;
     const identities = new Set<string>();
-    for (const row of rows.slice(0, 20)) {
+    for (const row of rows) {
+      if (purpose === "search" && quotes.length === 20) break;
       try {
         let base: Omit<TravelQuote, "signature" | "identity" | "id">,
           identityData: unknown;
@@ -412,10 +459,7 @@ export class PublicTravelSearch {
         const identity = createHash("sha256")
           .update(canonical(identityData))
           .digest("hex");
-        if (identities.has(identity)) {
-          rejectedCount++;
-          continue;
-        }
+        if (identities.has(identity)) continue;
         const unsigned = { ...base, id: randomUUID(), identity };
         const quote = travelQuoteSchema.parse({
           ...unsigned,
@@ -424,24 +468,55 @@ export class PublicTravelSearch {
         identities.add(identity);
         quotes.push(quote);
       } catch {
-        rejectedCount++;
+        continue;
       }
     }
     if (rows.length && !quotes.length)
       throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
-    return {
+    const results: TravelResults = {
       provider,
       category,
       retrievedAt,
       quotes,
-      rejectedCount: rejectedCount + Math.max(0, rows.length - 20),
+      rejectedCount: rows.length - quotes.length,
     };
+    const moreHotels = category === "stays" && data.has_more === true;
+    const nextHotelOffset =
+      moreHotels &&
+      Number.isSafeInteger(data.next_offset) &&
+      data.next_offset > (hotelOffset ?? 0)
+        ? (data.next_offset as number)
+        : undefined;
+    return { results, moreHotels, nextHotelOffset };
   }
   async revalidate(quote: TravelQuote, signal?: AbortSignal) {
     if (!verifyTravelQuote(quote))
       throw new TravelProviderError("TRAVEL_INVALID");
-    const current = await this.search(quote.category, quote.criteria, signal);
-    const match = current.quotes.find(item => item.identity === quote.identity);
+    // Share the original request deadline if a hotel moves to a later page.
+    const timeout = AbortSignal.timeout(25000);
+    const deadline = signal ? AbortSignal.any([signal, timeout]) : timeout;
+    const first = await this.fetchOffers(
+      quote.category,
+      quote.criteria,
+      "revalidate",
+      deadline
+    );
+    const sameOffer = (item: TravelQuote) => item.identity === quote.identity;
+    let match = first.results.quotes.find(sameOffer);
+    if (!match && first.moreHotels) {
+      if (first.nextHotelOffset === undefined)
+        throw new TravelProviderError("TRAVEL_PROVIDER_INVALID");
+      const next = await this.fetchOffers(
+        "stays",
+        quote.criteria,
+        "revalidate",
+        deadline,
+        first.nextHotelOffset
+      );
+      match = next.results.quotes.find(sameOffer);
+      if (!match && next.moreHotels)
+        throw new TravelProviderError("TRAVEL_PROVIDER_UNAVAILABLE");
+    }
     if (!match) throw new TravelProviderError("TRAVEL_OFFER_EXPIRED");
     return {
       quote: match,

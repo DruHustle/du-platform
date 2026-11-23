@@ -32,6 +32,7 @@ export async function request<T>(path: string, options: {
   const endpoint = new URL(API_URL + path);
   if (endpoint.origin !== base.origin || !endpoint.pathname.startsWith(`${base.pathname.replace(/\/$/, "")}/`)) throw new Error("Invalid API path");
   let response: Response;
+  let payload;
   const controller = new AbortController();
   const cancel = () => controller.abort();
   if (options.signal?.aborted) controller.abort();
@@ -45,19 +46,39 @@ export async function request<T>(path: string, options: {
       credentials: "omit",
       signal: controller.signal,
     });
+    try {
+      payload = response.status === 204 || response.status === 205 ? null : await response.json();
+    } catch (error) {
+      if (controller.signal.aborted || options.signal?.aborted) throw error;
+      if (response.ok) throw new ApiError("The service returned an unreadable response. Please try again.", response.status, "INVALID_RESPONSE");
+    }
   } catch (error) {
-    if (options.signal?.aborted) throw error;
+    if (options.signal?.aborted || error instanceof ApiError) throw error;
     throw new ApiError(controller.signal.aborted ? "The request timed out. Please try again." : "Could not connect. Check your connection and try again.");
   } finally {
     clearTimeout(timer);
     options.signal?.removeEventListener("abort", cancel);
   }
-  const payload = await response.json().catch(() => null);
-  if (!response.ok) {
+  if (!response.ok || payload?.success === false) {
     const error: ApiErrorPayload = payload?.error || {};
     throw new ApiError(error.message || payload?.message || "The service is unavailable. Please try again.", response.status, error.code || "API_ERROR");
   }
   return (payload?.success === true && "data" in payload ? payload.data : payload) as T;
+}
+
+export type ChatMessage = { role: "user" | "assistant"; content: string };
+
+export async function requestOnesaReply(conversation: ChatMessage[], signal: AbortSignal): Promise<string> {
+  const result = await request<{ reply: string; truncated?: boolean }>("/ai/chat", {
+    method: "POST",
+    body: { messages: conversation.slice(-20), language: "en" },
+    signal,
+    timeoutMs: 30_000,
+  });
+  if (typeof result?.reply !== "string" || !result.reply.trim() || result.truncated) {
+    throw new Error("The assistant could not complete a response. Please try again.");
+  }
+  return result.reply;
 }
 
 export type User = { id: number; fullName: string; email: string };
