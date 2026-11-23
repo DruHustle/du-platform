@@ -1,3 +1,4 @@
+import { onesaRoutes } from "../onesaRoutes";
 import { z } from "zod";
 import { AppError } from "../../../core/errorHandler";
 import { ok } from "../../../shared/responseFormatter";
@@ -25,6 +26,7 @@ export function createAuthModuleRouter() {
     next();
   });
 
+  router.use("/onesa", onesaRoutes());
   router.post(
     "/register",
     rateLimiter({

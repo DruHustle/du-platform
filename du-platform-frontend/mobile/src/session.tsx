@@ -1,4 +1,4 @@
-import { deleteSecurePayload } from "./securePayload";
+import { deleteSecurePayload, readSecurePayload, saveSecurePayload } from "./securePayload";
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { AppState } from "react-native";
 import * as SecureStore from "expo-secure-store";
@@ -11,7 +11,7 @@ const PENDING_ORDER_KEY = "du.native.order.pending.v1";
 const PENDING_CONTACT_KEY = "du.native.contact.pending.v1";
 const PENDING_ORDER_COMMAND_KEY = "du.native.order.command.v1";
 type AuthorizedOptions = { method?: "GET" | "POST" | "PUT" | "DELETE"; body?: unknown; signal?: AbortSignal };
-type Session = { user: User | null; accessToken: string; loading: boolean; error: string; signIn(email: string, password: string): Promise<void>; register(fullName: string, email: string, password: string): Promise<void>; updateProfile(fullName: string): Promise<void>; authorized<T>(path: string, options?: AuthorizedOptions): Promise<T>; signOut(): Promise<void>; restore(): Promise<void> };
+type Session = { acceptOnesa(user:User,token:string):Promise<void>; user: User | null; accessToken: string; loading: boolean; error: string; signIn(email: string, password: string): Promise<void>; register(fullName: string, email: string, password: string): Promise<void>; updateProfile(fullName: string): Promise<void>; authorized<T>(path: string, options?: AuthorizedOptions): Promise<T>; signOut(): Promise<void>; restore(): Promise<void> };
 const Context = createContext<Session | null>(null);
 export const useSession = () => { const value = useContext(Context); if (!value) throw new Error("Session provider missing"); return value; };
 
@@ -35,9 +35,9 @@ export function SessionProvider({ children }: React.PropsWithChildren) {
     const task = (async () => {
       setLoading(true); setError("");
       try {
-        const token = await SecureStore.getItemAsync(SESSION_KEY);
+        const token = await readSecurePayload(SESSION_KEY);
         if (!token) { if (version === generation.current) { setUser(null); setToken(""); } return; }
-        const refreshed = await request<{accessToken: string}>("/auth/token/refresh", { method: "POST", body: {}, token });
+        const refreshed = token.includes(".") ? {accessToken:token} : await request<{accessToken: string}>("/auth/token/refresh", { method: "POST", body: {}, token });
         const account = await request<{user: User}>("/auth/me", { token: refreshed.accessToken });
         if (version === generation.current) { setToken(refreshed.accessToken); setUser(account.user); }
       } catch (e) {
@@ -60,6 +60,13 @@ export function SessionProvider({ children }: React.PropsWithChildren) {
     await SecureStore.setItemAsync(SESSION_KEY, result.sessionToken);
     setToken(result.accessToken); setUser(result.user); setLoading(false); setError("");
   };
+  const acceptOnesa = async (account:User, token:string) => {
+    generation.current++;
+    await Promise.all([ORDER_KEY, PENDING_ORDER_KEY, PENDING_CONTACT_KEY, PENDING_ORDER_COMMAND_KEY].map(key => deleteSecurePayload(key)));
+    await deleteSecurePayload(SESSION_KEY);
+    await saveSecurePayload(SESSION_KEY,token);
+    setToken(token); setUser(account); setLoading(false); setError("");
+  };
   const signIn = async (email: string, password: string) => accept(await request<AuthResult>("/auth/native/login", { method: "POST", body: {email, password} }));
   const register = async (fullName: string, email: string, password: string) => accept(await request<AuthResult>("/auth/native/register", { method: "POST", body: {fullName, email, password, confirmPassword: password} }));
   const authorized = async <T,>(path: string, options: AuthorizedOptions = {}): Promise<T> => {
@@ -79,12 +86,12 @@ export function SessionProvider({ children }: React.PropsWithChildren) {
     if (version === generation.current) setUser(result.user);
   };
   const signOut = async () => {
-    const token = await SecureStore.getItemAsync(SESSION_KEY);
+    const token = await readSecurePayload(SESSION_KEY);
     await signOutOnDevice(
-      async () => { if (token) await request("/auth/logout", { method: "POST", body: {}, token }); },
+      async () => { if (token && !token.includes(".")) await request("/auth/logout", { method: "POST", body: {}, token }); },
       async () => { await clear(); setLoading(false); setError(""); }
     );
   };
-  return <Context.Provider value={{user, accessToken, loading, error, signIn, register, updateProfile, authorized, signOut, restore}}>{children}</Context.Provider>;
+  return <Context.Provider value={{acceptOnesa,user, accessToken, loading, error, signIn, register, updateProfile, authorized, signOut, restore}}>{children}</Context.Provider>;
 }
 export { ORDER_KEY, PENDING_ORDER_KEY, PENDING_CONTACT_KEY, PENDING_ORDER_COMMAND_KEY };

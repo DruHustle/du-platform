@@ -26,9 +26,8 @@ function getCookie(req: express.Request, key: string): string | null {
   return null;
 }
 
-export function setSessionCookie(res: express.Response, token: string) {
+export function setSessionCookie(res: express.Response, token: string, maxAge = 7 * 24 * 60 * 60) {
   const secure = process.env.NODE_ENV === "production";
-  const maxAge = 7 * 24 * 60 * 60;
   res.setHeader(
     "Set-Cookie",
     `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure ? "; Secure" : ""}`
