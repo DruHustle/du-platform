@@ -260,7 +260,7 @@ export default function SearchPanel({
       <h2 id="travel-search-title" className="page-section-title">
         {t(`travel.${category}`)}
       </h2>
-      <p>{t("travel.search-intro")}</p>
+      <p>{t(`travel.form-intro.${category}`)}</p>
       {referenceError && <div role="alert"><p>{t("travel.reference_unavailable", { defaultValue: "Travel locations are temporarily unavailable. Please try again." })}</p><Button variant="outline" onClick={() => setReferenceAttempt(value => value + 1)}>{t("search.retry", { defaultValue: "Try again" })}</Button></div>}
       <form onSubmit={submit} className="travel-form">
         {category === "flights" && (
@@ -314,7 +314,7 @@ export default function SearchPanel({
         {field(
           "departure",
           "date",
-          category === "stays" ? "check-in" : "departure"
+          category === "stays" ? "check-in" : category === "car-hire" ? "pickup-date" : "departure"
         )}
         {category === "flights" && (
           <label className="travel-flex-field">
@@ -338,7 +338,7 @@ export default function SearchPanel({
           field(
             "returnDate",
             "date",
-            category === "stays" ? "check-out" : "return-date"
+            category === "stays" ? "check-out" : category === "car-hire" ? "dropoff-date" : "return-date"
           )}
         <label>
           {t("travel.adults")}
@@ -469,7 +469,7 @@ export default function SearchPanel({
           {t(
             category === "flights"
               ? "travel.live.airports-note"
-              : "travel.unsupported-options"
+              : category === "stays" ? "travel.stay-area-note" : "travel.car-location-note"
           )}
         </p>
         {error && (
@@ -549,7 +549,7 @@ export default function SearchPanel({
                 rel="noopener noreferrer"
                 onClick={() => travelEvent("resource_opened", category)}
               >
-                {t("travel.open-provider")}
+                {t(`travel.kayak.${category}`)}
               </a>
             </Button>}
           </div>

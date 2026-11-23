@@ -47,7 +47,7 @@ export default function DiscoveryHero({
             wrapperClassName="absolute inset-0 h-full w-full"
             className="h-full w-full object-cover"
           />
-          <figcaption>{caption}</figcaption>
+          {caption && <figcaption>{caption}</figcaption>}
         </figure>
       </div>
     </section>

@@ -461,8 +461,12 @@ export default function Register() {
                     className="text-[11px] text-white/70 leading-tight cursor-pointer"
                   >
                     {t("auth.terms_agreement") ||
-                      "I agree to the Terms of Service and Privacy Policy regarding GDPR data governance."}
+                      "I accept the Terms of Service and have read the Privacy Policy."}
                   </label>
+                </div>
+                <div className="flex flex-wrap gap-x-4 text-xs text-zim-gold underline">
+                  <a href="/terms-of-service" target="_blank" rel="noreferrer">{t("terms_of_service")}</a>
+                  <a href="/privacy-policy" target="_blank" rel="noreferrer">{t("privacy_policy")}</a>
                 </div>
                 {termsTouched && !termsAccepted ? (
                   <p className="flex items-center gap-1.5 text-[11px] text-rose-300 pl-7">

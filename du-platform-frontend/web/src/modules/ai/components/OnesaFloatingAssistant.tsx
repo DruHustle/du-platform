@@ -63,9 +63,9 @@ function getWelcomeMessage(t: ReturnType<typeof useTranslation>["t"]) {
   return (
     t("onesa.welcome", {
       defaultValue:
-        "Welcome to Diaspora Unlocked, rooted in Zimbabwe and open to the Southern African diaspora. I can help you explore Zimbabwean products, regional travel and business ideas. Where would you like to start?",
+        "What are you planning? Ask about a Zimbabwean product, a stop on your trip or a business idea. I can help you find the relevant page and suggest questions to take to a provider.",
     }) ||
-    "Welcome to Diaspora Unlocked, rooted in Zimbabwe and open to the Southern African diaspora. I can help you explore Zimbabwean products, regional travel and business ideas. Where would you like to start?"
+    "What are you planning? Ask about a Zimbabwean product, a stop on your trip or a business idea. I can help you find the relevant page and suggest questions to take to a provider."
   );
 }
 

@@ -7,7 +7,7 @@ const webRoot = fileURLToPath(new URL("../..", import.meta.url));
 
 // Read the domain manifests without importing React or browser-only modules.
 // This inventory is shared by the static HTML build and sitemap generation.
-export function readSiteRoutes(root = webRoot) {
+export function readSiteRoutes(root = webRoot, products) {
   const modules = path.join(root, "src/modules");
   const paths = new Set();
   const redirects = [];
@@ -38,11 +38,13 @@ export function readSiteRoutes(root = webRoot) {
         );
         for (const id of Object.keys(projects))
           paths.add(`/investment/projects/${id}`);
+      } else if (route === "/business-guides/:guide") {
+        const guides = JSON.parse(fs.readFileSync(path.join(root, "src/domain/businessGuideTitles.json"), "utf8"));
+        for (const slug of Object.keys(guides)) paths.add(`/business-guides/${slug}`);
       } else if (route === "/shop/product/:slug") {
         const index = path.join(root, "dist/catalogue-index.json");
-        if (fs.existsSync(index))
-          for (const p of JSON.parse(fs.readFileSync(index, "utf8")))
-            paths.add(`/shop/product/${p.slug}`);
+        const catalogue = products ?? (fs.existsSync(index) ? JSON.parse(fs.readFileSync(index, "utf8")) : []);
+        for (const p of catalogue) paths.add(`/shop/product/${p.slug}`);
       } else if (route.includes(":")) {
         throw new Error(
           `Add static document coverage for dynamic route ${route}`
@@ -60,10 +62,13 @@ export function readSiteRoutes(root = webRoot) {
   return { paths: [...paths].sort(), redirects };
 }
 
-export function createSitemap(siteUrl, root = webRoot) {
-  const routes = readSiteRoutes(root)
+export function createSitemap(siteUrl, root = webRoot, products) {
+  const routes = readSiteRoutes(root, products)
     .paths.filter(
-      route => resolveRouteSeo({ pathname: route }).robots === "index,follow"
+      route => {
+        const seo = resolveRouteSeo({ pathname: route });
+        return seo.robots === "index,follow" && seo.canonicalPath === route;
+      }
     )
     .sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
   const urls = routes.map(route =>

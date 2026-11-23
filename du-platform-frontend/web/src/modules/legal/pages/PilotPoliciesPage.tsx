@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
+import PilotReadinessNotice from "@/modules/shop/components/PilotReadinessNotice";
 export default function PilotPoliciesPage() {
   const { t } = useTranslation();
   const [location] = useLocation();
@@ -15,6 +16,7 @@ export default function PilotPoliciesPage() {
                 : "pilot.operator_title"
             )}
           </h1>
+          <PilotReadinessNotice showPolicyLinks={false} />
           <p
             role="note"
             className="rounded-xl border border-amber-300/40 bg-amber-400/10 p-4"

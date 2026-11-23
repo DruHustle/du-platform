@@ -24,9 +24,6 @@ export default function PrivacyPolicy() {
               "Your data is processed under applicable data-protection rules and is not sold to third parties."
             )}
           </p>
-          <p className="rounded-xl border border-amber-300/40 p-4">
-            {t("pilot.draft_notice")}
-          </p>
           {[
             "privacy_flows",
             "privacy_whatsapp",
@@ -40,6 +37,7 @@ export default function PrivacyPolicy() {
           ))}
           <p className="text-white/80">{t("product_interest.privacy_notes")}</p>
           <p className="text-white/80">{t("contact_enquiry.privacy")}</p>
+          <p className="text-white/80">{t("care.privacy")}</p>
           <p className="text-white/80">
             {t("travel.privacy")}
             <br />

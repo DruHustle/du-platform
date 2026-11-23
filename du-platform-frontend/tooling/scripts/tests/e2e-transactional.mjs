@@ -35,6 +35,7 @@ Object.assign(process.env, {
   JWT_SECRET: "synthetic-service-browser-fixture-only",
   ADMIN_EMAILS: adminEmail,
   FROM_EMAIL: "service@example.test",
+  ONESA_MOCK_MODE: "true",
   SHOP_COMMERCIAL_MODE: "prelaunch",
   CSRF_ENABLED: "true",
 });
@@ -110,12 +111,13 @@ try {
       for (const language of ["en", "de", "sn", "nd"]) {
         // Quotas are reset only in this disposable fixture between independent cases.
         await db.execute("DELETE FROM rate_limit_buckets");
-        const locale = JSON.parse(
+        const translations = JSON.parse(
           await readFile(
             `du-platform-frontend/web/public/locales/${language}/translation.json`,
             "utf8"
           )
-        ).contact_enquiry;
+        );
+        const locale = translations.contact_enquiry;
         const context = await browser.newContext({
           viewport: { width, height: 950 },
           reducedMotion: "reduce",
@@ -127,6 +129,21 @@ try {
         const page = await context.newPage();
         page.setDefaultTimeout(15000);
         page.on("pageerror", e => errors.push(e.message));
+        if (width === 375 && language === "en") {
+          await page.goto(base + "/onesa");
+          await page.locator("#hero").getByRole("link", { name: "Plan three days in Victoria Falls" }).click();
+          await page.waitForURL("**/travel/planner?example=victoria-falls-3-days");
+          const response = page.waitForResponse(r => r.url().endsWith("/api/ai/trip-plan") && r.request().method() === "POST");
+          await page.locator('main form button[type="submit"]').click();
+          const draft = await response;
+          assert.equal(draft.status(), 200);
+          const result = await draft.json();
+          const { source, plan } = result.data ?? result;
+          assert.equal(source, "fallback");
+          assert.equal(plan.itinerary.length, 3);
+          await page.getByText(translations.tourism.onesa.trip_planner.fallback_plan, { exact: true }).waitFor();
+          pass(engine + " visitor generates a labelled three-day Victoria Falls draft");
+        }
         let submissions = 0,
           receipt;
         await context.route("**/api/notifications/contact", async route => {

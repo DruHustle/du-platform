@@ -1,0 +1,145 @@
+name: Installed visitor enquiries (isolated API)
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/installed-visitor-enquiries.yml'
+      - 'du-platform-backend/scripts/installed-visitor-fixture.mjs'
+      - 'du-platform-frontend/mobile/scripts/store-screens/InstalledVisitorTests.swift'
+      - 'du-platform-frontend/mobile/scripts/store-screens/isolated-android.py'
+permissions:
+  contents: read
+concurrency:
+  group: installed-visitor-enquiries-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  CI: '1'
+  EXPO_NO_TELEMETRY: '1'
+  EXPO_PUBLIC_API_URL: http://127.0.0.1:18765/api
+  EXPO_PUBLIC_WEB_URL: http://127.0.0.1:18765
+  INSTALLED_TEST_DATABASE_URL: mysql://du_installed:Fixture-Only2026@127.0.0.1:3306/du_installed_test
+jobs:
+  installed:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-26]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.4.1'
+      - name: Install API and app dependencies
+        run: |
+          pnpm --dir du-platform-backend install --frozen-lockfile
+          npm --prefix du-platform-frontend/mobile ci --no-audit --no-fund
+      - name: Create empty loopback test database
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo systemctl start mysql
+            client=(mysql -u root -proot)
+          else
+            export HOMEBREW_NO_AUTO_UPDATE=1
+            brew list --versions mysql@8.4 >/dev/null || brew install mysql@8.4
+            brew services start mysql@8.4
+            client=("$(brew --prefix mysql@8.4)/bin/mysql" -u root)
+          fi
+          for retry in {1..60}; do
+            if "${client[@]}" -e 'SELECT 1' >/dev/null 2>&1; then break; fi
+            sleep 2
+          done
+          "${client[@]}" <<'SQL'
+          CREATE DATABASE du_installed_test;
+          CREATE USER 'du_installed'@'127.0.0.1' IDENTIFIED BY 'Fixture-Only2026';
+          GRANT ALL PRIVILEGES ON du_installed_test.* TO 'du_installed'@'127.0.0.1';
+          SQL
+      - name: Start isolated API with real shop and contact routes
+        working-directory: du-platform-backend
+        run: |
+          node --import tsx scripts/installed-visitor-fixture.mjs serve > "$RUNNER_TEMP/visitor-api.log" 2>&1 &
+          for retry in {1..60}; do
+            if curl --silent --fail http://127.0.0.1:18765/__qa/ready; then exit 0; fi
+            sleep 2
+          done
+          cat "$RUNNER_TEMP/visitor-api.log"
+          exit 1
+      - if: runner.os == 'Linux'
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Build and sign the Android installation for this runner
+        if: runner.os == 'Linux'
+        working-directory: du-platform-frontend/mobile
+        run: |
+          # Only this disposable APK may use loopback HTTP.
+          python3 - <<'PY'
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+          ns = "http://schemas.android.com/apk/res/android"
+          ET.register_namespace("android", ns)
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
+          tree = ET.parse(manifest)
+          tree.find("application").set("{" + ns + "}networkSecurityConfig", "@xml/du_installed_network")
+          tree.write(manifest, encoding="utf-8", xml_declaration=True)
+          Path("android/app/src/main/res/xml").mkdir(exist_ok=True)
+          Path("android/app/src/main/res/xml/du_installed_network.xml").write_text(
+            '<network-security-config><domain-config cleartextTrafficPermitted="true"><domain includeSubdomains="false">127.0.0.1</domain></domain-config></network-security-config>')
+          PY
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;36.0.0'
+          bash android/gradlew -p android --no-daemon :app:assembleRelease -PreactNativeArchitectures=x86_64
+          qa_dir=$(mktemp -d "$RUNNER_TEMP/installed-visitor-key.XXXXXX")
+          trap 'rm -rf -- "$qa_dir"' EXIT
+          export ANDROID_RELEASE_KEYSTORE="$qa_dir/qa.p12" ANDROID_RELEASE_ALIAS=qa
+          ANDROID_RELEASE_STORE_PASSWORD=$(openssl rand -hex 24)
+          export ANDROID_RELEASE_STORE_PASSWORD ANDROID_RELEASE_KEY_PASSWORD="$ANDROID_RELEASE_STORE_PASSWORD"
+          keytool -genkeypair -keystore "$ANDROID_RELEASE_KEYSTORE" -alias qa -storepass:env ANDROID_RELEASE_STORE_PASSWORD -keypass:env ANDROID_RELEASE_KEY_PASSWORD -keyalg RSA -keysize 2048 -dname 'CN=Temporary installed visitor QA' -validity 7
+          ANDROID_RELEASE_CERT_SHA256=$(keytool -exportcert -keystore "$ANDROID_RELEASE_KEYSTORE" -alias qa -storepass:env ANDROID_RELEASE_STORE_PASSWORD | sha256sum | cut -d' ' -f1)
+          export ANDROID_RELEASE_CERT_SHA256
+          scripts/sign-release-apk.sh sign android/app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/visitor.apk"
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Send the product alert and support enquiry from Android
+        if: runner.os == 'Linux'
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          disable-animations: true
+          script: python3 du-platform-frontend/mobile/scripts/store-screens/isolated-android.py "$RUNNER_TEMP/visitor.apk"
+      - name: Send the product alert and support enquiry from iPhone
+        if: runner.os == 'macOS'
+        env:
+          EXPO_PUBLIC_API_URL: http://localhost:18765/api
+          EXPO_PUBLIC_WEB_URL: http://localhost:18765
+        working-directory: du-platform-frontend/mobile
+        run: |
+          pod install --project-directory=ios
+          ruby scripts/store-screens/prepare-ui-tests.rb ios/DiasporaUnlocked.xcodeproj InstalledVisitorTests.swift
+          device=$(xcrun simctl list devices available --json | python3 -c 'import json,sys; print(next(d["udid"] for group in json.load(sys.stdin)["devices"].values() for d in group if d["isAvailable"] and d["name"].startswith("iPhone") and "Pro Max" in d["name"]))')
+          xcodebuild test -workspace ios/DiasporaUnlocked.xcworkspace -scheme DUNativeSmoke -configuration Release -sdk iphonesimulator -destination "id=$device" -parallel-testing-enabled NO -resultBundlePath "$RUNNER_TEMP/visitor.xcresult" -only-testing:DUNativeSmokeUITests/InstalledVisitorTests/testAlertAndSupportReceipt ONLY_ACTIVE_ARCH=YES CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES
+          xcrun xcresulttool export attachments --path "$RUNNER_TEMP/visitor.xcresult" --output-path "$RUNNER_TEMP/visitor-attachments"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"])
+          folder = root / "visitor-attachments"
+          entries = json.loads((folder / "manifest.json").read_text())
+          attachments = [item for test in entries for item in test["attachments"] if item.get("suggestedHumanReadableName","").startswith("installed-support-id")]
+          if len(attachments) != 1: raise RuntimeError("Expected one displayed receipt")
+          (root / "installed-support-id").write_bytes((folder / attachments[0]["exportedFileName"]).read_bytes())
+          PY
+      - name: Match the displayed receipt and exercise the captured alert email links
+        working-directory: du-platform-backend
+        run: node --import tsx scripts/installed-visitor-fixture.mjs verify "$RUNNER_TEMP/installed-support-id"

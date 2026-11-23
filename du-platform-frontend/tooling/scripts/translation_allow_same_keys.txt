@@ -70,3 +70,9 @@ tourism.other_attractions.nyanga.source
 
 # Product/brand name remains unchanged across languages.
 brand
+home.technology
+home.tiles.onesa.title
+home.tiles.shop.title
+nav.technology
+search.categories.technology
+tech.landing.title

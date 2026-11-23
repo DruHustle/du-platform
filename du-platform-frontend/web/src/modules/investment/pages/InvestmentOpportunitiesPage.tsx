@@ -230,12 +230,12 @@ export default function InvestmentOpportunitiesPage() {
       <section className="document-section discovery-section discovery-listing min-h-screen relative overflow-hidden">
         <div className="container relative z-10 px-6 mx-auto space-y-6">
           <Link
-            href="/investment"
+            href="/business-guides"
             className="inline-flex items-center text-xs uppercase tracking-widest font-bold text-slate-600 hover:text-slate-950"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t("investment.back_to_investment", {
-              defaultValue: "Back to Investment",
+              defaultValue: "Back to business guides",
             })}
           </Link>
 

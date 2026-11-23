@@ -247,7 +247,7 @@ try {
   await adminPage.goto(base + "/login?next=%2Fadmin");
   await adminPage.getByLabel("Email Address", { exact: true }).fill(adminEmail);
   await adminPage.getByLabel("Password", { exact: true }).fill(password);
-  await adminPage.getByRole("button", { name: "Login", exact: true }).click();
+  await adminPage.getByRole("button", { name: "Sign in", exact: true }).click();
   await adminPage.waitForURL("**/admin");
   await adminPage.getByRole("button", { name: "Orders", exact: true }).click();
   await adminPage.getByRole("button").filter({ hasText: ref }).click();

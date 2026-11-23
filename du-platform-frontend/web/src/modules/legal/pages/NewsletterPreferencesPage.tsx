@@ -1,49 +1,65 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 
+function readLink() {
+  return new URLSearchParams(window.location.hash.slice(1));
+}
+
 export default function NewsletterPreferencesPage() {
   const { t } = useTranslation();
-  const [input] = useState(() => {
-    const params = new URLSearchParams(window.location.hash.slice(1));
-    return {
-      token: params.get("token") || "",
-      action: params.get("action") || "",
-    };
-  });
+  const [input, setInput] = useState(readLink);
+  const token = input.get("token") || "";
+  const action = input.get("action") || "";
+  const linkVersion = useRef(0);
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState("");
   const [error, setError] = useState("");
   const valid =
-    /^[a-f0-9]{48}$/.test(input.token) &&
-    ["confirm", "unsubscribe"].includes(input.action);
+    /^[a-f0-9]{48}$/.test(token) &&
+    ["confirm", "unsubscribe"].includes(action);
   // Preference tokens stay out of server access logs, referrers and browser history.
   useEffect(() => {
-    window.history.replaceState(
-      window.history.state,
-      "",
-      window.location.pathname + window.location.search
+    const stripFragment = () => window.history.replaceState(
+      window.history.state, "", window.location.pathname + window.location.search
     );
+    const useNewLink = () => {
+      linkVersion.current++;
+      setInput(readLink());
+      setBusy(false);
+      setDone("");
+      setError("");
+      stripFragment();
+    };
+    stripFragment();
+    window.addEventListener("hashchange", useNewLink);
+    return () => {
+      linkVersion.current++;
+      window.removeEventListener("hashchange", useNewLink);
+    };
   }, []);
   const submit = async () => {
     if (busy) return;
+    const version = linkVersion.current;
     setBusy(true);
     setError("");
     try {
-      await api.post(`/newsletter/${input.action}`, {
-        token: input.token,
+      await api.post(`/newsletter/${action}`, {
+        token,
       });
+      if (version !== linkVersion.current) return;
       setDone(
         t(
-          input.action === "confirm"
+          action === "confirm"
             ? "newsletter_preferences.confirmed"
             : "newsletter_preferences.unsubscribed"
         )
       );
     } catch (err: any) {
+      if (version !== linkVersion.current) return;
       setError(
         t(
           err?.response?.status === 400
@@ -52,7 +68,7 @@ export default function NewsletterPreferencesPage() {
         )
       );
     } finally {
-      setBusy(false);
+      if (version === linkVersion.current) setBusy(false);
     }
   };
   return (
@@ -64,7 +80,7 @@ export default function NewsletterPreferencesPage() {
               {t("newsletter_preferences.brand")}
             </p>
             <h1 className="page-title mt-4">
-              {input.action === "unsubscribe"
+              {action === "unsubscribe"
                 ? t("newsletter_preferences.manage_title")
                 : t("newsletter_preferences.confirm_title")}
             </h1>
@@ -79,7 +95,7 @@ export default function NewsletterPreferencesPage() {
             ) : (
               <>
                 <p className="mt-6 leading-7 text-slate-300">
-                  {input.action === "unsubscribe"
+                  {action === "unsubscribe"
                     ? t("newsletter_preferences.unsubscribe_help")
                     : t("newsletter_preferences.confirm_help")}
                 </p>
@@ -90,7 +106,7 @@ export default function NewsletterPreferencesPage() {
                 >
                   {busy
                     ? t("newsletter_preferences.updating")
-                    : input.action === "unsubscribe"
+                    : action === "unsubscribe"
                       ? t("newsletter_preferences.unsubscribe")
                       : t("newsletter_preferences.confirm")}
                 </Button>

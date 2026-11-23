@@ -1,6 +1,7 @@
-import { createStaticRoute } from "../core/routing";
+import { createRedirectRoute, createStaticRoute } from "../core/routing";
 import TechnologyPage from "./pages/TechnologyPage";
 
 export const technologyRoutes = [
-  createStaticRoute("/technology", TechnologyPage),
+  createStaticRoute("/onesa", TechnologyPage),
+  createRedirectRoute("/technology", "/onesa"),
 ];

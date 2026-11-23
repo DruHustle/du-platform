@@ -15,7 +15,7 @@ test("publish configured store identities independently and remove obsolete asso
   await writeAppLinks(output, { IOS_APP_ID_PREFIX: "ABCDEFGHIJ" });
   assert.deepEqual((await read("apple-app-site-association")).applinks.details, [{
     appIDs: ["ABCDEFGHIJ.com.diasporaunlocked.app"],
-    components: ["/reset-password", "/shop", "/shop/*", "/travel", "/travel/*"].map(route => ({ "/": route })),
+    components: ["/reset-password", "/shop", "/shop/*", "/travel", "/travel/*", "/care", "/onesa", "/onesa-ai-chat", "/technology"].map(route => ({ "/": route })),
   }]);
   await assert.rejects(read("assetlinks.json"), { code: "ENOENT" });
   await writeAppLinks(output, { PLAY_APP_SIGNING_CERT_SHA256: [fingerprint, rotatedFingerprint, fingerprint].join(",") });

@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import TravelNav from "./TravelNav";
 import SearchPanel from "./SearchPanel";
+import TravelGuides from "./TravelGuides";
 import MyTrips from "./MyTrips";
 import type { TravelCategory } from "@/domain/travel";
 import "./travel.css";
@@ -16,12 +17,15 @@ export default function TravelPage() {
         <TravelNav />
         <header className="travel-heading">
           <h1 className="page-title">{t(`travel.${section}`)}</h1>
-          <p>{t("travel.description")}</p>
+          <p>{t(`travel.purpose.${section}`)}</p>
         </header>
         {section === "my-trips" ? (
           <MyTrips />
         ) : (
-          <SearchPanel key={section} category={section as TravelCategory} />
+          <>
+            <SearchPanel key={section} category={section as TravelCategory} />
+            <TravelGuides category={section as TravelCategory} />
+          </>
         )}
         <p className="travel-disclosure">
           {t("travel.disclosure")}{" "}

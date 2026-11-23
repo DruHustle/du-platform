@@ -11,7 +11,7 @@ import {
 } from "@/modules/ai/lib/aiApi";
 import { ArrowLeft, Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import { consumeTravelChatDraft } from "@/modules/travel/chatHandoff";
 
 export default function ChatPage() {
@@ -35,7 +35,7 @@ export default function ChatPage() {
 
   const welcomeMessage = t("onesa.welcome", {
     defaultValue:
-      "Welcome to Diaspora Unlocked, rooted in Zimbabwe and open to the Southern African diaspora. I can help you explore Zimbabwean products, regional travel and business ideas. Where would you like to start?",
+      "What are you planning? Ask about a Zimbabwean product, a stop on your trip or a business idea. I can help you find the relevant page and suggest questions to take to a provider.",
   });
   const [messages, setMessages] = useState<OnesaChatMessage[]>([
     {
@@ -43,11 +43,13 @@ export default function ChatPage() {
       content: welcomeMessage,
     },
   ]);
-  const [input, setInput] = useState("");
+  const example = new URLSearchParams(useSearch()).get("example");
+  const exampleKey = example && ["farming", "stock", "jobs", "skills"].includes(example) ? example : null;
+  const [input, setInput] = useState(() => exampleKey ? t("tech.ideas." + exampleKey + ".prompt") : "");
   useEffect(() => {
     const travelDraft = consumeTravelChatDraft();
-    if (travelDraft) setInput(travelDraft);
-  }, []);
+    if (!exampleKey && travelDraft) setInput(travelDraft);
+  }, [exampleKey]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [retryAfterSecondsRemaining, setRetryAfterSecondsRemaining] = useState<

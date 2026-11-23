@@ -119,6 +119,7 @@ try {
               if (p === "/api/shop/products")
                 return route.fulfill({
                   json: {
+                    source: "db",
                     products,
                     pricing: testPricing,
                     readiness: state.startsWith("prelaunch")
@@ -204,6 +205,11 @@ try {
                 ),
                 saved.filter(i => i.productId !== jersey.id)
               );
+              if (state === "prelaunch-zero") {
+                await cart.waitFor({ state: "detached" });
+                await page.locator("[data-shop-product-card]").first().waitFor();
+                assert.equal(await page.locator("[data-mobile-basket-summary]").count(), 0);
+              }
             }
             assert(
               await page.evaluate(
@@ -212,7 +218,7 @@ try {
             );
             assert(
               !/shop\.products\.|product_interest\./.test(
-                await cart.innerText()
+                await page.locator("main").innerText()
               )
             );
             assert.deepEqual(errors, []);
@@ -239,7 +245,7 @@ try {
           const p = new URL(route.request().url()).pathname;
           if (p === "/api/shop/products")
             return route.fulfill({
-              json: { products: [jersey, other], readiness: prelaunch, pricing: testPricing },
+              json: { source: "db", products: [jersey, other], readiness: prelaunch, pricing: testPricing },
             });
           if (p.endsWith("/details")) {
             if (mode === "slow") {
