@@ -6,7 +6,10 @@ import { getCookieConsent } from "@/lib/cookieConsent";
 import { trackShopFunnel } from "../lib/shopFunnel";
 import OrderStatus from "../components/OrderStatus";
 import { matchesShopSegment, shopProductDescription } from "../lib/shopContent";
-import { convertShopCents, calculateShopShippingCents } from "@/domain/shopCurrency";
+import {
+  convertShopCents,
+  calculateShopShippingCents,
+} from "@/domain/shopCurrency";
 import { useShopCurrency } from "../lib/useShopCurrency";
 import ShopCurrencySelect from "../components/ShopCurrencySelect";
 import PilotReadinessNotice from "../components/PilotReadinessNotice";
@@ -40,9 +43,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { resolveCurrentUserBootstrap } from "@/lib/authSessionBootstrap";
 import { api, type AuthUser } from "@/lib/api";
-import {
-  shopOrderRequestSchema,
-} from "@/domain/shopCheckout";
+import { shopOrderRequestSchema } from "@/domain/shopCheckout";
 import {
   isOrderReceipt,
   prepareCheckoutAttempt,
@@ -285,8 +286,13 @@ export default function ShopProducts() {
         row.item.quantity,
     0
   );
-  const shippingBase = calculateShopShippingCents(baseSubtotalCents, deliverySpeed);
-  const shippingCents = Number.isFinite(shippingBase) ? convertShopCents(shippingBase, "EUR", currency) : Number.NaN;
+  const shippingBase = calculateShopShippingCents(
+    baseSubtotalCents,
+    deliverySpeed
+  );
+  const shippingCents = Number.isFinite(shippingBase)
+    ? convertShopCents(shippingBase, "EUR", currency)
+    : Number.NaN;
   const totalCents = subtotalCents + shippingCents;
   const whatsappNumber = normalizeWhatsAppPhone(
     String(import.meta.env.VITE_WHATSAPP_ORDER_NUMBER ?? "")
@@ -683,7 +689,10 @@ export default function ShopProducts() {
                     {!receiptOnly && <PilotReadinessNotice />}
                     {!receiptOnly && canCheckout && !pricing && (
                       <p role="status" className="mb-4 text-sm text-amber-200">
-                        Current delivery and conversion estimates are unavailable. You can still send an assisted request; the server will calculate the request total, and the team will confirm the final quote before payment.
+                        Current delivery and conversion estimates are
+                        unavailable. You can still send an assisted request; the
+                        server will calculate the request total, and the team
+                        will confirm the final quote before payment.
                       </p>
                     )}
                     {!receiptOnly && invalidBasket && (
@@ -1338,7 +1347,7 @@ export default function ShopProducts() {
         <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
           <div
             data-mobile-basket-summary
-            className="bg-slate-950/95 backdrop-blur-sm border-t border-white/10 px-4 py-3 flex items-center justify-between gap-3"
+            className="bg-slate-950/95 backdrop-blur-sm border-t border-white/10 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex items-center justify-between gap-3"
           >
             <div className="flex items-center gap-2 min-w-0">
               <ShoppingCart className="h-4 w-4 shrink-0 text-zim-gold" />

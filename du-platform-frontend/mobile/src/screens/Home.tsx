@@ -1,11 +1,11 @@
 import React from "react";
 import { ImageBackground, Text, View, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Action, Card, Copy, Heading, Screen, colors } from "../ui";
+import { Action, Card, Copy, Grid, Heading, Screen, colors } from "../ui";
 export function HomeScreen() {
   const navigation = useNavigation<any>();
   return (
-    <Screen>
+    <Screen wide>
       <ImageBackground
         source={require("../../assets/victoria-falls.webp")}
         imageStyle={{ borderRadius: 14 }}
@@ -24,33 +24,35 @@ export function HomeScreen() {
         secondary
         onPress={() => navigation.navigate("Search")}
       />
-      <Card>
-        <Heading>Plan a visit</Heading>
-        <Copy>
-          Compare flight options and look for a place to stay near your
-          destination.
-        </Copy>
-        <Action
-          title="Find flights"
-          onPress={() => navigation.navigate("Travel", { section: "flights" })}
-        />
-        <Action
-          title="Find a stay"
-          secondary
-          onPress={() => navigation.navigate("Travel", { section: "stays" })}
-        />
-      </Card>
-      <Card>
-        <Heading>Shop from home</Heading>
-        <Copy>
-          Browse Zimbabwean food, crafts and sportswear. Check product details
-          and request an availability update.
-        </Copy>
-        <Action
-          title="Browse products"
-          onPress={() => navigation.navigate("Shop")}
-        />
-      </Card>
+      <Grid>
+        <Card>
+          <Heading>Plan a visit</Heading>
+          <Copy>
+            Compare flight options and look for a place to stay near your
+            destination.
+          </Copy>
+          <Action
+            title="Find flights"
+            onPress={() => navigation.navigate("Travel", { section: "flights" })}
+          />
+          <Action
+            title="Find a stay"
+            secondary
+            onPress={() => navigation.navigate("Travel", { section: "stays" })}
+          />
+        </Card>
+        <Card>
+          <Heading>Shop from home</Heading>
+          <Copy>
+            Browse Zimbabwean food, crafts and sportswear. Check product details
+            and request an availability update.
+          </Copy>
+          <Action
+            title="Browse products"
+            onPress={() => navigation.navigate("Shop")}
+          />
+        </Card>
+      </Grid>
       <Card>
         <Heading>Explore business opportunities</Heading>
         <Copy>

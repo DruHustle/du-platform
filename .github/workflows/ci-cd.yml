@@ -83,7 +83,13 @@ jobs:
           git diff --exit-code -- du-platform-frontend/mobile/ios du-platform-frontend/mobile/android
           test -z "$(git status --porcelain --untracked-files=all -- du-platform-frontend/mobile/ios du-platform-frontend/mobile/android)"
 
-      - name: Audit production dependencies
+      - name: Audit web production dependencies
+        run: pnpm --dir du-platform-frontend/web audit --prod --audit-level=moderate
+
+      - name: Audit backend production dependencies
+        run: pnpm --dir du-platform-backend audit --prod --audit-level=moderate
+
+      - name: Audit repository tooling production dependencies
         run: pnpm --dir du-platform-frontend/tooling audit --prod --audit-level=moderate
 
       - name: Type check
@@ -219,6 +225,15 @@ jobs:
         env:
           ONESA_BROWSER_ENGINE: webkit
 
+      - name: Preserve responsive assistant evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: responsive-assistant-evidence
+          if-no-files-found: ignore
+          retention-days: 7
+          path: /tmp/du-onesa-chat-*
+
       - name: Shop cart regression tests
         run: pnpm --dir du-platform-frontend/tooling test:e2e:shop
         env:
@@ -291,6 +306,8 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
           path: |
+            /tmp/du-shop-tests/report.json
+            /tmp/du-shop-tests/failure.png
             /tmp/du-travel-*/report.json
             /tmp/du-travel-*/failure.png
             /tmp/du-travel-*/failure.html

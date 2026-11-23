@@ -174,6 +174,8 @@ export default function NTIRSearchPage() {
     } catch {
       if (controller.signal.aborted) return;
       setResults(searchFallbackEntities(q));
+      // Always identify the bundled records. A generic transport/server error
+      // must not conceal that these results did not come from the live API.
       setError(
         t("investment.ntir.service_unavailable", {
           defaultValue: "Search is unavailable. Showing the directory entries included with the site.",
@@ -255,9 +257,12 @@ export default function NTIRSearchPage() {
           </form>
 
           {error ? (
-            <p role="alert" className="text-red-400">
-              {error}
-            </p>
+            <div role="alert" className="space-y-3">
+              <p className="text-red-400">{error}</p>
+              <Button variant="outline" onClick={() => void runSearch(query)}>
+                {t("search.retry", { defaultValue: "Try again" })}
+              </Button>
+            </div>
           ) : null}
           {loading ? (
             <p role="status" className="text-white/70">

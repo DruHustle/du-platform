@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import FormattedChatMessage from "@/components/FormattedChatMessage";
+import { useVisualViewport } from "@/hooks/useVisualViewport";
 import {
   checkOnesaHealth,
   sendOnesaChatMessage,
@@ -32,6 +33,7 @@ const DESKTOP_BUBBLE_STORAGE_KEY = "onesa-desktop-bubble-position-v2";
 const HIDE_ONESA_BUBBLE_ROUTES = [
   "/admin",
   "/login",
+  "/register",
   "/forgot-password",
   "/reset-password",
   "/legal-notice",
@@ -93,6 +95,10 @@ export default function OnesaFloatingAssistant() {
     y: number;
   } | null>(null);
   const [isOnesaChatOpen, setIsOnesaChatOpen] = useState(false);
+  const chatViewport = useVisualViewport(isOnesaChatOpen);
+  const compactChat =
+    isMobileViewport || (chatViewport?.height ?? viewportHeight) < 560;
+  const shortChat = (chatViewport?.height ?? viewportHeight) < 480;
   const [onesaMessages, setOnesaMessages] = useState<OnesaChatMessage[]>([
     {
       role: "assistant",
@@ -108,7 +114,7 @@ export default function OnesaFloatingAssistant() {
     useState<number | null>(null);
   const bubbleRef = useRef<HTMLDivElement | null>(null);
   const bubblePositionRef = useRef<{ x: number; y: number } | null>(null);
-  const onesaMessagesEndRef = useRef<HTMLDivElement | null>(null);
+  const onesaMessagesRef = useRef<HTMLDivElement | null>(null);
   const requestInFlightRef = useRef(false);
   const healthCheckVersionRef = useRef(0);
   const suppressBubbleClickRef = useRef(false);
@@ -372,13 +378,23 @@ export default function OnesaFloatingAssistant() {
   useEffect(() => {
     if (!isOnesaChatOpen) return;
     const frameId = window.requestAnimationFrame(() => {
-      onesaMessagesEndRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
+      const messages = onesaMessagesRef.current;
+      if (!messages) return;
+      messages.scrollTo({
+        top: messages.scrollHeight,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
       });
     });
     return () => window.cancelAnimationFrame(frameId);
-  }, [isOnesaChatOpen, onesaMessages, onesaLoading]);
+  }, [
+    isOnesaChatOpen,
+    onesaMessages,
+    onesaLoading,
+    onesaError,
+    chatViewport?.height,
+  ]);
 
   const sendOnesaPopupMessage = async () => {
     const trimmed = onesaInput.trim();
@@ -673,7 +689,7 @@ export default function OnesaFloatingAssistant() {
           aria-label={t("tech.restore_chat_bubble", {
             defaultValue: "Show chat bubble",
           })}
-          className={`fixed z-[96] border border-zim-gold/50 bg-slate-950/95 text-zim-gold backdrop-blur-md shadow-xl transition hover:bg-slate-900 ${
+          className={`fixed z-[96] min-h-11 min-w-11 border border-zim-gold/50 bg-slate-950/95 text-zim-gold backdrop-blur-md shadow-xl transition hover:bg-slate-900 ${
             bubbleOffscreenSide === "left"
               ? "left-0 top-1/2 -translate-y-1/2 rounded-r-full px-2 py-4"
               : bubbleOffscreenSide === "right"
@@ -785,198 +801,214 @@ export default function OnesaFloatingAssistant() {
                   exit={{ opacity: 0 }}
                 />
               </Dialog.Overlay>
-              <Dialog.Content
-                asChild
-                aria-describedby={undefined}
-                onCloseAutoFocus={event => {
-                  event.preventDefault();
-                  document
-                    .querySelector<HTMLButtonElement>(
-                      '[data-onesa-bubble-trigger="true"]'
-                    )
-                    ?.focus();
-                }}
+              <div
+                className="onesa-chat-viewport fixed z-[250] pointer-events-none"
+                style={
+                  chatViewport ?? {
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100dvh",
+                  }
+                }
               >
-                <motion.section
-                  data-onesa-chat-modal="true"
-                  initial={
-                    isMobileViewport
-                      ? { opacity: 0, y: 40 }
-                      : { opacity: 0, y: 24, scale: 0.98 }
-                  }
-                  animate={
-                    isMobileViewport
-                      ? { opacity: 1, y: 0 }
-                      : { opacity: 1, y: 0, scale: 1 }
-                  }
-                  exit={
-                    isMobileViewport
-                      ? { opacity: 0, y: 40 }
-                      : { opacity: 0, y: 16, scale: 0.98 }
-                  }
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  className={`fixed z-[250] overflow-hidden border border-zim-gold/20 bg-slate-950/95 shadow-[0_28px_80px_rgba(0,0,0,0.65)] backdrop-blur-xl ${
-                    isMobileViewport
-                      ? "bottom-4 left-3 right-3 top-[6.5rem] rounded-[1.4rem]"
-                      : "bottom-24 right-5 h-[min(72vh,640px)] w-[min(440px,calc(100vw-2rem))] rounded-[1.8rem] md:right-10"
-                  }`}
+                <Dialog.Content
+                  asChild
+                  aria-describedby={undefined}
+                  onCloseAutoFocus={event => {
+                    event.preventDefault();
+                    document
+                      .querySelector<HTMLButtonElement>(
+                        '[data-onesa-bubble-trigger="true"]'
+                      )
+                      ?.focus();
+                  }}
                 >
-                  <div className="flex h-full flex-col">
-                    <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-zim-gold">
-                          {t("onesa.brand", { defaultValue: "Onesa" })}
-                        </p>
-                        <Dialog.Title asChild>
-                          <h2 className="truncate !text-sm font-black text-white">
-                            {t("onesa.title", {
-                              defaultValue: "Chat with Onesa AI",
-                            })}
-                          </h2>
-                        </Dialog.Title>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${
-                            onesaIsOnline
-                              ? "border border-emerald-300/40 bg-emerald-500/15 text-emerald-300"
-                              : onesaIsOnline === null
-                                ? "border border-white/20 bg-white/10 text-white/70"
-                                : "border border-red-300/40 bg-red-500/15 text-red-300"
-                          }`}
-                        >
+                  <motion.section
+                    data-onesa-chat-modal="true"
+                    data-compact={compactChat}
+                    data-short={shortChat}
+                    initial={
+                      isMobileViewport
+                        ? { opacity: 0, y: 40 }
+                        : { opacity: 0, y: 24, scale: 0.98 }
+                    }
+                    animate={
+                      isMobileViewport
+                        ? { opacity: 1, y: 0 }
+                        : { opacity: 1, y: 0, scale: 1 }
+                    }
+                    exit={
+                      isMobileViewport
+                        ? { opacity: 0, y: 40 }
+                        : { opacity: 0, y: 16, scale: 0.98 }
+                    }
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="onesa-chat-modal pointer-events-auto absolute overflow-y-auto overscroll-contain rounded-[1.4rem] border border-zim-gold/20 bg-slate-950/95 shadow-[0_28px_80px_rgba(0,0,0,0.65)] backdrop-blur-xl md:rounded-[1.8rem]"
+                  >
+                    <div className="onesa-chat-layout flex h-full flex-col">
+                      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-4 py-3">
+                        <div className="min-w-0">
+                          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-zim-gold">
+                            {t("onesa.brand", { defaultValue: "Onesa" })}
+                          </p>
+                          <Dialog.Title asChild>
+                            <h2 className="truncate !text-sm font-black text-white">
+                              {t("onesa.title", {
+                                defaultValue: "Chat with Onesa AI",
+                              })}
+                            </h2>
+                          </Dialog.Title>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-2">
                           <span
-                            className={`h-2 w-2 rounded-full ${
+                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${
                               onesaIsOnline
-                                ? "bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,0.9)]"
+                                ? "border border-emerald-300/40 bg-emerald-500/15 text-emerald-300"
                                 : onesaIsOnline === null
-                                  ? "bg-slate-400"
-                                  : "bg-red-400"
+                                  ? "border border-white/20 bg-white/10 text-white/70"
+                                  : "border border-red-300/40 bg-red-500/15 text-red-300"
                             }`}
-                          />
-                          {onesaIsOnline === null
-                            ? t("onesa.checking_text")
-                            : onesaIsOnline
-                              ? t("onesa.online_text", {
-                                  defaultValue: "Online",
-                                })
-                              : t("onesa.offline_text", {
-                                  defaultValue: "Offline",
-                                })}
-                        </span>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          aria-label={t("close", { defaultValue: "Close" })}
-                          onClick={() => setIsOnesaChatOpen(false)}
-                          className="h-8 w-8 rounded-full text-white/70 hover:bg-white/10 hover:text-white"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    {onesaStatus ? (
-                      <p className="border-b border-white/10 px-4 py-2 text-[11px] leading-relaxed text-white/70">
-                        {onesaStatus}
-                      </p>
-                    ) : null}
-
-                    <div
-                      role="log"
-                      aria-label={t("onesa.title")}
-                      aria-live="polite"
-                      aria-relevant="additions"
-                      aria-busy={onesaLoading}
-                      className="flex-1 overflow-y-auto px-4 py-4"
-                    >
-                      <div className="space-y-4">
-                        {onesaMessages.map((message, index) => (
-                          <div
-                            key={`${message.role}-${index}`}
-                            className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                           >
-                            <div
-                              className={`max-w-[92%] px-3 py-2 text-sm leading-relaxed ${
-                                message.role === "user"
-                                  ? "rounded-[1.25rem] rounded-br-[0.45rem] border border-zim-gold/30 bg-slate-900/90 text-white"
-                                  : "rounded-[1.25rem] rounded-bl-[0.45rem] border border-zim-gold/45 bg-zim-gold/10 text-white shadow-[0_0_24px_rgba(212,175,55,0.22)]"
+                            <span
+                              className={`h-2 w-2 rounded-full ${
+                                onesaIsOnline
+                                  ? "bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,0.9)]"
+                                  : onesaIsOnline === null
+                                    ? "bg-slate-400"
+                                    : "bg-red-400"
                               }`}
-                            >
-                              <FormattedChatMessage
-                                content={message.content}
-                                className="text-sm leading-relaxed"
-                              />
-                              {message.truncated ? (
-                                <p
-                                  className="mt-2 text-xs text-zim-gold"
-                                  role="status"
-                                >
-                                  {t("onesa.response_incomplete", {
-                                    defaultValue:
-                                      "This answer was cut short. Ask Onesa to continue.",
+                            />
+                            {onesaIsOnline === null
+                              ? t("onesa.checking_text")
+                              : onesaIsOnline
+                                ? t("onesa.online_text", {
+                                    defaultValue: "Online",
+                                  })
+                                : t("onesa.offline_text", {
+                                    defaultValue: "Offline",
                                   })}
-                                </p>
-                              ) : null}
-                            </div>
-                          </div>
-                        ))}
-                        <div ref={onesaMessagesEndRef} />
+                          </span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            aria-label={t("close", { defaultValue: "Close" })}
+                            onClick={() => setIsOnesaChatOpen(false)}
+                            className="h-11 min-h-[44px] w-11 min-w-[44px] rounded-full text-white/70 hover:bg-white/10 hover:text-white"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
-                    </div>
 
-                    <form
-                      onSubmit={handleOnesaPopupSubmit}
-                      className="space-y-2 border-t border-white/10 px-4 py-3"
-                    >
-                      <Textarea
-                        aria-label={t("onesa.message_label", {
-                          defaultValue: "Message to Onesa",
-                        })}
-                        value={onesaInput}
-                        onChange={event => setOnesaInput(event.target.value)}
-                        onKeyDown={handleOnesaPopupInputKeyDown}
-                        placeholder={
-                          hasOnesaChatStarted
-                            ? ""
-                            : t("onesa.starter_prompt", {
-                                defaultValue:
-                                  "Ask about Zimbabwe or Southern Africa…",
-                              })
-                        }
-                        className="min-h-[96px] border-white/20 bg-white/[0.02] text-white placeholder:text-white/70"
-                      />
-                      {onesaError ? (
-                        <p role="alert" className="text-xs text-red-400">
-                          {onesaError}
-                          {onesaRetryAfterSecondsRemaining !== null
-                            ? ` (${onesaRetryAfterSecondsRemaining}s)`
-                            : ""}
-                        </p>
-                      ) : null}
-                      <div className="flex justify-end">
-                        <Button
-                          type="submit"
-                          disabled={
-                            onesaLoading ||
-                            !onesaInput.trim() ||
-                            (onesaRetryAfterSecondsRemaining ?? 0) > 0
-                          }
-                          className="rounded-full bg-zim-gold px-6 text-[11px] font-black uppercase tracking-widest text-zim-black hover:bg-white"
-                        >
-                          <Send className="mr-2 h-4 w-4" />
-                          {onesaLoading
-                            ? t("onesa.thinking", {
-                                defaultValue: "Thinking...",
-                              })
-                            : t("onesa.send", { defaultValue: "Send" })}
-                        </Button>
+                      <div
+                        ref={onesaMessagesRef}
+                        role="log"
+                        aria-label={t("onesa.title")}
+                        aria-live="polite"
+                        aria-relevant="additions"
+                        aria-busy={onesaLoading}
+                        className="onesa-chat-messages min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4"
+                      >
+                        <div className="space-y-4">
+                          {onesaStatus ? (
+                            <p className="text-[11px] leading-relaxed text-white/70">
+                              {onesaStatus}
+                            </p>
+                          ) : null}
+                          {onesaMessages.map((message, index) => (
+                            <div
+                              key={`${message.role}-${index}`}
+                              className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                            >
+                              <div
+                                className={`max-w-[92%] px-3 py-2 text-sm leading-relaxed ${
+                                  message.role === "user"
+                                    ? "rounded-[1.25rem] rounded-br-[0.45rem] border border-zim-gold/30 bg-slate-900/90 text-white"
+                                    : "rounded-[1.25rem] rounded-bl-[0.45rem] border border-zim-gold/45 bg-zim-gold/10 text-white shadow-[0_0_24px_rgba(212,175,55,0.22)]"
+                                }`}
+                              >
+                                <FormattedChatMessage
+                                  content={message.content}
+                                  className="text-sm leading-relaxed"
+                                />
+                                {message.truncated ? (
+                                  <p
+                                    className="mt-2 text-xs text-zim-gold"
+                                    role="status"
+                                  >
+                                    {t("onesa.response_incomplete", {
+                                      defaultValue:
+                                        "This answer was cut short. Ask Onesa to continue.",
+                                    })}
+                                  </p>
+                                ) : null}
+                              </div>
+                            </div>
+                          ))}
+                          {onesaError ? (
+                            <p
+                              id="onesa-popup-error"
+                              role="alert"
+                              className="text-xs text-red-400"
+                            >
+                              {onesaError}
+                              {onesaRetryAfterSecondsRemaining !== null
+                                ? ` (${onesaRetryAfterSecondsRemaining}s)`
+                                : ""}
+                            </p>
+                          ) : null}
+                        </div>
                       </div>
-                    </form>
-                  </div>
-                </motion.section>
-              </Dialog.Content>
+
+                      <form
+                        onSubmit={handleOnesaPopupSubmit}
+                        className="onesa-chat-composer shrink-0 space-y-2 border-t border-white/10 px-4 py-3"
+                      >
+                        <Textarea
+                          aria-label={t("onesa.message_label", {
+                            defaultValue: "Message to Onesa",
+                          })}
+                          value={onesaInput}
+                          aria-describedby={
+                            onesaError ? "onesa-popup-error" : undefined
+                          }
+                          onChange={event => setOnesaInput(event.target.value)}
+                          onKeyDown={handleOnesaPopupInputKeyDown}
+                          placeholder={
+                            hasOnesaChatStarted
+                              ? ""
+                              : t("onesa.starter_prompt", {
+                                  defaultValue:
+                                    "Ask about Zimbabwe or Southern Africa…",
+                                })
+                          }
+                          className="min-h-[96px] max-h-48 border-white/20 bg-white/[0.02] text-base text-white placeholder:text-white/70 md:text-base"
+                        />
+                        <div className="flex justify-end">
+                          <Button
+                            type="submit"
+                            disabled={
+                              onesaLoading ||
+                              !onesaInput.trim() ||
+                              (onesaRetryAfterSecondsRemaining ?? 0) > 0
+                            }
+                            className="h-auto min-h-[44px] min-w-[44px] sm:min-w-[11rem] whitespace-normal rounded-full bg-zim-gold px-6 text-[11px] font-black uppercase tracking-widest text-zim-black hover:bg-white"
+                          >
+                            <Send className="mr-2 h-4 w-4" />
+                            {onesaLoading
+                              ? t("onesa.thinking", {
+                                  defaultValue: "Thinking...",
+                                })
+                              : t("onesa.send", { defaultValue: "Send" })}
+                          </Button>
+                        </div>
+                      </form>
+                    </div>
+                  </motion.section>
+                </Dialog.Content>
+              </div>
             </Dialog.Portal>
           ) : null}
         </AnimatePresence>

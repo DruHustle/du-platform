@@ -18,7 +18,12 @@ describe("contact message recovery", () => {
     await expect(sendContactAttempt(restored)).resolves.toBe(saved.requestId);
     expect(fetchMock.mock.calls.map(([, options]) => JSON.parse(options.body))).toEqual([saved, saved]);
   });
-  it.each([null, {}, { received: true, requestId: "another-message" }, { received: false, requestId: saved.requestId }])(
+  it("keeps a request unconfirmed when the receipt is missing", async () => {
+    // The API boundary rejects an empty success envelope before contact.ts reads it.
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(reply(null)));
+    await expect(sendContactAttempt(saved)).rejects.toMatchObject({ code: "INVALID_RESPONSE" });
+  });
+  it.each([{}, { received: true, requestId: "another-message" }, { received: false, requestId: saved.requestId }])(
     "keeps a request unconfirmed after an unrelated or incomplete response", async data => {
       vi.stubGlobal("fetch", vi.fn().mockResolvedValue(reply(data)));
       await expect(sendContactAttempt(saved)).rejects.toThrow("did not confirm");

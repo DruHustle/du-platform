@@ -14,7 +14,9 @@ vi.mock("react-native", () => ({
   Platform: fakes.platform, StyleSheet: { create: styles => styles },
   Text: "Text", TextInput: "TextInput", View: "View", Pressable: "Pressable",
   ActivityIndicator: "ActivityIndicator", ScrollView: "ScrollView", Keyboard: { metrics: () => undefined, addListener: () => ({ remove() {} }) },
+  useWindowDimensions: () => ({ width: 390, height: 844, fontScale: 1, scale: 3 }),
 }));
+vi.mock("@react-native-community/netinfo", () => ({ useNetInfo: () => ({ isConnected: true, isInternetReachable: true }) }));
 vi.mock("react-native-safe-area-context", () => ({ SafeAreaView: "SafeAreaView", useSafeAreaInsets: () => ({ bottom: 0 }) }));
 vi.mock("@react-navigation/native", () => ({ useNavigation: () => fakes.navigation }));
 vi.mock("../src/session", () => ({ useSession: () => fakes.session }));

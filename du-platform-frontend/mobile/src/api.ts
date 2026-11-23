@@ -50,7 +50,7 @@ export async function request<T>(path: string, options: {
       payload = response.status === 204 || response.status === 205 ? null : await response.json();
     } catch (error) {
       if (controller.signal.aborted || options.signal?.aborted) throw error;
-      if (response.ok) throw new ApiError("The service returned an unreadable response. Please try again.", response.status, "INVALID_RESPONSE");
+      if (response.ok) throw new ApiError("The service returned an unreadable response. Please try again.", 502, "INVALID_RESPONSE");
     }
   } catch (error) {
     if (options.signal?.aborted || error instanceof ApiError) throw error;
@@ -61,9 +61,16 @@ export async function request<T>(path: string, options: {
   }
   if (!response.ok || payload?.success === false) {
     const error: ApiErrorPayload = payload?.error || {};
-    throw new ApiError(error.message || payload?.message || "The service is unavailable. Please try again.", response.status, error.code || "API_ERROR");
+    // A 2xx that reports success:false is a failed operation, not a client error.
+    throw new ApiError(error.message || payload?.message || "The service is unavailable. Please try again.", response.ok ? 502 : response.status, error.code || "API_ERROR");
   }
-  return (payload?.success === true && "data" in payload ? payload.data : payload) as T;
+  if (response.status === 204 || response.status === 205) return null as T;
+  const hasData = payload?.success === true && Object.prototype.hasOwnProperty.call(payload, "data");
+  const value = hasData ? payload.data : payload;
+  // Screens render from these values, so reject an envelope without an object body.
+  if (value === null || typeof value !== "object" || (payload?.success === true && !hasData))
+    throw new ApiError("The service returned an invalid response. Please try again.", 502, "INVALID_RESPONSE");
+  return value as T;
 }
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
@@ -88,3 +95,28 @@ export type Readiness = { commercialReady: boolean; mode: string; enforcement: s
 export type Catalog = { products: Product[]; readiness: Readiness; source: string; cached?: boolean };
 export type TravelQuote = { id: string; identity: string; provider: string; category: string; title: string; price: number; currency: string; bookingUrl: string; [key: string]: unknown };
 export type TravelCriteria = { origin: string; destination: string; tripType: "return" | "one-way"; departure: string; returnDate: string; adults: number; childAges: number[]; rooms: number; currency: string; pickup: string; dropoff: string; pickupTime: string; dropoffTime: string };
+
+/** Validate values used by native filters, prices and ordering before rendering. */
+export function parseCatalog(value: unknown): Catalog {
+  const invalid = () => new ApiError("The catalogue response was invalid. Please try again.", 502, "INVALID_RESPONSE");
+  if (!value || typeof value !== "object") throw invalid();
+  const data = value as Partial<Catalog>;
+  const validProduct = (product: unknown): product is Product => {
+    if (!product || typeof product !== "object") return false;
+    const p = product as Partial<Product>;
+    return Number.isSafeInteger(p.id) && p.id! > 0
+      && [p.slug, p.name, p.description, p.category, p.image_url, p.currency].every(field => typeof field === "string")
+      && Number.isSafeInteger(p.price_cents) && p.price_cents! >= 0
+      && Number.isSafeInteger(p.stock_qty) && p.stock_qty! >= 0
+      && (p.is_active === 0 || p.is_active === 1)
+      && (p.image_api_url == null || typeof p.image_api_url === "string");
+  };
+  const readiness = data.readiness;
+  if (!Array.isArray(data.products) || !data.products.every(validProduct)
+    || typeof data.source !== "string" || (data.cached !== undefined && typeof data.cached !== "boolean")
+    || !readiness || typeof readiness.commercialReady !== "boolean"
+    || typeof readiness.mode !== "string" || typeof readiness.enforcement !== "string"
+    || !Array.isArray(readiness.approvedProductIds) || !readiness.approvedProductIds.every(id => Number.isSafeInteger(id) && id > 0)
+    || !Array.isArray(readiness.destinationCountries) || !readiness.destinationCountries.every(country => typeof country === "string")) throw invalid();
+  return data as Catalog;
+}

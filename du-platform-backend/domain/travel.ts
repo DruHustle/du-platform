@@ -292,7 +292,10 @@ export const travelQuoteSchema = z
           q.priceBasis !== "unspecified"))
     )
       ctx.addIssue({ code: "custom", message: "Invalid supplier quote" });
-  });
+  })
+  .describe(
+    "Signed supplier observation. Return the complete object unchanged for price revalidation. Kiwi.com flights use party totals and an opaque checkout URL. Pilot stays use an unspecified price basis."
+  );
 export type TravelQuote = z.infer<typeof travelQuoteSchema>;
 export const travelResultsSchema = z
   .object({

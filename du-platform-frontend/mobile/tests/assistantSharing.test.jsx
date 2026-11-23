@@ -11,7 +11,9 @@ vi.mock("react-native", () => ({
   Platform: fakes.platform, StyleSheet: { create: value => value }, Linking: {},
   View: "View", Text: "Text", TextInput: "TextInput", Pressable: "Pressable",
   ActivityIndicator: "ActivityIndicator", ScrollView: "ScrollView", Keyboard: { dismiss: fakes.dismiss, metrics: () => undefined, addListener: () => ({ remove() {} }) },
+  useWindowDimensions: () => ({ width: 390, height: 844, fontScale: 1, scale: 3 }),
 }));
+vi.mock("@react-native-community/netinfo", () => ({ useNetInfo: () => ({ isConnected: true, isInternetReachable: true }) }));
 vi.mock("react-native-safe-area-context", () => ({ SafeAreaView: "SafeAreaView", useSafeAreaInsets: () => ({ bottom: 0 }) }));
 vi.mock("expo-web-browser", () => ({ openBrowserAsync: fakes.browser }));
 vi.mock("expo-crypto", () => ({ randomUUID: () => "report-request" }));
@@ -20,7 +22,11 @@ vi.mock("../src/api", () => ({ ApiError: class extends Error {}, request: fakes.
 vi.mock("../src/securePayload", () => ({
   readSecurePayload: fakes.restore, saveSecurePayload: fakes.save, deleteSecurePayload: fakes.remove,
 }));
-vi.mock("../src/session", () => ({ PENDING_CONTACT_KEY: "pending-contact" }));
+vi.mock("../src/session", () => ({
+  PENDING_CONTACT_KEY: "pending-contact",
+  // A settled, signed-out session whose account never changes during a test.
+  useSession: () => ({ epoch: 0, loading: false, user: null, capture: () => 0, isCurrent: () => true, storage: (_epoch, operation) => operation() }),
+}));
 
 describe.each(["ios", "android"])("Onesa on %s", platform => {
   let screen, initialAct;

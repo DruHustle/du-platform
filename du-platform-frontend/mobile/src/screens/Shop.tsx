@@ -3,21 +3,32 @@ import { Image, Pressable, Switch, Text, View } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import * as Crypto from "expo-crypto";
-import { ApiError, request, type Catalog, type Product } from "../api";
+import { ApiError, parseCatalog, request, type Catalog, type Product } from "../api";
+import { latestRequest } from "../requestLifecycle";
 import { canRequestProduct, deliveryCoverage, defaultShopFilters, filterShopProducts, shopCategories, type ShopFilters } from "../shopDiscovery";
 import { productImageUrl as imageUrl } from "../media";
 import { useCart } from "../cart";
 import { canEditRejectedRequest, readPendingOrder, readQuoteAcceptance, reconcileQuoteAcceptance, type QuoteAcceptanceAttempt, type OrderPayload, type Order } from "../checkout";
 import { saveSecurePayload, readSecurePayload, deleteSecurePayload } from "../securePayload";
 import { ORDER_KEY, PENDING_ORDER_KEY, PENDING_ORDER_COMMAND_KEY, useSession } from "../session";
-import { Action, Card, Copy, Field, Heading, Loading, Message, Screen, colors } from "../ui";
+import { Action, Card, Copy, Field, Grid, Heading, Loading, Message, Screen, colors } from "../ui";
 
 const err = (value: unknown) => value instanceof Error ? value.message : "The shop is temporarily unavailable.";
 const money = (amount: number, currency: string) => `${currency} ${(amount / 100).toFixed(2)}`;
 function useCatalog() {
   const [data, setData] = useState<Catalog | null>(null); const [loading,setLoading]=useState(true); const [error,setError]=useState("");
-  const load = useCallback(async () => {setLoading(true);setError("");try {const next=await request<Catalog>("/shop/products"); if(!Array.isArray(next?.products))throw new Error("The catalogue response is invalid.");setData(next);} catch(e){setError(err(e));}finally{setLoading(false);}},[]);
-  useFocusEffect(useCallback(()=>{void load();},[load]));
+  const [requests] = useState(latestRequest);
+  const load = useCallback(async () => {
+    const pending = requests.begin();
+    setLoading(true); setError("");
+    try {
+      // Filters, prices and ordering read these values, so validate them first.
+      const next = parseCatalog(await request<unknown>("/shop/products", { signal: pending.signal }));
+      if (pending.isCurrent()) setData(next);
+    } catch (e) { if (pending.isCurrent()) setError(err(e)); }
+    finally { if (pending.isCurrent()) setLoading(false); }
+  }, [requests]);
+  useFocusEffect(useCallback(() => { void load(); return requests.invalidate; }, [load, requests]));
   return {data,loading,error,load};
 }
 export function ShopScreen({ route }: { route?: { params?: Partial<ShopFilters> } }) {
@@ -29,7 +40,7 @@ export function ShopScreen({ route }: { route?: { params?: Partial<ShopFilters> 
   const coverage = data && !loading && !error && deliveryCoverage(data);
   const filtered = Boolean(filters.q.trim() || filters.availableOnly || filters.category !== "all");
   const quantity = cart.items.reduce((count, item) => count + item.quantity, 0);
-  return <Screen>
+  return <Screen wide>
     <Heading>Shop</Heading>
     <Copy>Explore Zimbabwean products, check availability and request updates.</Copy>
     {!!coverage && <Copy>{coverage}</Copy>}
@@ -64,7 +75,7 @@ export function ShopScreen({ route }: { route?: { params?: Partial<ShopFilters> 
       {products.length} {products.length === 1 ? "product" : "products"}
     </Text>}
     {data && !products.length && <Message message={filtered ? "No products match. Change or clear your filters to see more." : "There are no products in the catalogue yet."} />}
-    {products.map(product => {
+    <Grid>{products.map(product => {
       const image = imageUrl(product.image_url, product.image_api_url);
       return <Card key={product.id}>
         {image && <Image source={{ uri: image }} style={{ width: "100%", height: 180, borderRadius: 10, backgroundColor: colors.pale }} resizeMode="cover" />}
@@ -73,7 +84,7 @@ export function ShopScreen({ route }: { route?: { params?: Partial<ShopFilters> 
         <Copy>Indicative price: {money(product.price_cents, product.currency)}</Copy>
         <Action title="Product details" accessibilityLabel={`View details for ${product.name}`} onPress={() => navigation.navigate("Product", { slug: product.slug })} />
       </Card>;
-    })}
+    })}</Grid>
   </Screen>;
 }
 export function ProductScreen({ route }: { route: { params: { slug: string } } }) {
@@ -165,13 +176,22 @@ export function CartScreen() {
   const sending = useRef(false);
   const [restored, setRestored] = useState(false);
   const [restoreAttempt, setRestoreAttempt] = useState(0);
+  // A saved request, receipt or prefilled contact details must never carry
+  // over to another account. Reset, then restore the current account's data.
   useEffect(() => {
-    let active = true;
+    setPending(null); setOrder(null); setBusy(false); setError("");
+    setName(session.user?.fullName || ""); setEmail(session.user?.email || "");
+    setCountry(""); setCity(""); setAddress(""); setPostal(""); setNotes("");
+  }, [session.epoch, session.user?.id]);
+  useEffect(() => {
     setRestored(false);
+    if (session.loading) return;
+    const epoch = session.capture();
+    let active = true;
     setError("");
-    void Promise.all([readSecurePayload(PENDING_ORDER_KEY), SecureStore.getItemAsync(ORDER_KEY)])
+    void session.storage(epoch, () => Promise.all([readSecurePayload(PENDING_ORDER_KEY), SecureStore.getItemAsync(ORDER_KEY)]))
       .then(([draft, receipt]) => {
-        if (!active) return;
+        if (!active || !session.isCurrent(epoch)) return;
         if (draft) {
           const saved = readPendingOrder(draft);
           setPending(saved);
@@ -182,11 +202,12 @@ export function CartScreen() {
         if (receipt) setOrder(JSON.parse(receipt));
         setRestored(true);
       })
-      .catch(() => { if (active) setError("Could not read your saved request on this device."); });
+      .catch(() => { if (active && session.isCurrent(epoch)) setError("Could not read your saved request on this device."); });
     return () => { active = false; };
-  }, [restoreAttempt]);
+  }, [restoreAttempt, session.epoch, session.loading, session.user?.id]);
   const submit = async () => {
     if (sending.current || !restored) return;
+    const epoch = session.capture();
     sending.current = true;
     setError(""); setBusy(true);
     let payload = pending;
@@ -203,23 +224,32 @@ export function CartScreen() {
           postalCode: postal.trim(), customerNotes: notes.trim(), deliverySpeed: "normal",
           paymentMethod: "manual_assisted", analyticsConsent: false, requestToken,
         };
-        await saveSecurePayload(PENDING_ORDER_KEY, JSON.stringify(payload));
+        const saved = payload;
+        await session.storage(epoch, () => saveSecurePayload(PENDING_ORDER_KEY, JSON.stringify(saved)));
+        if (!session.isCurrent(epoch)) return;
         cart.reserve(requestToken, payload.items);
         setPending(payload);
       }
+      if (!session.isCurrent(epoch)) return;
       const result = await request<{ order: Order }>("/shop/orders", { method: "POST", body: payload });
+      if (!session.isCurrent(epoch)) return;
       if (!result?.order?.orderRef || result.order.manageToken !== payload.requestToken)
         throw new Error("Could not confirm the response. Retry the same request.");
       const { orderRef, manageToken, status, currency, totalCents } = result.order;
       const receipt = { orderRef, manageToken, status, currency, totalCents };
-      await SecureStore.setItemAsync(ORDER_KEY, JSON.stringify(receipt));
-      await deleteSecurePayload(PENDING_ORDER_KEY);
+      await session.storage(epoch, async () => {
+        await SecureStore.setItemAsync(ORDER_KEY, JSON.stringify(receipt));
+        await deleteSecurePayload(PENDING_ORDER_KEY);
+      });
+      if (!session.isCurrent(epoch)) return;
       cart.finish(payload.requestToken, true);
       setPending(null); setOrder(receipt);
     } catch (e) {
+      if (!session.isCurrent(epoch)) return;
       if (payload && canEditRejectedRequest(e, Boolean(pending))) {
         try {
-          await deleteSecurePayload(PENDING_ORDER_KEY);
+          await session.storage(epoch, () => deleteSecurePayload(PENDING_ORDER_KEY));
+          if (!session.isCurrent(epoch)) return;
           cart.finish(payload.requestToken, false);
           setPending(null);
         } catch {
@@ -230,7 +260,7 @@ export function CartScreen() {
       setError(err(e));
     } finally {
       sending.current = false;
-      setBusy(false);
+      if (session.isCurrent(epoch)) setBusy(false);
     }
   };
   const editable = restored && !busy && !pending;
@@ -277,19 +307,26 @@ function OrderStatus({ order }: { order: Order }) {
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
   const active = useRef<AbortController | null>(null);
+  // Serialize account storage with sign-in/out; a ref keeps the callbacks stable.
+  const session = useRef(useSession());
+  session.current = useSession();
+  // Each refresh or acceptance captures the account once, so a request that
+  // finishes after a sign-in/out cannot write under the next account.
+  const accountStorage = <T,>(epoch: number, operation: () => Promise<T>) => session.current.storage(epoch, operation);
   const { orderRef, manageToken } = order;
   const path = `/shop/orders/${encodeURIComponent(orderRef)}`;
 
   const refresh = useCallback(async (signal: AbortSignal) => {
+    const epoch = session.current.capture();
     const data = await request<Workflow>(`${path}/workflow`, { orderToken: manageToken, signal });
     if (signal.aborted) return;
     setWorkflow(data);
     setCommand(undefined);
-    const raw = await SecureStore.getItemAsync(PENDING_ORDER_COMMAND_KEY);
+    const raw = await accountStorage(epoch, () => SecureStore.getItemAsync(PENDING_ORDER_COMMAND_KEY));
     if (signal.aborted) return;
     const saved = readQuoteAcceptance(raw);
     if (raw !== null && !saved) {
-      await SecureStore.deleteItemAsync(PENDING_ORDER_COMMAND_KEY);
+      await accountStorage(epoch, () => SecureStore.deleteItemAsync(PENDING_ORDER_COMMAND_KEY));
       if (signal.aborted) return;
       setNotice("Saved retry details were unreadable. Review the current request before continuing.");
     }
@@ -300,7 +337,7 @@ function OrderStatus({ order }: { order: Order }) {
       setNotice(state === "applied"
         ? "Your quote acceptance was recorded. Payment is arranged separately."
         : "Your request changed. Review its current status and quote before continuing.");
-      await SecureStore.deleteItemAsync(PENDING_ORDER_COMMAND_KEY);
+      await accountStorage(epoch, () => SecureStore.deleteItemAsync(PENDING_ORDER_COMMAND_KEY));
     }
   }, [manageToken, orderRef, path]);
 
@@ -328,6 +365,7 @@ function OrderStatus({ order }: { order: Order }) {
     if (active.current || command === undefined || !workflow || workflow.stage !== "quote_sent" || workflow.quoteExpired ||
         (command && command.version !== workflow.version)) return;
     const controller = new AbortController();
+    const epoch = session.current.capture();
     active.current = controller;
     setBusy(true);
     setError("");
@@ -335,7 +373,7 @@ function OrderStatus({ order }: { order: Order }) {
     try {
       const attempt = command ?? { ref: orderRef, version: workflow.version, requestId: Crypto.randomUUID() };
       if (!command) {
-        await SecureStore.setItemAsync(PENDING_ORDER_COMMAND_KEY, JSON.stringify(attempt));
+        await accountStorage(epoch, () => SecureStore.setItemAsync(PENDING_ORDER_COMMAND_KEY, JSON.stringify(attempt)));
         if (controller.signal.aborted) return;
         setCommand(attempt);
       }
@@ -347,7 +385,7 @@ function OrderStatus({ order }: { order: Order }) {
       setWorkflow(data);
       setCommand(null);
       setNotice("Your quote acceptance was recorded. Payment is arranged separately.");
-      await SecureStore.deleteItemAsync(PENDING_ORDER_COMMAND_KEY);
+      await accountStorage(epoch, () => SecureStore.deleteItemAsync(PENDING_ORDER_COMMAND_KEY));
     } catch (failure) {
       if (controller.signal.aborted) return;
       if (failure instanceof ApiError && failure.status === 409) {

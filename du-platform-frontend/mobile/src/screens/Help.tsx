@@ -8,9 +8,9 @@ import { onesaProductLinks } from "../onesaProductLinks";
 import { shopDestination, isSitePath } from "../shopDiscovery";
 import { readSearchResponse, type SearchResponse } from "../searchResults";
 import { readContactAttempt, sendContactAttempt, type ContactAttempt } from "../contact";
-import { PENDING_CONTACT_KEY } from "../session";
+import { PENDING_CONTACT_KEY, useSession } from "../session";
 import { saveSecurePayload, readSecurePayload, deleteSecurePayload } from "../securePayload";
-import { Action, Card, Copy, Field, Heading, Message, Screen, styles } from "../ui";
+import { Action, Card, Copy, Field, Grid, Heading, Message, Screen, styles } from "../ui";
 
 const errorMessage=(e:unknown)=>e instanceof Error?e.message:"The service is temporarily unavailable.";
 function AssistantReply({ content }: { content: string }) {
@@ -45,7 +45,16 @@ export function AssistantScreen() {
   const [error, setError] = useState("");
   const active = useRef<AbortController | null>(null);
   const draftVersion = useRef(0);
+  const session = useSession();
   useEffect(() => () => active.current?.abort(), []);
+  // Signing in, out or into another account must not show or continue the
+  // previous account's conversation or deliver a reply requested under it.
+  useEffect(() => {
+    active.current?.abort();
+    active.current = null;
+    draftVersion.current++;
+    setText(""); setMessages([]); setBusy(false); setError(""); setSharing("review");
+  }, [session.epoch]);
 
   function stopSharing() {
     active.current?.abort();
@@ -124,11 +133,20 @@ export function ContactScreen({ route }: { route: { params?: { reportReply?: str
   const [error, setError] = useState("");
   const [pending, setPending] = useState<ContactAttempt | null>(null);
   const sending = useRef(false);
+  const session = useSession();
+  // Each account (or the signed-out state) has its own saved message on this
+  // device. Clear the form when the account changes, then restore that one.
   useEffect(() => {
+    setPending(null); setName(""); setEmail(""); setSubject(""); setMessage("");
+    setIncludedReply(null); setReceipt(""); setError(""); setBusy(false); setRestored(false);
+  }, [session.epoch]);
+  useEffect(() => {
+    if (session.loading) return;
+    const epoch = session.capture();
     let active = true;
     setError("");
-    void readSecurePayload(PENDING_CONTACT_KEY).then(raw => {
-      if (!active) return;
+    void session.storage(epoch, () => readSecurePayload(PENDING_CONTACT_KEY)).then(raw => {
+      if (!active || !session.isCurrent(epoch)) return;
       if (raw) {
         const saved = readContactAttempt(raw);
         setPending(saved);
@@ -137,13 +155,14 @@ export function ContactScreen({ route }: { route: { params?: { reportReply?: str
       }
       setRestored(true);
     }).catch(() => {
-      if (active) setError("Could not read your saved message on this device.");
+      if (active && session.isCurrent(epoch)) setError("Could not read your saved message on this device.");
     });
     return () => { active = false; };
-  }, [restoreAttempt]);
+  }, [restoreAttempt, session.epoch, session.loading]);
 
   async function send() {
     if (sending.current || !restored) return;
+    const epoch = session.capture();
     sending.current = true;
     setBusy(true); setReceipt(""); setError("");
     try {
@@ -152,28 +171,33 @@ export function ContactScreen({ route }: { route: { params?: { reportReply?: str
         requestId: Crypto.randomUUID(), language: "en", module: "general",
       };
       if (!pending) {
-        await saveSecurePayload(PENDING_CONTACT_KEY, JSON.stringify(body));
+        await session.storage(epoch, () => saveSecurePayload(PENDING_CONTACT_KEY, JSON.stringify(body)));
+        if (!session.isCurrent(epoch)) return;
         setPending(body);
       }
+      if (!session.isCurrent(epoch)) return;
       const confirmed = await sendContactAttempt(body);
-      await deleteSecurePayload(PENDING_CONTACT_KEY);
+      await session.storage(epoch, () => deleteSecurePayload(PENDING_CONTACT_KEY));
+      if (!session.isCurrent(epoch)) return;
       setPending(null); setName(""); setEmail(""); setSubject(""); setMessage("");
       setReceipt(confirmed);
     } catch (e) {
+      if (!session.isCurrent(epoch)) return;
       if (e instanceof ApiError && e.status === 400) {
         try {
-          await deleteSecurePayload(PENDING_CONTACT_KEY);
+          await session.storage(epoch, () => deleteSecurePayload(PENDING_CONTACT_KEY));
+          if (!session.isCurrent(epoch)) return;
           setPending(null);
           setError(errorMessage(e));
         } catch {
-          setError("Could not clear the saved request. Retry the same message.");
+          if (session.isCurrent(epoch)) setError("Could not clear the saved request. Retry the same message.");
         }
       } else {
         setError(`${errorMessage(e)} Retry the same message to avoid duplicates.`);
       }
     } finally {
       sending.current = false;
-      setBusy(false);
+      if (session.isCurrent(epoch)) setBusy(false);
     }
   }
   const editable = restored && !pending && !busy;
@@ -267,7 +291,7 @@ export function SearchScreen() {
     }
   }
 
-  return <Screen>
+  return <Screen wide>
     <Heading>Search</Heading>
     <Field label="Search products, destinations and information" value={query} onChangeText={editQuery}
       returnKeyType="search" onSubmitEditing={() => void search()}/>
@@ -275,11 +299,11 @@ export function SearchScreen() {
     {!!error && <Message error message={error}/>}
     {response?.partial && !error && <Message message="Some results are temporarily unavailable. You can open the results shown or retry your search."/>}
     {response && !response.results.length && !response.partial && !busy && !error && <Copy>No results found. Try another search.</Copy>}
-    {response?.results.map((item, i) => <Card key={`${item.href}-${i}`}>
+    <Grid>{response?.results.map((item, i) => <Card key={`${item.href}-${i}`}>
       <Heading>{item.title}</Heading>
       <Copy>{item.category === "Tourism" ? "Travel" : item.category}{item.summary ? ` · ${item.summary}` : ""}</Copy>
       <Action title={`Open ${item.title}`} onPress={() => openResult(item)}/>
-    </Card>)}
+    </Card>)}</Grid>
   </Screen>;
 }
 export function ExternalScreen({route}: {route: {params: {path: string; title: string}}}) {

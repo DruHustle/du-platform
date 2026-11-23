@@ -42,7 +42,12 @@ export const registerSchema = z
 export const forgotPasswordSchema = z.object({
   email: z.string().trim().max(254).email(),
   language: z.enum(["en", "de", "sn", "nd"]).optional(),
-  next: z.string().optional(),
+  next: z
+    .string()
+    .optional()
+    .describe(
+      "Optional task path. Only supported in-app destinations are included in reset emails."
+    ),
 });
 
 export const resetPasswordSchema = z

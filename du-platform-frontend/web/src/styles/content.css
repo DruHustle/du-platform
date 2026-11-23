@@ -416,6 +416,9 @@
     overscroll-behavior-y: auto;
     scrollbar-gutter: auto;
   }
+  .content-page:has([data-mobile-basket-summary]) .site-footer {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+  }
 }
 
 .content-page #shop-cart-checkout button,
@@ -493,4 +496,52 @@
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 16px;
+}
+
+/* The assistant portal follows the visible viewport, including the keyboard.
+   Keep its controls reachable while only the conversation needs to scroll. */
+.onesa-chat-modal {
+  right: max(2.5rem, env(safe-area-inset-right));
+  bottom: max(6rem, env(safe-area-inset-bottom));
+  width: min(
+    440px,
+    calc(100% - 2.5rem - max(2.5rem, env(safe-area-inset-right)))
+  );
+  height: min(72%, 640px);
+  max-height: calc(100% - 7rem - env(safe-area-inset-top));
+}
+.onesa-chat-modal[data-compact="true"] {
+  top: max(0.75rem, env(safe-area-inset-top));
+  right: max(0.75rem, env(safe-area-inset-right));
+  bottom: max(0.75rem, env(safe-area-inset-bottom));
+  left: max(0.75rem, env(safe-area-inset-left));
+  width: auto;
+  height: auto;
+  max-height: none;
+}
+.onesa-chat-modal .onesa-chat-layout {
+  min-height: 196px;
+}
+.onesa-chat-modal .onesa-chat-messages {
+  overflow-wrap: anywhere;
+}
+.onesa-chat-modal[data-short="true"] .onesa-chat-composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 8px;
+  padding: 8px 12px;
+}
+.onesa-chat-modal[data-short="true"] .onesa-chat-composer > * {
+  margin: 0;
+}
+.onesa-chat-modal[data-short="true"] .onesa-chat-composer textarea {
+  min-height: 64px;
+  max-height: 96px;
+}
+.onesa-chat-modal[data-short="true"] .onesa-chat-composer button {
+  min-width: 44px;
+  max-width: 9rem;
+  padding-inline: 12px;
+  letter-spacing: normal;
 }

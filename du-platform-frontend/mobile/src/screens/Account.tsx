@@ -6,7 +6,7 @@ import { useSession } from "../session";
 import { Action, Card, Copy, Field, Heading, Loading, Message, Screen } from "../ui";
 
 const message = (error: unknown) => error instanceof Error ? error.message : "Unable to complete your request. Please try again.";
-type AccountRoute = { params?: { next?: string; entry?: "forgot" | "login" } };
+type AccountRoute = { params?: { next?: string; entry?: "forgot" | "login"; mode?: string } };
 export function AccountScreen({ route }: { route?: AccountRoute } = {}) {
   const session = useSession();
   const navigation = useNavigation<any>();
@@ -28,6 +28,19 @@ export function AccountScreen({ route }: { route?: AccountRoute } = {}) {
     setPassword("");
     navigation.setParams({ entry: undefined });
   }, [entry, navigation]);
+
+  // Website links (/login?mode=…, /register, /forgot-password) open this tab
+  // in the requested mode. Consume the parameter like `entry` so later
+  // parameter updates cannot reset a form the user is filling in.
+  const linkedMode = route?.params?.mode;
+  useEffect(() => {
+    if (linkedMode !== "login" && linkedMode !== "register" && linkedMode !== "forgot") return;
+    setMode(linkedMode);
+    setPassword("");
+    setFeedback("");
+    setError("");
+    navigation.setParams({ mode: undefined });
+  }, [linkedMode, navigation]);
 
   const finishSignIn = () => {
     if (!next) return;
